@@ -364,11 +364,7 @@
                                         </table>
                                         <div class="row">
                                           <div class="col-12 d-flex justify-content-center">
-<<<<<<< Updated upstream
                                             <button type="button" class="btn btn-primary m-1" name='btnSalesCalcualte' id='btnSalesCalcualte'>
-=======
-                                            <button type="button" class="btn btn-primary m-1" id="saleOrderCalculate" name="salesOrderCalculate">
->>>>>>> Stashed changes
                                               <a class="" href="#" style="text-decoration: none;color:white">
                                                 Calculate
                                               </a>
@@ -382,11 +378,7 @@
                                         <label class="text-nowrap align-middle">
                                             Cost Price
                                         </label>
-<<<<<<< Updated upstream
                                         <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice" disabled>
-=======
-                                        <input type="number" class="form-input form-control sellable" id="costPrice" name="costPrice">
->>>>>>> Stashed changes
                                         <br>
                                         <label class="text-nowrap align-middle">
                                             Payment Method
@@ -668,11 +660,7 @@
                         </div>
                         <div class="row">
                           <div class="col-12 d-flex justify-content-center">
-<<<<<<< Updated upstream
                             <select class="form-control sellable" id="paymentType" name="paymentType" onchange="selectPaymentMethod();">
-=======
-                            <select class="form-control sellable" id="payementType" name="payementType">
->>>>>>> Stashed changes
                                 <option selected disabled>Please Select Payment Type...</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Cheque">Cheque</option>
@@ -722,11 +710,7 @@
                                   <td class="text-center">Downpayment</td>
                                   <td class="text-center">Cash</td>
                                   <td class="text-center">Paid</td>
-<<<<<<< Updated upstream
                                   <td class="text-center">Juan Dela Curz</td>
-=======
-                                  <td class="text-center">Juan Dela Cruz</td>
->>>>>>> Stashed changes
                                 </tr>
                                 <tr>
                                   <td class="text-center">PID-000000001</td>
@@ -735,11 +719,7 @@
                                   <td class="text-center">Downpayment</td>
                                   <td class="text-center">Check</td>
                                   <td class="text-center">Pending</td>
-<<<<<<< Updated upstream
                                   <td class="text-center">Juan Dela Curz</td>
-=======
-                                  <td class="text-center">Juan Dela Cruz</td>
->>>>>>> Stashed changes
                                 </tr>
                               </tbody>
                             </table>
