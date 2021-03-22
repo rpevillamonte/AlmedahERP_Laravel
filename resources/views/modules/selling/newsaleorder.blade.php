@@ -20,4 +20,4 @@
         </div>
     </div>
 </nav>
-<?php include 'saleorderForm.php' ?>
+@include('modules.selling.saleorderform')
