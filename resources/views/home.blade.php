@@ -941,6 +941,10 @@
                 <div id='submenunewUI' class="collapse sidebar-submenu">
                     <a href="#" id="address-toggle" data-parent="NewUI"
                         class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Operators</span>
+                    </a>
+                    <a href="#" id="address-toggle" data-parent="NewUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Address</span>
                     </a>
                     <a href="#" id="Coupon-toggle" data-parent="newUI"

@@ -613,6 +613,11 @@ Route::get('/repairinfo', function () {
     return view('modules.manufacturing.repairinfo');
 });
 
+/** OPERATORS ROUTES*/
+Route::get('/operators', function () {
+    return view('modules.NewUI.operators');
+});
+
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
     return view('modules.stock.warehouse');
