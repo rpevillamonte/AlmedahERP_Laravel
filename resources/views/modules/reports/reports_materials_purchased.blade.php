@@ -24,7 +24,7 @@
                         <div id="fixed" class="col-md-12">
                              <div class="d-flex flex-row-reverse">
                                  <select data-column="0" id='mp_status' class="form-control flex-row-reverse"style="width: 200px" method="POST">
-                                    <option value="">[ By Status ]</option>
+                                    <option value="">By Status</option>
                                     @foreach($mp_status as $mp_status)
                                     <option value="{{$mp_status}}">{{$mp_status}}</option>
                                     @endforeach
@@ -35,7 +35,7 @@
             <thead>
                 <th>ID</th>
                 <th>Purchase ID</th>
-                <th>Supplier Quatation ID</th>
+                <th>Supplier Quotation ID</th>
                 <th>Purchase Date</th>
                 <th>Total Cost</th>
                 <th>Status</th>

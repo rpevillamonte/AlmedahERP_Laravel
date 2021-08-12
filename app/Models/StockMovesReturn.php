@@ -14,6 +14,7 @@ class StockMovesReturn extends Model
         'tracking_id',
         'item_code',
         'return_date',
-        'return_status'
+        'return_status',
+        'return_logs'
     ]; 
 }

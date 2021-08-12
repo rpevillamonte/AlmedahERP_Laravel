@@ -17,7 +17,7 @@ class StockTransfer extends Model
         'item_code',
         'source_station',
         'target_station',
-        'transfer_status'
-
+        'transfer_status',
+        'transfer_logs'
     ]; 
 }

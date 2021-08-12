@@ -1,10 +1,65 @@
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+var SUPP_SUCCESS = "#s_success_message";
+var SUPP_FAIL = "#s_alert_message";
 
 $(document).ready(function() {
     $("#supplierTbl").DataTable({
         "searching": false,
         "info": false,
     });
+    $(".supplier-search").selectpicker();
+});
+
+$(".supplier-search").change(function (e) { 
+    var tbl = $("#supplierTbl").DataTable();
+    let url = ''
+    if($(this).val() === 'None')
+        url = '/supplier-all'
+    else {
+        let id = $(this).attr('id');
+        switch(id) {
+            case 'supplierName':
+                url = /supp-filter-name/
+                break;
+            case 'sgroupSelect':
+                url = '/supp-filter-sg/'
+                break;
+        }
+        url = url + $(this).val();
+        if (url === '') return;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: $(this).val(),
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                tbl.rows('tr').remove();
+                var suppliers = data.suppliers;
+                if (suppliers.length > 0) {
+                    for(let i=0; i<suppliers.length; i++) {
+                        var supplier = suppliers[i];
+                        tbl.row.add([
+                            `
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input">
+                            </div>
+                            `,
+                            `
+                            <a href='javascript:onclick=openSupplierInfo(${supplier.id});'>${supplier.company_name}</a>
+                            `,
+                            supplier.contact_name,
+                            supplier.phone_number,
+                            supplier.supplier_address,
+                            supplier.supplier_group
+                        ]);
+                    }
+                }
+                tbl.draw();
+            }
+        });
+    }
+    e.preventDefault();
+    
 });
 
 $("#supplierForm, #updateSupplierForm").submit(function () {
@@ -19,52 +74,34 @@ $("#supplierForm, #updateSupplierForm").submit(function () {
     if(!$("#supplier_contact").val()) {
         formData.delete('supplier_contact');
     }
-    var flag = true;
 
     if(
         !$("#supplier_name").val() || !$("#supplier_phone").val() ||
         $("#supplier_group").val() === 'n/o' || !$("#supplier_email").val() || !$("#supplier_address").val()
     ) {
-        slideAlert("Please make sure that all the appropriate information has been provided.", false);
-        flag = false;
+        slideAlert("Please make sure that all the appropriate information has been provided.", SUPP_FAIL);
+        return;
     }
 
     if($("#supplier_phone").val().length != 11) {
-        slideAlert("Contact number is not of appropriate length.", false);
-        flag = false;
+        slideAlert("Contact number is not of appropriate length.", SUPP_FAIL);
+        return;
     }    
 
-    if(flag) {
-        $.ajax({
-            url: $(this).attr('action'),
-            type: $(this).attr('method'),
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(data) {
-                loadSupplier();
-            }
-        });
-    }
+    $.ajax({
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            loadSupplier();
+        }
+    });
 
     return false;
 
 });
-
-function slideAlert(message, flag) {
-    if (flag) {
-        $("#s_success_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#s_success_message").slideUp(500);
-        });
-        $("#s_success_message").html(message);
-    }
-    else {
-        $("#s_alert_message").fadeTo(3500, 500).slideUp(500, function(){
-            $("#s_alert_message").slideUp(500);
-        });
-        $("#s_alert_message").html(message);
-    }
-}
 
 $("#deleteSuppForm").submit(function() {
     $.ajaxSetup({

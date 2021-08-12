@@ -7,9 +7,13 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
               <ul class="navbar-nav ml-auto">
-                  <li class="nav-item dropdown li-bom">
-                    </li>
-                  <li class="nav-item li-bom">
+                  <li class="nav-item li-bom mr-1"> 
+                      <button class="btn btn-primary" style="display: none" id="saveStockTransfer">Save</button>
+                  </li>
+                  <li class="nav-item li-bom mr-1">
+                    <button class="btn btn-primary" style="display: none" id="confirmStockTransfer" type="submit">Submit</button>
+                  <li>
+                  </li>
                       <button class="btn btn-primary" style="display:none" id="saveStockTransferCreate" form="addStockMovesForm">Save</button>
                   </li>
                   <li class="nav-item li-bom">
@@ -20,14 +24,7 @@
           </div>
       </div>
   </nav>
-  <div class="d-flex">
-    <div class="col-1">
-      <button class="btn btn-primary" style="display: none" id="saveStockTransfer">Save</button>
-    </div>
-    <div class="col-1">
-      <button class="btn btn-primary" style="display: none" id="confirmStockTransfer" type="submit" onclick="" >Submit</button>
-    </div>
-  </div>
+
 
   <div class="alert alert-success alert-dismissible" id="new-stock-success" style="display:none;">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
@@ -59,7 +56,7 @@
                 <div class="row">
                   <div class="col">
                     <label for="">Tracking ID</label>
-                    <input type="text" name='tracking_id' id="tracking_id" class="form-control" placeholder="Tracking ID" value="">
+                    <input type="text" name='tracking_id' id="tracking_id" class="form-control" placeholder="Tracking ID" value="" readonly>
                   </div>
                   <div class="col">
                     <label for="">Move Date</label>
@@ -103,7 +100,7 @@
           <hr>
           <div class="card-body filter">
             <h5>Items</h5>
-            <table class="table table-bom border-bottom" >
+            <table class="table table-bom border-bottom mb-0">
                 <thead class="border-top border-bottom bg-light">
                     <tr class="text-muted">
                         <td>
@@ -121,9 +118,11 @@
                   </thead>
                   <tbody id="items">
 
+                    
                   </tbody>
-     
+                  
                   </table>
+                  <p id="no-items"></p>
                   <center id="emptyMat">
                     No items selected for Transfer
                   </center>
@@ -137,8 +136,15 @@
                       </button>
                     </div>
                   </div>
+                  
           </div>
+          <hr>
+          <div class="card-body filter">
+            <h5>Logs</h5>
+            <div id="transfer_logs">
 
+            </div>
+          </div>
       </div>
     </div>
   </div>
@@ -247,6 +253,11 @@
     let tracking_id = $("#tracking_id").val();
     console.log("itemsbelow");
     console.log(items);
+
+    items.map(item=>{
+        item.qty_checker = item.qty_received;
+      });
+      
     let item_code = JSON.stringify(items);
     let employee_id = $("#employee_id").val();
     let move_date = $('#move_date').val();
@@ -277,11 +288,16 @@
         }
     });
     let tracking_id = $("#tracking_id").val();
+
+    items.map(item=>{
+        item.qty_checker = item.qty_received;
+      });
     console.log("items");
     console.log(items);
     let item_code = JSON.stringify(items);
     let employee_id = $("#employee_id").val();
     let move_date = $('#move_date').val();
+ 
     if(sameSourceTargetStation()){
       $('#new-stock-danger').show()
       $('#new-stock-danger').html('Raw Material has the same Source and Target Station');
@@ -302,6 +318,7 @@
   });
 
   $('#addStockMovesForm').on('submit', function(e){
+
     e.preventDefault();
     $.ajaxSetup({
         headers: {
@@ -311,6 +328,12 @@
 
       var formData = new FormData(this);
       console.log('items');
+      console.log(items);
+
+      items.map(item=>{
+        item.qty_checker = item.qty_received;
+      });
+
       console.log(items);
       formData.append("item_code", JSON.stringify(items));
       $.ajax({
@@ -485,11 +508,11 @@
   }
 
   function sameSourceTargetStation(){
-    items.forEach(item=>{
-      if(item.source_station == item.target_station){
+    for(let i=0; i<items.length; i++){
+      if(items[i].source_station == items[i].target_station){
         return true;
       }
-    });
+    }
     return false;
   }
 
@@ -565,10 +588,20 @@
                   $('#confirmStockTransfer').hide();
                   $('#saveStockTransfer').hide();
                   $('#saveStockTransferCreate').hide();
+                  $('#mat_ordered_id').attr('readonly', true);
+                  $('#employee_id').attr('readonly', true);
+                  $('#move_date').attr('readonly', true);
                 }else{
                   $('#saveStockTransfer').show();
                   $('#confirmStockTransfer').show();
                   $('#saveStockTransferCreate').hide();
+                  if(matOrderedId){
+                    $('#mat_ordered_id').attr('readonly', false);
+                  }else{
+                    $('#mat_ordered_id').attr('readonly', true);
+                  }
+                  $('#employee_id').attr('readonly', false);
+                  $('#move_date').attr('readonly', false);
                 }
                 let stations = data['stations'];
                 let conditions = ['New', 'Good', 'Damaged'];
@@ -595,8 +628,18 @@
                       valuesForConditions.push('');
                     }
                   });
+
                   selectedArrayForStations.push(valuesForStations);
                   selectedArrayForConditions.push(valuesForConditions);
+                });
+
+                JSON.parse(data['transfer_logs']).forEach((log,index) => {
+                  let date = log.date;
+                  $('#transfer_logs').append(`
+                  <div class="alert alert-secondary" role="alert">
+                    `+log.message+`.
+                    <p class="card-text"><small class="text-muted">`+date+`</small></p>
+                  </div`);
                 });
                 
                 console.log('stations');
@@ -640,6 +683,11 @@
                 });
                 console.log('item_code');
                 console.log(items);
+                if(items.length == 0){
+                  $('#no-items').append(`<div class="alert alert-success text-center" role="alert">
+                    Items successfully transferred to Source Station
+                  </div>`);
+                }
             },
             error: function(data) {
                 console.log("error");
@@ -680,9 +728,9 @@
                       </select></td>
                     <td><label for="item_condition"></label>
                       <select id="item_condition" onchange="onChangeItemCondition(this.value, this)">
-                        <option value="new">New</option>
-                        <option value="good">Good</option>
-                        <option value="damaged">Damaged</option>
+                        <option value="New">New</option>
+                        <option value="Good">Good</option>
+                        <option value="Damaged">Damaged</option>
                       </select></td></tr>`
                   );
                   let obj = { 'item_code': item.item_code, 

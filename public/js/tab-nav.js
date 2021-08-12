@@ -4,7 +4,24 @@ if ($("#divMain").children().length == 0) {
         $("#divMain").load("/dashboard");
     });
 }
+
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
+
+//if (sessionStorage.getItem("route")) {
+//    $("#divMain").load(sessionStorage.getItem("route"));
+//} else {
+//    $("#divMain").load("/dashboard");
+//}
 //--> End of Dashboard js <--//
+
+function slideAlert(message, alert_appear) {
+    $(alert_appear)
+        .fadeTo(3500, 500)
+        .slideUp(500, function () {
+            $(alert_appear).slideUp(500);
+        });
+    $(alert_appear).html(message);
+}
 
 $(document).ready(function () {
     $("body").on("click", ".menu", function () {
@@ -26,51 +43,7 @@ $(document).ready(function () {
         var menu = moduleWOSpace;
         //checks if the clicked item has its tab is shown
         if (!$(`#tab${menu}`).length) {
-            $("#tabs").append(
-                `<li class="nav-item menu-item">
-            <a class="nav-link" data-toggle="tab" href="#content${menu}" id="tab${menu}">
-                  ${moduleWithSpace} <b class="closeTab text close ml-4">x</b>
-            </a>
-        </li>`
-            );
-            // append the content of the tab
-            $("#contents").append(
-                `<div class="tab-pane active p-0" id="content${menu}">
-        </div>`
-            );
-            //goes to a specific module
-            var $link = `${menu}`;
-            var $parent = $(this).attr("data-parent");
-            // set custom module route defined in data-module attribute
-            if (typeof $(this).attr("data-module-url") !== "undefined") {
-                $link = $(this).attr("data-module-url");
-            }
-
-            $(`#content${menu}`).load(
-                "/" + $link.toLowerCase(),
-                function (responseTxt, statusTxt, xhr) {
-                    if (statusTxt == "error") {
-                        console.log(
-                            "Error: " + xhr.status + ": " + xhr.statusText
-                        );
-                        console.log($parent);
-                        $(`#content${menu}`).load(
-                            "/" + $link.toLowerCase(),
-                            function (responseTxt, statusTxt, xhr) {
-                                if (statusTxt == "error")
-                                    alert(
-                                        "Error: " +
-                                            xhr.status +
-                                            ": " +
-                                            xhr.statusText
-                                    );
-                            }
-                        );
-                    }
-                    //console.log("/" + $link.toLowerCase());
-                }
-            );
-            $(`#tab${menu}`).tab("show");
+            loadTab(menu, moduleWithSpace);
         }
         // if it's active, show it
         else {
@@ -106,6 +79,52 @@ $(document).ready(function () {
         //--> End of Dashboard js (close tabs) <--//
     });
 });
+
+function loadTab(menu, moduleWithSpace) {
+    $("#tabs").append(
+        `<li class="nav-item menu-item">
+    <a class="nav-link" data-toggle="tab" href="#content${menu}" id="tab${menu}">
+          ${moduleWithSpace} <b class="closeTab text close ml-4">x</b>
+    </a>
+</li>`
+    );
+    // append the content of the tab
+    $("#contents").append(
+        `<div class="tab-pane active p-0" id="content${menu}">
+</div>`
+    );
+    //goes to a specific module
+    var $link = `${menu}`;
+    var $parent = $(this).attr("data-parent");
+    // set custom module route defined in data-module attribute
+    if (typeof $(this).attr("data-module-url") !== "undefined") {
+        $link = $(this).attr("data-module-url");
+    }
+    var linkString = "/" + $link.toLowerCase();
+    $(`#content${menu}`).load(
+        linkString,
+        function (responseTxt, statusTxt, xhr) {
+            if (statusTxt == "error") {
+                console.log("Error: " + xhr.status + ": " + xhr.statusText);
+                console.log($parent);
+                $(`#content${menu}`).load(
+                    linkString,
+                    function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt == "error")
+                            alert(
+                                "Error: " + xhr.status + ": " + xhr.statusText
+                            );
+                    }
+                );
+            }
+            //console.log(linkString);
+            sessionStorage.setItem("route", linkString);
+            sessionStorage.setItem("menuString", menu);
+            sessionStorage.setItem("moWSpace", moduleWithSpace);
+        }
+    );
+    $(`#tab${menu}`).tab("show");
+}
 
 function loadNewBOM() {
     $(document).ready(function () {
@@ -1010,7 +1029,7 @@ function writeRemark(el) {
     let currentRow = $(el).closest("tr");
     let itemCodeFound = currentRow.find("td:nth-child(2)").html();
     console.log(itemsRet);
-    itemsRet.forEach((itemRet) => {
+    passValueArray.forEach((itemRet) => {
         if (itemCodeFound == itemRet.item_code) {
             console.log(itemRet.remarks);
             $("#remarkText").val(function (text) {
@@ -1046,20 +1065,15 @@ function showItemsRet(trackingId) {
         type: "GET",
         url: "/showItemsRet/" + trackingId,
         success: function (data) {
-            let qty_checker = [];
-            JSON.parse(data["items_list_received"]).forEach((item) => {
-                qty_checker.push(item.qty_received);
-            });
-            console.log(qty_checker);
             if (data["return_date"]) {
                 $("#return_date_ret").val(data["return_date"]);
             }
             let items_list_received = JSON.parse(data["transfer"]);
-            items_list_received.forEach((item, index) => {
+            items_list_received.forEach((item) => {
                 let obj = {
                     item_code: item.item_code,
                     qty_received: item.qty_received,
-                    qty_checker: qty_checker[index],
+                    qty_checker: item.qty_checker,
                     source_station: item.source_station,
                     target_station: item.target_station,
                     consumable: item.consumable,
@@ -1072,7 +1086,7 @@ function showItemsRet(trackingId) {
                 let obj = {
                     item_code: item.item_code,
                     qty_received: item.qty_received,
-                    qty_checker: item.qty_received,
+                    qty_checker: item.qty_checker,
                     source_station: item.source_station,
                     target_station: item.target_station,
                     consumable: item.consumable,
@@ -1120,6 +1134,10 @@ function showItemsRet(trackingId) {
                 );
             });
 
+            // if (items_list_received.length == 0) {
+
+            // }
+
             // -------------
             if (data["return"]) {
                 let items_to_be_returned = JSON.parse(data["return"]);
@@ -1163,6 +1181,13 @@ function showItemsRet(trackingId) {
                             `</td></tr>`
                     );
                 });
+
+                console.log("ret");
+                console.log(itemsRet);
+                console.log("trans");
+                console.log(itemsTrans);
+                console.log("pass");
+                console.log(passValueArray);
             }
         },
         error: function (data) {
@@ -1483,7 +1508,7 @@ function RoutingTable() {
 
 function newoperation() {
     $(document).ready(function () {
-        $("#contentOperations").load("/newoperation");
+        $("#contentOperations").load("/operations/create");
     });
 }
 
@@ -1496,5 +1521,21 @@ function operationtable() {
 function editoperation(id) {
     $(document).ready(function () {
         $("#contentOperations").load(`/operations/${id}/edit`);
+    });
+}
+
+function repairtable() {
+    $(document).ready(function () {
+        $("#contentRepair").load("/repair");
+    });
+}
+function newrepairrequest() {
+    $(document).ready(function () {
+        $("#contentRepair").load("/newrepairrequest");
+    });
+}
+function repairinfo() {
+    $(document).ready(function () {
+        $("#contentRepair").load("/repairinfo");
     });
 }

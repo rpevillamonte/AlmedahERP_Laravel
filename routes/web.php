@@ -33,6 +33,8 @@ use App\Http\Controllers\ChartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
+use App\Http\Controllers\NotificationLogsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +59,10 @@ Route::get('/dashboard', function () {
 Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
+
+/*NOTIFICATION ROUTES */
+Route::get('/notification', [NotificationLogsController::class, 'get_notifications'])->name('get_notifications');
+
 
 /*ADDRESS ROUTES */
 Route::get('/address', function() {
@@ -264,7 +270,6 @@ Route::get('/archived', function () {
 /**OPERATIONS ROUTES */
 Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
-Route::get('/newoperation', [OperationsController::class, 'openOperationForm']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -396,11 +401,11 @@ Route::get('/quality', function () {
 
 /**REPORTS ROUTES*/
 Route::get('/reportsbuilder', function () {
-    return view('modules.reports.reportsbuilder');
-});
-Route::get('/loadReportsBuilderShowReport', function () {
     return view('modules.reports.reportsbuilderform_showreport');
 });
+#Route::get('/loadReportsBuilderShowReport', function () {
+#   return view('modules.reports.reportsbuilderform_showreport');
+#});
 Route::get('/openReportsBuilderForm', function () {
     return view('modules.reports.reportsbuilderform');
 });
@@ -519,6 +524,9 @@ Route::get('/loadStockEntry', function () {
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
+Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
+Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filterBySupplierGroup']);
+Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/
 Route::get('/newsuppliergroup', function() {
@@ -596,6 +604,17 @@ Route::get('/getBomId/{selected}/{text}', [WorkOrderController::class, 'getBomId
 Route::get('/getQtyFromMatOrdered/{work_order_no}', [WorkOrderController::class, 'getQtyFromMatOrdered']);
 Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderController::class, 'checkUpdateStatus']);
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
+
+/**REPAIR ROUTES*/
+Route::get('/repair', function () {
+    return view('modules.manufacturing.repair');
+});
+Route::get('/newrepairrequest', function () {
+    return view('modules.manufacturing.newrepairrequest');
+});
+Route::get('/repairinfo', function () {
+    return view('modules.manufacturing.repairinfo');
+});
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
