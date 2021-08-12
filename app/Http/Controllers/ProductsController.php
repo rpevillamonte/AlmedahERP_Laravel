@@ -61,7 +61,8 @@ class ProductsController extends Controller
             'reorderQty'=>'nullable|numeric|min:1',
             'prototype'=>'nullable|numeric|min:0',
             'manufacturing_date'=>'required|date',
-            'product_pulled_off_market'=>'required|date'
+            'product_pulled_off_market'=>'required|date',
+            'warranty_days'=>'required|integer|numeric|min:0'
         ];
         if(request('product_status') != 'Variant'){
             $rules['picture'] = 'required';
@@ -114,6 +115,8 @@ class ProductsController extends Controller
             $data->sale_supply_method = $form_data['saleSupplyMethod'];
             $data->manufacturing_date = $form_data['manufacturing_date'];
             $data->product_pulled_off_market = $form_data['product_pulled_off_market'];
+
+            $data->warranty_days = $form_data['warranty_days'];
             
             //Would fail if prototype is unchecked
             //Since forms does not submit unchecked checkboxes
@@ -234,6 +237,8 @@ class ProductsController extends Controller
             $data->sale_supply_method = $form_data['saleSupplyMethod'];
             $data->manufacturing_date = $form_data['manufacturing_date'];
             $data->product_pulled_off_market = $form_data['product_pulled_off_market'];
+
+            $data->warranty_days = $form_data['warranty_days'];
             
             //Would fail if prototype is unchecked
             //Since forms does not submit unchecked checkboxes

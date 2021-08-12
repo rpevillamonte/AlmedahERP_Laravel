@@ -46,19 +46,21 @@
                 </tr>
             </thead>
             <tbody class="">
+                @foreach ($warranty_claims as $row)
 
                 <tr id="">
-                <td>
+                    <td>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a href='javascript:onclick=repairinfo();'>Sample Data</a></td>
-                    <td>REP00001</td>
-                    <td>Sample Data</td>
-                    <td>PROD0001</td>
+                    <td ><a href='javascript:onclick=repairinfo();'>{{$row->customer_name}}</a></td>
+                    <td>{{$row->wclaim_id}}</td>
+                    <td>{{$row->repair_status}}</td>
+                    <td>{{$row->product_code}}</td>
                     <td><button><i class="fa fa-trash"></i></button></td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

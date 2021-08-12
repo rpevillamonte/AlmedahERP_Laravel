@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
-
+use App\Http\Controllers\repairController;
 
 /*
 |--------------------------------------------------------------------------
@@ -596,12 +596,9 @@ Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderContro
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**REPAIR ROUTES*/
-Route::get('/repair', function () {
-    return view('modules.manufacturing.repair');
-});
-Route::get('/newrepairrequest', function () {
-    return view('modules.manufacturing.newrepairrequest');
-});
+Route::get('/repair', [repairController::class, 'index']);
+Route::get('/newrepairrequest', [repairController::class, 'createIndex']);
+
 Route::get('/repairinfo', function () {
     return view('modules.manufacturing.repairinfo');
 });

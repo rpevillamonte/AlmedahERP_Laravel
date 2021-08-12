@@ -249,6 +249,23 @@ class SalesOrderController extends Controller
                     $prod->stock_unit = 0;
                 }
                 $prod->save();
+
+                // Makes a serial number for each product purchased
+                // @TODO Make warranty individually
+                for ($i=0; $i < $order->quantity_purchased; $i++) {
+
+                    $warranty = new warranty();
+                    $warranty->warranty_period = $prod->warranty_days;
+                    $warranty->warranty_end_date = Carbon::now()->addDays( (int)$prod->warranty_days); #Adds current date to warranty days
+                    
+                    $warranty->save();
+
+                    $sn = new serial_numbers();
+                    $sn->serial_no = $order->product_code + '-SN' + sn->id;
+                    $sn->product_code = $order->product_code;
+                    $sn->warranty_id = $warranty->id;
+                    $sn->save();
+                }
             }
 
             $work_order_ids = array();

@@ -52,8 +52,13 @@
                 <div class="col-6">
                   <div class="form-group">
                     <label for="purpose">Customer</label>
-
-                    <input type="text" name="customer" id="customer" class="form-control">
+                    <input list="customers" class="form-input form-control" name="customer_id" onchange="" autocomplete="off">
+                    <datalist id="customers">
+                        @foreach ($customers as $row)
+                            <option value="{{ $row->id }}"> {{ $row->customer_lname }}
+                                {{ $row->customer_fname }} </option>
+                        @endforeach
+                    </datalist>
                   </div>
                 </div>
          </div>     
@@ -198,7 +203,7 @@
                   <div class="form-group">
                     <label for="purpose">Resolved By</label>
 
-                    <input type="text" name="resolved_by" id="resolved_by" class="form-control">
+                    <input type="text"   class="form-control">
                   </div>
                 </div>
          </div>  
@@ -234,7 +239,7 @@
                   <div class="form-group">
                     <label for="purpose">Customer Name</label>
 
-                    <input type="text" name="resolved_by" id="resolved_by" class="form-control" readonly>
+                    <input type="text"   class="form-control" readonly>
                   </div>
                 </div>
 
@@ -242,7 +247,7 @@
                   <div class="form-group">
                     <label for="purpose">Branch Name</label>
 
-                    <input type="text" name="resolved_by" id="resolved_by" class="form-control" readonly>
+                    <input type="text"   class="form-control" readonly>
                   </div>
                 </div>
          </div>  
@@ -253,7 +258,7 @@
                   <div class="form-group">
                     <label for="purpose">Contact No.</label>
 
-                    <input type="text" name="resolved_by" id="resolved_by" class="form-control" readonly>
+                    <input type="text"   class="form-control" readonly>
                   </div>
                 </div>
 
@@ -261,7 +266,7 @@
                   <div class="form-group">
                     <label for="purpose">Address</label>
 
-                    <input type="text" name="resolved_by" id="resolved_by" class="form-control" readonly>
+                    <input type="text"   class="form-control" readonly>
                   </div>
                 </div>
 
