@@ -1,4 +1,3 @@
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 var ROUTING_SUCCESS = "#routing_success_msg";
 var ROUTING_FAIL = "#routing_alert_msg";
 
@@ -82,7 +81,20 @@ $("#routingsForm").submit(function () {
     });
     // create a routing first....
     var routingData = new FormData(this);
-    var routingId = "";
+
+    var operationsData = {};
+    operations = $("#newrouting-input-rows tr");
+
+    for(let i=1; i<=operations.length; i++) {
+        operationsData[i] = {
+            'seq_id' : $(`#seq_id${i}`).val(),
+            'operation' : $(`#operation${i}`).val(),
+            'hour_rate' : $(`#hour_rate${i}`).val(),
+            'operation_time' : $(`#operation_time${i}`).val()
+        }
+    }
+
+    routingData.append('routing_operations', JSON.stringify(operationsData))
 
     $.ajax({
         type: "POST",
@@ -93,33 +105,12 @@ $("#routingsForm").submit(function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            routingId = response.routing_id;
+            RoutingTable();
         }
     });
     //routingId = tempId;
     // ..then input the routing operations
-    var operationsData;
-    operations = $("#newrouting-input-rows tr");
-    for(let i=1; i<=operations.length; i++) {
-        operationsData = new FormData();
-        operationsData.append('seq_id', $(`#seq_id${i}`).val());
-        operationsData.append('operation', $(`#operation${i}`).val());
-        operationsData.append('routing_id', routingId);
-        operationsData.append('hour_rate', $(`#hour_rate${i}`).val());
-        operationsData.append('operation_time', $(`#operation_time${i}`).val());
-        $.ajax({
-            type: "POST",
-            url: '/routingoperation',
-            data: operationsData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                console.log("success");
-                RoutingTable();
-            }
-        });
-    }
+    
     return false;
 
 });
