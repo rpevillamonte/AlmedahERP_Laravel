@@ -617,6 +617,9 @@ Route::get('/repairinfo', function () {
 Route::get('/operators', function () {
     return view('modules.NewUI.operators');
 });
+Route::get('/adminoperator', function () {
+    return view('modules.NewUI.adminoperator');
+});
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
