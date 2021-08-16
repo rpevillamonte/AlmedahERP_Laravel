@@ -599,9 +599,11 @@ Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderCont
 Route::get('/repair', [repairController::class, 'index']);
 Route::get('/newrepairrequest', [repairController::class, 'createIndex']);
 
-Route::get('/repairinfo', function () {
-    return view('modules.manufacturing.repairinfo');
-});
+Route::post('/getSerials', [repairController::class, 'getSerials']);
+Route::post('/getSerialWithWarranty', [repairController::class, 'getSerialWithWarranty']);
+Route::post('/getCustomerDetails', [repairController::class, 'getCustomerDetails']);
+Route::post('/createRepair', [repairController::class, 'store']);
+Route::get('/repairinfo/{id}', [repairController::class, 'viewEdit']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class warranty extends Model
 {
     use HasFactory;
+    public $timestamps = False;
 
     protected $fillable = [
         'warranty_id',

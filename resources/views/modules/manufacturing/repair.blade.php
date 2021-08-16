@@ -54,7 +54,7 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td ><a href='javascript:onclick=repairinfo();'>{{$row->customer_name}}</a></td>
+                    <td ><a href='javascript:onclick=repairinfo({{$row->id}});'>{{$row->customer_name}}</a></td>
                     <td>{{$row->wclaim_id}}</td>
                     <td>{{$row->repair_status}}</td>
                     <td>{{$row->product_code}}</td>

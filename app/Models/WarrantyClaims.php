@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class WarrantyClaims extends Model
 {
     use HasFactory;
+    public $timestamps = False;
     protected $fillable = [
         'wclaim_id',
         'sales_id',
@@ -18,5 +19,6 @@ class WarrantyClaims extends Model
         'warranty_status',
         'resolution_date',
         'resolution_details',
+        'serial_number',
     ];
 }
