@@ -360,10 +360,12 @@ function setProductWarrantyDetails(elem){
             //$("#warranty_expiry_date").val(response[0]['warranty_end_date'])
             var resDate = new Date(response[0]['warranty_end_date'])
             var jsDate = new Date();
-            if (resDate <= jsDate){
+            if (resDate < jsDate){
+               $("#warranty_status").val("Warranty Expired")
                $("#warranty_expiry_date").val(response[0]['warranty_end_date'])
                $("#warranty_expiry_date").removeClass().addClass('form-control bg-warning');
             }else{
+               $("#warranty_status").val("In Warranty")
                $("#warranty_expiry_date").val(response[0]['warranty_end_date'])
                $("#warranty_expiry_date").removeClass().addClass('form-control bg-success');
             }

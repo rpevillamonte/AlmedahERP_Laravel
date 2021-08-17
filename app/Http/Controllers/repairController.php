@@ -24,7 +24,7 @@ class repairController extends Controller
     }
 
     function viewEdit($id){
-        $warranty_claims = WarrantyClaims::find($id)->first();
+        $warranty_claims = WarrantyClaims::where('id', $id)->first();
         #Get warranty info
         $sn = DB::table('serial_numbers')
         ->join('warranties', 'warranties.id', '=', 'serial_numbers.warranty_id')
@@ -104,6 +104,30 @@ class repairController extends Controller
         $warranty_claims->customer_name = $form_data['customer_name'];
         $warranty_claims->product_code = $form_data['product_code'];
         $warranty_claims->serial_number = $form_data['serial_number'];
+        $warranty_claims->warranty_status = $form_data['warranty_status'];
+        $warranty_claims->additional_notes = $form_data['Description'];
+        $warranty_claims->save();
+
+        return response($form_data);
+    }
+
+    function update(Request $request, $id){
+        //Needs Validation
+        $form_data = $request->input();
+
+        $warranty_claims = WarrantyClaims::find($id);
+        $warranty_claims->wclaim_id = "WCLAIM-" . $warranty_claims->id;
+        $warranty_claims->sales_id = $form_data['sales_id'];
+        $warranty_claims->issue_date = $form_data['issue_date'];
+        $warranty_claims->issue_desc = $form_data['issue_desc'];
+        $warranty_claims->repair_status = $form_data['repair_status'];
+        $warranty_claims->resolution_date = $form_data['resolution_date'];
+        $warranty_claims->resolution_details = $form_data['resolution_details'];
+        $warranty_claims->customer_name = $form_data['customer_name'];
+        $warranty_claims->product_code = $form_data['product_code'];
+        $warranty_claims->serial_number = $form_data['serial_number'];
+        $warranty_claims->warranty_status = $form_data['warranty_status'];
+        $warranty_claims->additional_notes = $form_data['Description'];
         $warranty_claims->save();
 
         return response($form_data);

@@ -604,6 +604,7 @@ Route::post('/getSerialWithWarranty', [repairController::class, 'getSerialWithWa
 Route::post('/getCustomerDetails', [repairController::class, 'getCustomerDetails']);
 Route::post('/createRepair', [repairController::class, 'store']);
 Route::get('/repairinfo/{id}', [repairController::class, 'viewEdit']);
+Route::patch('/editRepairReq/{id}', [repairController::class, 'update']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

@@ -20,5 +20,6 @@ class WarrantyClaims extends Model
         'resolution_date',
         'resolution_details',
         'serial_number',
+        'additional_notes'
     ];
 }
