@@ -69,7 +69,7 @@
                                 <th scope="col" class="text-center" style="width: 0%;">
                                     <span class="fa fa-heart fa-fw"></span>
                                 </th>
-                                <th scope="col" style="width: 40%;">Name</th>
+                                <th scope="col" style="width: 40%;">Station ID</th>
                                 <th scope="col" style="width: 20%;">Workstation Name</th>
                                 <th scope="col" style="width: 40%;">Description</th>
                             </tr>
@@ -87,7 +87,7 @@
                                         <span class="fa fa-heart fa-fw" style="vertical-align: middle;">
                                     </td>
                                     <td>
-                                        <span>{{ $station->station_name }}</span>
+                                        <span>{{ $station->station_id }}</span>
                                     </td>
                                     <td>{{ $station->station_name }}</td>
                                     <td>{{ $station->description }}</td>

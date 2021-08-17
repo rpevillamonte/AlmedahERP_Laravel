@@ -109,7 +109,7 @@ $("body").on("click", ".employee-edit-btn", function (e) {
     console.log(id);
     $.ajax({
         type: "GET",
-        url: "/gete-employee/" + id,
+        url: "/get-employee/" + id,
         success: function (data) {
             console.log(data);
         },
