@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
+
 class BOMController extends Controller
 {
     /**
@@ -21,8 +22,23 @@ class BOMController extends Controller
      */
     public function index()
     {
+        //
         $bills_of_materials = BillOfMaterials::all();
-        return view('modules.BOM.bom', ['boms' => $bills_of_materials]);//
+        return view('modules.BOM.bom', ['boms' => $bills_of_materials]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        $man_prod = ManufacturingProducts::all();
+        $components = Component::all();
+        $routings = Routings::all();
+        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'components' => $components, 'routings' => $routings]);
     }
 
     /**
@@ -33,6 +49,7 @@ class BOMController extends Controller
      */
     public function store(Request $request)
     {
+        //
         try {
             $form_data = $request->input();
             $last_bom = BillOfMaterials::latest()->first();
@@ -41,7 +58,7 @@ class BOMController extends Controller
 
             $bom = new BillOfMaterials();
 
-            if(isset($form_data['product_code'])) {
+            if (isset($form_data['product_code'])) {
                 $bom->product_code = $form_data['product_code'];
                 $code = $form_data['product_code'];
                 $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
@@ -54,14 +71,14 @@ class BOMController extends Controller
             }
 
             $bom_name .= $name . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
-            
+
             $matching_boms = BillOfMaterials::where('product_code', $code)->orWhere('component_code', $code)->get();
 
             $is_default_boms = $matching_boms->where('is_default', 1)->first();
 
             $default_flag = false;
 
-            if($is_default_boms && $form_data['is_default'] == 1) {
+            if ($is_default_boms && $form_data['is_default'] == 1) {
                 $is_default_boms->is_default = 0;
                 $is_default_boms->is_active = 1;
                 $is_default_boms->save();
@@ -78,16 +95,24 @@ class BOMController extends Controller
 
             $bom->save();
 
-            if($default_flag) {
-                return ['message' => 'This will be the new default bill of materials for '. $name . '. '];
+            if ($default_flag) {
+                return ['message' => 'This will be the new default bill of materials for ' . $name . '. '];
             }
         } catch (Exception $e) {
             return $e;
         } //
     }
 
-    public function viewBOM($bom_id) {
-        $bom = BillOfMaterials::find($bom_id);
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+        $bom = BillOfMaterials::find($id);
         $routing = $bom->routing;
         $item = ($bom->product != null) ? $bom->product : $bom->component;
         $routing_ops = $routing->operations();
@@ -95,31 +120,43 @@ class BOMController extends Controller
         $man_prod = ManufacturingProducts::all();
         $components = Component::all();
         $routings = Routings::all();
-        return view('modules.BOM.bominfo',
-                    ['bom' => $bom, 'routing' => $routing, 'item' => $item, 'routing_ops' => $routing_ops, 'rateList' => $rateList,
-                    'man_prods' => $man_prod, 'routings' => $routings, 'components' => $components]
-                   );
+        return view(
+            'modules.BOM.bominfo',
+            [
+                'bom' => $bom, 'routing' => $routing, 'item' => $item, 'routing_ops' => $routing_ops, 'rateList' => $rateList,
+                'man_prods' => $man_prod, 'routings' => $routings, 'components' => $components
+            ]
+        );
     }
 
-
-    //Check if there is an identical BOM with 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $bom_id)
+    public function update(Request $request, $id)
     {
+        //
         try {
-            $bom = BillOfMaterials::find($bom_id);
+            $bom = BillOfMaterials::find($id);
             $form_data = $request->input();
 
             $bom_name = "BOM-"; //initialize "BOM-"
-            
-            if(isset($form_data['product_code'])) {
+
+            if (isset($form_data['product_code'])) {
                 $bom->product_code = $form_data['product_code'];
                 $code = $form_data['product_code'];
                 $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
@@ -131,15 +168,15 @@ class BOMController extends Controller
                 $name = $component->component_name;
             }
 
-            $bom_name .= $name . "-" . str_pad($bom_id, 3, "0", STR_PAD_LEFT);
-            
+            $bom_name .= $name . "-" . str_pad($id, 3, "0", STR_PAD_LEFT);
+
             $matching_boms = BillOfMaterials::where('product_code', $code)->orWhere('component_code', $code)->get();
 
             $is_default_boms = $matching_boms->where('is_default', 1)->first();
 
             $default_flag = false;
 
-            if($is_default_boms && $form_data['is_default'] == 1) {
+            if ($is_default_boms && $form_data['is_default'] == 1) {
                 $is_default_boms->is_default = 0;
                 $is_default_boms->is_active = 1;
                 $is_default_boms->save();
@@ -156,8 +193,8 @@ class BOMController extends Controller
 
             $bom->save();
 
-            if($default_flag) {
-                return ['message' => 'This will be the new default bill of materials for '. $name . '. '];
+            if ($default_flag) {
+                return ['message' => 'This will be the new default bill of materials for ' . $name . '. '];
             }
         } catch (Exception $e) {
             return $e;
@@ -167,34 +204,32 @@ class BOMController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\BillsOfMaterials  $billsOfMaterials
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($bom_id)
+    public function destroy($id)
     {
-        $bills_of_materials = BillOfMaterials::find($bom_id);
+        //
+        $bills_of_materials = BillOfMaterials::find($id);
         $bills_of_materials->delete();
     }
 
-    public function BOMForm()
-    {
-        $man_prod = ManufacturingProducts::all();
-        $components = Component::all();
-        $routings = Routings::all();
-        return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'components' => $components, 'routings' => $routings]);
-    }
-
-    public function getProduct($product_code)
+    public function getItem($item_type, $value)
     {
         try {
-            $product = ManufacturingProducts::where('product_code', $product_code)->first();
-            $product_mats = $product->materials();
-            $products_and_rates = array();
-            foreach ($product_mats as $material) {
+            $item = null;
+            if ($item_type === 'product') {
+                $item = ManufacturingProducts::where('product_code', $value)->first();
+            } else {
+                $item = Component::where('component_code', $value)->first();
+            }
+            $item_mats = $item->materials();
+            $items_and_rates = array();
+            foreach ($item_mats as $material) {
                 $item_code = $material['material']->item_code;
                 $p_order = MaterialPurchased::where('items_list_purchased', 'LIKE', "%{$item_code}%")->first();
                 if ($p_order != null) {
-                    $po_items = $p_order->productsAndRates($item_code);
+                    $po_items = $p_order->productsAndRates($item_code, $value);
                 }
                 //dd(DB::getQueryLog());
                 else {
@@ -209,15 +244,9 @@ class BOMController extends Controller
                         'subtotal' => $material['qty']
                     );
                 }
-                array_push(
-                    $products_and_rates,
-                    array(
-                        'product_rates' => $po_items,
-                        'qty' => $material['qty']
-                    )
-                );
+                array_push($items_and_rates, $po_items);
             }
-            return ["product" => $product, 'materials_info' => $products_and_rates];
+            return ["item" => $item, 'materials_info' => $items_and_rates];
         } catch (Exception $e) {
             return response()->json([
                 "error" => $e->getMessage()
@@ -225,42 +254,4 @@ class BOMController extends Controller
         }
     }
 
-    public function getComponent($component_code) {
-        try {
-            //code...
-            $component = Component::where('component_code', $component_code)->first();
-            $product_mats = $component->materials();
-            $products_and_rates = array();
-            foreach ($product_mats as $material) {
-                $item_code = $material['material']->item_code;
-                $p_order = MaterialPurchased::where('items_list_purchased', 'LIKE', "%{$item_code}%")->first();
-                if ($p_order != null) {
-                    $po_items = $p_order->productsAndRates($item_code);
-                }
-                //dd(DB::getQueryLog());
-                else {
-                    $raw_mat = ManufacturingMaterials::where('item_code', $material['material']->item_code)->first();
-                    $po_items = array(
-                        'item_code' => $material['material']->item_code,
-                        'item' => $raw_mat,
-                        'uom' => $raw_mat->uom,
-                        'req_date' => date('Y-m-d'),
-                        'qty' => $material['qty'],
-                        'rate' => 1,
-                        'subtotal' => $material['qty']
-                    );
-                }
-                array_push(
-                    $products_and_rates,
-                    array(
-                        'product_rates' => $po_items,
-                        'qty' => $material['qty']
-                    )
-                );
-            }
-            return ["component" => $component, 'materials_info' => $products_and_rates];
-        } catch (Exception $e) {
-            //throw $th;
-        }
-    }
 }
