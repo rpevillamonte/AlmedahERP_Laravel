@@ -141,7 +141,7 @@ Route::get('/hr', function () {
 });
 
 Route::get('/employee', [EmployeeController::class, 'index']);
-
+Route::get('/get-employee/{id}', [EmployeeController::class, 'getEmployee']);
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
 Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
 Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
@@ -495,7 +495,7 @@ Route::get('/loadStockEntry', function () {
 Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
 Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
-Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filterBySupplierGroup']);
+Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/

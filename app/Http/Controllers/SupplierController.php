@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ManufacturingMaterials;
 use App\Models\MaterialPurchased;
+use App\Models\MPRecord;
 use App\Models\RequestQuotationSuppliers;
 use Illuminate\Http\Request;
 
 use App\Models\Supplier;
+use App\Models\SupplierGroup;
 use App\Models\SuppliersQuotation;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 
 class SupplierController extends Controller
@@ -23,8 +26,14 @@ class SupplierController extends Controller
     {
         //
         $suppliers = Supplier::all();
+        foreach ($suppliers as $supplier) {
+            # code...
+            $rms = $supplier->sg_materials;
+            $supplier->rm_count = $rms->count();
+        }
         $names = Supplier::select('company_name')->get();
-        return view('modules.buying.supplier', ['suppliers' => $suppliers, 'names' => $names]);
+        $materials = ManufacturingMaterials::all();
+        return view('modules.buying.supplier', ['suppliers' => $suppliers, 'names' => $names, 'materials' => $materials]);
     }
 
     /**
@@ -61,9 +70,9 @@ class SupplierController extends Controller
 
             $data->company_name = $form_data['supplier_name'];
             $data->supplier_group = $form_data['supplier_group'];
-            if(isset($form_data['supplier_contact'])) {
+            if (isset($form_data['supplier_contact'])) {
                 $data->contact_name = $form_data['supplier_contact'];
-            } 
+            }
             $data->phone_number = $form_data['supplier_phone'];
             $data->supplier_email = $form_data['supplier_email'];
             $data->supplier_address = $form_data['supplier_address'];
@@ -74,22 +83,44 @@ class SupplierController extends Controller
         }
     }
 
-    public function getSupplier($supplier_id) {
+    public function getSupplier($supplier_id)
+    {
         return ['supplier' => Supplier::where('supplier_id', $supplier_id)->first()];
     }
 
-    public function getSupplierData() {
+    public function getSupplierData()
+    {
         $suppliers = Supplier::all();
+        foreach ($suppliers as $supplier) {
+            # code...
+            $rms = $supplier->sg_materials;
+            $supplier->rm_count = $rms->count();
+        }
         return response()->json(['suppliers' => $suppliers]);
     }
 
-    public function filterByName($name) {
-        $suppliers = Supplier::where('company_name', 'LIKE', "%".$name."%")->get();
+    public function filterByName($name)
+    {
+        $suppliers = Supplier::where('company_name', 'LIKE', "%" . $name . "%")->get();
+        foreach ($suppliers as $supplier) {
+            # code...
+            $rms = $supplier->sg_materials;
+            $supplier->rm_count = $rms->count();
+        }
         return response()->json(['suppliers' => $suppliers]);
     }
 
-    public function filterBySupplierGroup($supplier_group) {
-        $suppliers = Supplier::where('supplier_group', 'LIKE', "%".$supplier_group."%")->get();
+    public function filterBySupplierGroup($item_code)
+    {
+        $suppliers = DB::table('suppliers')
+            ->join('supplier_group', 'supplier_group.supplier_id', '=', 'suppliers.supplier_id')
+            ->where('supplier_group.item_code', '=', $item_code)
+            ->get();
+        foreach ($suppliers as $supplier) {
+            # code...
+            $rms = Supplier::find($supplier->id)->first()->sg_materials;
+            $supplier->rm_count = $rms->count();
+        }
         return response()->json(['suppliers' => $suppliers]);
     }
 
@@ -107,24 +138,34 @@ class SupplierController extends Controller
         $counts = array();
         $counts['sq_count'] = SuppliersQuotation::where('supplier_id', $supplier->supplier_id)->get()->count();
         $counts['rq_count'] = RequestQuotationSuppliers::where('supplier_id', $supplier->supplier_id)->get()->count();
-        $mp = MaterialPurchased::where('items_list_purchased', 'LIKE', "%". $supplier->supplier_id ."%")
-                                ->where('mp_status', '=', 'To Receive and Bill')->get();
+        $mp = MaterialPurchased::where('items_list_purchased', 'LIKE', "%" . $supplier->supplier_id . "%")
+            ->where('mp_status', '=', 'To Receive and Bill')->get();
         $counts['po_count'] = $mp->count();
         $pr_count = 0;
         $pi_count = 0;
         foreach ($mp as $record) {
             $pr = $record->receipt;
-            if($pr !== null) {
+            if ($pr !== null) {
                 $pr_count++;
-                if($pr->invoice !== null) $pi_count++;
+                if ($pr->invoice !== null) $pi_count++;
             }
         }
         $counts['pr_count'] = $pr_count;
         $counts['pi_count'] = $pi_count;
 
+        $supplier_mats = $supplier->sg_materials;
+        foreach ($supplier_mats as $rm) {
+            # code...
+            $rm_rate = MPRecord::where('item_code', $rm->item_code)->where('supplier_id', $rm->supplier_id)->first();
+            if (is_null($rm_rate)) {
+                $rm->rate = 0;
+            } else $rm->rate = $rm_rate->rate;
+            $rm->item = ManufacturingMaterials::where('item_code', $rm->item_code)->first();
+        } 
+
         //echo dd(DB::getQueryLog());
 
-        return view('modules.buying.supplierInfo', ['supplier' => $supplier, 'counts' => $counts]);
+        return view('modules.buying.supplierInfo', ['supplier' => $supplier, 'counts' => $counts, 'material_data' => $supplier_mats]);
     }
 
     /**
@@ -155,9 +196,9 @@ class SupplierController extends Controller
 
             $data->company_name = $form_data['supplier_name'];
             $data->supplier_group = $form_data['supplier_group'];
-            if(isset($form_data['supplier_contact'])) {
+            if (isset($form_data['supplier_contact'])) {
                 $data->contact_name = $form_data['supplier_contact'];
-            } 
+            }
             $data->contact_name = $form_data['supplier_contact'];
             $data->phone_number = $form_data['supplier_phone'];
             $data->supplier_email = $form_data['supplier_email'];

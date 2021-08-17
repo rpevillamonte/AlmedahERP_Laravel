@@ -116,6 +116,7 @@
                                 value="{{ $supplier['phone_number'] }}" class="form-control" placeholder="+63">
                         </div>
                         <div class="col-6">
+                            {{--
                             <label for="supplier_group">Supplier Group</label>
                             <select name="supplier_group" id="supplier_group" class="form-control">
                                 <option value="{{ $supplier['supplier_group'] }}" selected hidden>
@@ -125,6 +126,7 @@
                                 <option value="Hardware">Hardware</option>
                             </select>
                             <br>
+                            --}}
                             <label for="supplier_email">E-mail Address</label>
                             <input type="email" id="supplier_email" name="supplier_email" class="form-control"
                                 value="{{ $supplier['supplier_email'] }}">
@@ -135,6 +137,45 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header" id="heading2">
+            <h2 class="mb-0">
+                <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
+                    data-target="#supplierRMData" aria-expanded="false">
+                    RAW MATERIALS
+                </button>
+            </h2>
+        </div>
+        <div id="supplierRMData" class="collapse" aria-labelledby="heading2">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <label class=" text-nowrap align-middle">Item Pricing</label>
+                        <table class="table border-bottom table-hover table-bordered" id="itemsFromReceipt">
+                            <thead class="border-top border-bottom bg-light">
+                                <tr class="text-muted">
+                                    <td>Item Code</td>
+                                    <td>Item Name</td>
+                                    <td>Rate</td>
+                                </tr>
+                            </thead>
+                            <tbody class="" id="supplierMats">
+                                @foreach ($material_data as $item)
+                                    <td>{{ $item->item_code }}</td>
+                                    <td>{{ $item->item->item_name }}</td>
+                                    <td>{{ $item->rate }}</td>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <td colspan="5" rowspan="2">
+                                </td>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

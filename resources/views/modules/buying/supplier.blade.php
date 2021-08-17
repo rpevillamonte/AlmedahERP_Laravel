@@ -53,12 +53,11 @@
                 <div class="col-4">
                     <div class="form-group">
                         <select name="sgroupSelect" id="sgroupSelect" class="form-control supplier-search">
-                            <option value="None" selected>Search by Supplier Group</option>
-                            <option value="Raw Material">Raw Material</option>
-                            <option value="Hardware">Hardware</option>
-                            <option value="Electrical">Electrical</option>
+                            <option value="None" selected data-subtext="All Suppliers">Search by Raw Material</option>
+                            @foreach ($materials as $rm)
+                                <option value="{{ $rm->item_code }}" data-subtext="{{ $rm->item_code }}">{{ $rm->item_name }}</option>
+                            @endforeach
                         </select>
-                        {{--<input type="text" class="form-control" placeholder="Supplier Group">--}}
                     </div>
                 </div>
             </div>
@@ -91,7 +90,7 @@
                         <td>Contact Name</td>
                         <td>Phone Number</td>
                         <td>Supplier Address</td>
-                        <td>Supplier Group</td>
+                        <td># of Raw Materials</td>
                     </tr>
                 </thead>
                 <tbody class="">
@@ -109,7 +108,7 @@
                             <td class="text-black-50">{{ $supplier->contact_name }}</td>
                             <td class="text-black-50">{{ $supplier->phone_number }}</td>
                             <td class="text-black-50">{{ $supplier->supplier_address }}</td>
-                            <td class="text-black-50">{{ $supplier->supplier_group }}</td>
+                            <td class="text-black-50">{{ $supplier->rm_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>

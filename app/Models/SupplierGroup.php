@@ -14,4 +14,12 @@ class SupplierGroup extends Model
         'item_code'
     ];
     public $timestamps = false;
+
+    public function raw_material(){
+        return $this->belongsTo(ManufacturingMaterials::class, 'item_code', 'item_code');
+    }
+
+    public function supplier(){
+        return $this->belongsTo(Supplier::class, 'supplier_id', 'supplier_id');
+    }
 }
