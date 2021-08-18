@@ -61,6 +61,10 @@ Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
+Route::get('/login', function() {
+    return view('modules.login.login');
+});
+
 /*NOTIFICATION ROUTES */
 Route::get('/notification', [NotificationLogsController::class, 'get_notifications'])->name('get_notifications');
 
