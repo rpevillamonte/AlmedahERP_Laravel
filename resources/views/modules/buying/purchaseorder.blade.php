@@ -178,6 +178,7 @@
                     }
                     url = url + `/${$(this).val()}`;
                 }
+                if(url === '/') return;
                 //$(`.po-datatable-search:not(#${id})`).val("None").selectpicker('refresh');
                 $.ajax({
                     type: 'GET',
@@ -202,7 +203,6 @@
                                     item.purchase_date,
                                     `₱ ${price_string}`
                                 ]);
-                                console.log('True');
                             }
                         }
                         tbl.draw();

@@ -32,6 +32,10 @@ class Supplier extends Model
             );
     }
 
+    public function sg_materials() {
+        return $this->hasMany(SupplierGroup::class, 'supplier_id', 'supplier_id');
+    }
+
     public function mats_sold(){
         return $this
             ->hasManyThrough(

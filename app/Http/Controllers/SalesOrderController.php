@@ -14,6 +14,8 @@ use App\Models\MaterialPurchased;
 use App\Models\payment_logs;
 use App\Models\MaterialRequest;
 use App\Models\ordered_products;
+use App\Models\warranty;
+use App\Models\serial_numbers;
 use Illuminate\Support\Carbon;
 use DB;
 use \stdClass;
@@ -249,6 +251,30 @@ class SalesOrderController extends Controller
                     $prod->stock_unit = 0;
                 }
                 $prod->save();
+
+                // Makes a serial number for each product purchased
+                // @TODO Make warranty individually
+                for ($i=0; $i < $order->quantity_purchased; $i++) {
+
+                    $warranty = new warranty();
+                    $warranty->save();
+                    $warranty = warranty::find($warranty->id);
+                    $warranty->warranty_id = 'WTY-'. strval($warranty->id);
+                    $warranty->delivery_id = $warranty->id;
+                    $warranty->warranty_period = $prod->warranty_days;
+                    $warranty->warranty_end_date = Carbon::now()->addDays( (int)$prod->warranty_days); #Adds current date to warranty days
+                    
+                    $warranty->save();
+
+                    $sn = new serial_numbers();
+                    $sn->save();
+                    $sn = serial_numbers::find($sn->id);
+                    $sn->serial_no = $order->product_code . '-SN-' . strval($sn->id) ;
+                    $sn->product_code = $order->product_code;
+                    $sn->warranty_id = $warranty->id;
+                    $sn->sales_id = $data->id;
+                    $sn->save();
+                }
             }
 
             $work_order_ids = array();

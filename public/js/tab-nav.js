@@ -1515,8 +1515,8 @@ function newrepairrequest() {
         $("#contentRepair").load("/newrepairrequest");
     });
 }
-function repairinfo() {
+function repairinfo(id) {
     $(document).ready(function () {
-        $("#contentRepair").load("/repairinfo");
+        $("#contentRepair").load("/repairinfo/"+id);
     });
 }

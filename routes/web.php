@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
-
+use App\Http\Controllers\repairController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,8 +85,7 @@ Route::get('/address', function() {
 
 /**BOM ROUTES*/
 Route::resource('/bom', BOMController::class);
-Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
-Route::get('/get-component/{component_code}', [BOMController::class, 'getComponent']);
+Route::get('/get-item/{item_type}/{value}', [BOMController::class, 'getItem']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -146,7 +145,7 @@ Route::get('/hr', function () {
 });
 
 Route::get('/employee', [EmployeeController::class, 'index']);
-
+Route::get('/get-employee/{id}', [EmployeeController::class, 'getEmployee']);
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
 Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
 Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
@@ -496,14 +495,20 @@ Route::get('/loadStockEntry', function () {
     return view('modules.manufacturing.stockentry');
 });
 
+Route::get('/stocktracing', function () {
+    return view('modules.stock.StockTracing');
+});
+
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
+Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
 Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
-Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filterBySupplierGroup']);
+Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/
 Route::resource('/suppliergroup', SupplierGroupController::class);
+Route::get('/sg-get-item/{material_id}', [SupplierGroupController::class, 'getRawMat']);
 Route::get('/newsuppliergrouptable', function() {
     return view('modules.NewUI.NewSupplierGrpTable');
 });
@@ -575,15 +580,15 @@ Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderContro
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**REPAIR ROUTES*/
-Route::get('/repair', function () {
-    return view('modules.manufacturing.repair');
-});
-Route::get('/newrepairrequest', function () {
-    return view('modules.manufacturing.newrepairrequest');
-});
-Route::get('/repairinfo', function () {
-    return view('modules.manufacturing.repairinfo');
-});
+Route::get('/repair', [repairController::class, 'index']);
+Route::get('/newrepairrequest', [repairController::class, 'createIndex']);
+
+Route::post('/getSerials', [repairController::class, 'getSerials']);
+Route::post('/getSerialWithWarranty', [repairController::class, 'getSerialWithWarranty']);
+Route::post('/getCustomerDetails', [repairController::class, 'getCustomerDetails']);
+Route::post('/createRepair', [repairController::class, 'store']);
+Route::get('/repairinfo/{id}', [repairController::class, 'viewEdit']);
+Route::patch('/editRepairReq/{id}', [repairController::class, 'update']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

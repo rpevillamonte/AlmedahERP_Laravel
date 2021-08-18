@@ -110,6 +110,7 @@
         $('#attribute').selectpicker('refresh');
         $('#materials').val(null);
         $('#materials').selectpicker('refresh');
+        $('#warranty_days').val(null);
         $('[name="product_category"]').val("none"); 
         $('[name="procurement_method"]').val("none");
         // Changing the input type to reset the file list
@@ -181,7 +182,7 @@
         $('#manufacturing_date').val(product['manufacturing_date']);
         $('#product_pulled_off_market').val(product['product_pulled_off_market']);
         $('#saleSupplyMethod').val(product['sale_supply_method'])
-        
+        $('#warranty_days').val(product['warranty_days'])
         $('#reorderLevel').val(product['reorder_level']);
         $('#reorderQty').val(product['reorder_qty']);
         if(product['prototype'] == 1){
@@ -693,6 +694,13 @@
                                 <div class="col">
                                     <label for="product_pulled_off_market">Product Pulled off Market</label>
                                     <input type="date" name="product_pulled_off_market" id="product_pulled_off_market" class="form-control">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="Warranty">Warranty in Days</label>
+                                    <input type="number" name="warranty_days" id="warranty_days" class="form-control" min="0" oninput="validity.valid||(value='');">
                                 </div>
                             </div>
                         </div>
