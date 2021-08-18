@@ -77,7 +77,7 @@ body {
      <div class="row mx-auto">
         <img src="images/login_logo.png" class="mx-auto shadow" style="max-width:30%;">
       </div>
-      <div class="card shadow mx-auto" style="max-width: 80%; background-image: url('images/img_login_new.jpg'); background-size: cover;">
+      <div class="card shadow mx-auto" style="max-width: 80%; background-image: url('images/img_login.jpg'); background-size: cover;">
         <div class="row">
           <div class="col-sm-7">
             <!-- <img src="images/img_login.png" class="card-img-top mx-auto"> -->
