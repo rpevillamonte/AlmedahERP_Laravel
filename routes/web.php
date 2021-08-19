@@ -499,6 +499,17 @@ Route::get('/stocktracing', function () {
     return view('modules.stock.StockTracing');
 });
 
+
+// Team Members Route
+Route::get('/teammembers', function () {
+    return view('modules.teamsAndRoles.TeamMembers');
+});
+
+// User Role Routes
+Route::get('/userrole', function () {
+    return view('modules.teamsAndRoles.UserRole');
+});
+
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
