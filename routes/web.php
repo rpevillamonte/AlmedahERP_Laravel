@@ -498,12 +498,22 @@ Route::get('/stocktracing', function () {
 
 // Team Members Route
 Route::get('/teammembers', function () {
-    return view('modules.teamsAndRoles.TeamMembers');
+    return view('modules.userManagement.TeamMembers.TeamMembers');
 });
 
-// User Role Routes
-Route::get('/userrole', function () {
-    return view('modules.teamsAndRoles.UserRole');
+// User Role Route
+Route::get('/roles', function () {
+    return view('modules.userManagement.RoleManagement.UserRole');
+});
+
+// Employment Type Route
+Route::get('/employmenttype', function () {
+    return view('modules.userManagement.EmploymentType.EmploymentType');
+});
+
+// Departments Route
+Route::get('/departments', function () {
+    return view('modules.userManagement.Departments.Departments');
 });
 
 /**SUPPLIER ROUTES */

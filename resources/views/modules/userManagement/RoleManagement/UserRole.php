@@ -7,16 +7,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        More
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                    </ul>
-                </li>
+
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="">Refresh</button>
@@ -39,10 +30,12 @@
     </thead>
     <tbody>
         <tr>
-            <td class="text-bold"><a href="">Admin Role</a></td>
+            <td class="text-bold"><a href="#editRoleModal" data-toggle="modal" data-target="#editRoleModal">Admin
+                    Role</a></td>
         </tr>
         <tr>
-            <td class="text-bold"><a href="">Manager Role</a></td>
+            <td class="text-bold"><a href="#editRoleModal" data-toggle="modal" data-target="#editRoleModal">Manager
+                    Role</a></td>
         </tr>
     </tbody>
 </table>
@@ -78,6 +71,35 @@
             </div>
             <div class="modal-footer d-flex">
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal New Record-->
+<div class="modal fade" id="editRoleModal" tabindex="-1" role="dialog" aria-labelledby="newTracePromptTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit Role</h5>
+                <div class="d-flex flex-row-reverse">
+                    <button type="submit" class="btn btn-primary m-1" data-target="#editRoleModal" id="saveRole">
+                        <a class="" href="#" style="text-decoration: none;color:white">
+                            Save
+                        </a>
+                    </button>
+                    <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#editRoleModal"
+                        id="closeTracePrompt">
+                        Delete <span class="fas fa-trash"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body p-5">
+                <?php include 'editRole.php' ?>
+            </div>
+            <div class="modal-footer d-flex">
+
             </div>
         </div>
     </div>
