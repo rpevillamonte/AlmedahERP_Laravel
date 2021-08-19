@@ -19,8 +19,8 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
+                        onclick="" id="URRefresh">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newRoleFormPrompt">
@@ -56,7 +56,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add New Role</h5>
                 <div class="d-flex flex-row-reverse">
-                    <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newRoleFormPrompt" id="saveRole">
+                    <button type="button" class="btn btn-primary m-1" data-target="#newRoleFormPrompt" id="saveRole">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>

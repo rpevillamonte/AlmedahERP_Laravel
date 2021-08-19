@@ -42,6 +42,10 @@ $("#saveRole").click(function () {
     $("#roleForm").submit();
 });
 
+$("#URRefresh").click(function () { 
+    $("#divMain").load('/userrole');
+});
+
 $("#roleForm").submit(function (e) {
     $.ajaxSetup({
         headers: {
@@ -59,6 +63,7 @@ $("#roleForm").submit(function (e) {
         processData: false,
         success: function (response) {
             resetRoleForm();
+            $("#newRoleFormPrompt").modal('hide');
         }
     });
     
