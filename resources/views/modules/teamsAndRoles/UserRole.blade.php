@@ -1,3 +1,4 @@
+<script src="{{ asset('js/userrole.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">User Role</h2>
@@ -39,20 +40,13 @@
     </thead>
     <tbody>
         <tr>
-            <td class="text-bold"><a href="">Admin Role</a></td>
+            <td class="text-bold"><a href="#">Admin Role</a></td>
         </tr>
         <tr>
-            <td class="text-bold"><a href="">Manager Role</a></td>
+            <td class="text-bold"><a href="#">Manager Role</a></td>
         </tr>
     </tbody>
 </table>
-
-
-<script>
-    $(document).ready(function () {
-        x = $('#UserRoleTable').DataTable();
-    });
-</script>
 
 <!-- Modal New Record-->
 <div class="modal fade" id="newRoleFormPrompt" tabindex="-1" role="dialog" aria-labelledby="newTracePromptTitle"
@@ -62,19 +56,19 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Add New Role</h5>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newRoleFormPrompt" id="saveRole">
+                    <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newRoleFormPrompt" id="saveRole">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
-                        data-target="#newRoleFormPrompt" id="closeTracePrompt">
+                        data-target="#newRoleFormPrompt" id="closeRolePrompt">
                         Close
                     </button>
                 </div>
             </div>
             <div class="modal-body p-5">
-                <?php include 'newRoleForm.php' ?>
+                @include('modules.teamsAndRoles.newRoleForm')
             </div>
             <div class="modal-footer d-flex">
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>

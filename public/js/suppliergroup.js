@@ -63,26 +63,35 @@ $("#sgMasterChk").change(function () {
     chk.prop('checked', checked);
     var tr = chk.parent('th').parent('tr');
     if(checked) {
-        tr.addClass('.sg-x-item');
+        tr.attr('class', '.sg-x-item');
         $("#sgDeleteRow").show();
     }
     else {
-        tr.removeClass('.sg-x-item');
-        $("#sgDeleteRow").hide()
+        tr.attr('class', '');
+        $("#sgDeleteRow").hide();
     };
 });
 
 $("#sgDeleteRow").click(function () { 
-    $(".sg-x-item").remove();
+    $("#sgRawMatTbl tbody tr").each(function() {
+        if($(this).hasClass('.sg-x-item')) {
+            $(this).remove();
+        }
+    });
 });
 
 function sgChkFunction(){
     $(".sg-check").change(function(){
         var tr = $(this).parent('th').parent('tr');
         if(tr.hasClass('.sg-x-item')){
-            tr.removeClass('.sg-x-item');
+            tr.attr('class', '');
         } else {
-            tr.addClass('.sg-x-item');
+            tr.attr('class', '.sg-x-item');
+        }
+        if ($('.sg-check:checkbox:checked').length > 0) {
+            $("#sgDeleteRow").show();
+        } else {
+            $("#sgDeleteRow").hide();
         }
     });
 }

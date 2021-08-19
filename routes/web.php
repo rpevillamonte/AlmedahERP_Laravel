@@ -36,6 +36,7 @@ use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
 use App\Http\Controllers\repairController;
+use App\Http\Controllers\UserRoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -506,9 +507,7 @@ Route::get('/teammembers', function () {
 });
 
 // User Role Routes
-Route::get('/userrole', function () {
-    return view('modules.teamsAndRoles.UserRole');
-});
+Route::resource('/userrole', UserRoleController::class);
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
