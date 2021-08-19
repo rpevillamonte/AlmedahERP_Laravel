@@ -21,10 +21,10 @@ function onChangeFunction() {
 // Function for adding rows in the currency and price list
 $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
-    let nextRow = ($("#emptyRow").html()) ? 1 :("#itemTable tbody tr").length + 1;
+    let nextRow = ($("#emptyRow").html()) ? 1 : $("#itemTable tbody tr").length + 1;
     let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
     if($("#emptyRow").html()) {
-        $("#emptyRow").remove();
+        $("#emptyRow").parent('tr').remove();
     }
     tbl.append(`
     <tr id="item-${nextRow}">
@@ -60,12 +60,12 @@ $("#rowBtn").on('click', function () {
 
 // Function for deleting rows in currency and price list
 $("#deleteRow").click(function () {
-    if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable tbody tr").length) {
+    if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable-content tr").length) {
         //When all table rows are removed, leave one new field 
         $("#itemTable tbody tr").remove();
         $("#itemTable tbody").append(
             `
-            <tr id="item-1">
+            <tr>
                 <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
             </tr> 
             `

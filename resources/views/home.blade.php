@@ -227,6 +227,33 @@
                         <span class="submenu-icon ml-auto"></span>
                     </div>
                 </a>
+
+                {{-- Teams and Roles Menu --}}
+
+                <a href="#submenuTeamsAndRoles" data-toggle="collapse" aria-expanded="false"
+                    class="bg-dark  list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-start align-items-center">
+                        <span class="fas fa-users-cog fa-fw mr-3 menu"></span>
+                        <span class="menu-collapsed align-middle smaller menu">Teams and Roles</span>
+                        <span class="submenu-icon ml-auto"></span>
+                    </div>
+                </a>
+                <!-- End of Menu Item Manufacturing -->
+                <!-- Submenu Manufacturing content -->
+                <div id='submenuTeamsAndRoles' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Team Members</span>
+                    </a>
+                </div>
+                <div id='submenuTeamsAndRoles' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">User Role</span>
+                    </a>
+                </div>
+
+                {{-- End of Teams and Roles --}}
                 <!-- End of dashboard -->
                 <!-- Menu Item Messages -->
                 <a href="#submenuMessages" data-toggle="collapse" aria-expanded="false"
@@ -513,6 +540,9 @@
                     </a>
                     <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Stock Moves</span>
+                    </a>
+                    <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Stock Tracing</span>
                     </a>
                     
 

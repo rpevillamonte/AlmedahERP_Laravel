@@ -42,11 +42,6 @@ Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
-/**BOM ROUTES */
-Route::get('/bom', [BOMController::class, 'index']);
-Route::get('/newBOM', function() { 
-    return view('modules.manufacturing.bomsubModules.newbom');
-});
 Route::get('/subNewBOM', function() {
     return view('modules.newbom');
 });
@@ -98,7 +93,7 @@ Route::get('/hr', function() {
 });
 Route::get('/employee', [EmployeeController::class, 'index']);
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
-Route::get('/gete-employee/{id}', [EmployeeController::class, 'getEmployee']);
+Route::get('/get-employee/{id}', [EmployeeController::class, 'getEmployee']);
 Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
 Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
 Route::put('/update-employee-status/{id}/{stat}', [EmployeeController::class, 'toggle']);
