@@ -503,11 +503,21 @@ Route::get('/stocktracing', function () {
 
 // Team Members Route
 Route::get('/teammembers', function () {
-    return view('modules.teamsAndRoles.TeamMembers');
+    return view('modules.userManagement.TeamMembers.TeamMembers');
 });
 
 // User Role Routes
-Route::resource('/userrole', UserRoleController::class);
+Route::resource('/role', UserRoleController::class);
+
+// Employment Type Route
+Route::get('/employmenttype', function () {
+    return view('modules.userManagement.EmploymentType.EmploymentType');
+});
+
+// Departments Route
+Route::get('/departments', function () {
+    return view('modules.userManagement.Departments.Departments');
+});
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);

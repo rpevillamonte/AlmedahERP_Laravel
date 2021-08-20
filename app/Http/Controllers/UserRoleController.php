@@ -16,7 +16,7 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        return view('modules.teamsAndRoles.UserRole');
+        return view('modules.userManagement.RoleManagement.UserRole');
     }
 
     /**

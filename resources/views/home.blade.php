@@ -228,32 +228,43 @@
                     </div>
                 </a>
 
-                {{-- Teams and Roles Menu --}}
-
-                <a href="#submenuTeamsAndRoles" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark  list-group-item list-group-item-action">
+                {{-- User management Menu --}}
+                <a href="#submenuUsermanageMent" data-toggle="collapse" aria-expanded="false"
+                    class="bg-dark  list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-start align-items-center">
                         <span class="fas fa-users-cog fa-fw mr-3 menu"></span>
-                        <span class="menu-collapsed align-middle smaller menu">Teams and Roles</span>
+                        <span class="menu-collapsed align-middle smaller">User Management</span>
                         <span class="submenu-icon ml-auto"></span>
                     </div>
                 </a>
+
                 <!-- End of Menu Item Manufacturing -->
                 <!-- Submenu Manufacturing content -->
-                <div id='submenuTeamsAndRoles' class="collapse sidebar-submenu">
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Team Members</span>
                     </a>
                 </div>
-                <div id='submenuTeamsAndRoles' class="collapse sidebar-submenu">
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
                         class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">User Role</span>
+                        <span class="menu-collapsed align-middle">Roles</span>
                     </a>
                 </div>
-
-                {{-- End of Teams and Roles --}}
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Departments</span>
+                    </a>
+                </div>
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Employment Type</span>
+                    </a>
+                </div>
+                {{-- End of User Management --}}
                 <!-- End of dashboard -->
                 <!-- Menu Item Messages -->
                 <a href="#submenuMessages" data-toggle="collapse" aria-expanded="false"
