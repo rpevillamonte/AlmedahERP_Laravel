@@ -16,7 +16,8 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        return view('modules.userManagement.RoleManagement.UserRole');
+        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::all()]);
+    
     }
 
     /**
@@ -28,6 +29,12 @@ class UserRoleController extends Controller
     {
         //
     }
+
+    public function getRole($id) {
+        $role = UserRole::find($id);
+        $role->permissions = $role->permissions(); 
+        return response()->json(['role' => $role]);
+    } 
 
     /**
      * Store a newly created resource in storage.

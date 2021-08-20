@@ -23,7 +23,43 @@ $('.user-view, .user-create, .user-edit, .user-delete').change(function () {
     permissions[key][elem_func] = value;
 });
 
-$("#closeRolePrompt").click(function () { 
+$(".role-entity").click(function() {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    var id = $(this).attr('value');
+    $.ajax({
+        type: "GET",
+        url: `/get-role/${id}`,
+        data: id,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            var role = response.role;
+            console.log(role);
+            $("#roleEditName").val(role.role_name);
+            permissions = role.permissions;
+            for (let key in permissions) {
+                console.log(key);
+                var tr = $(`#roleEdit${key}`);
+                var role_prop = permissions[key];
+                tr.find('.edit-user-view').prop('checked', getCheckStatus(role_prop.view));
+                tr.find('.edit-user-create').prop('checked', getCheckStatus(role_prop.create));
+                tr.find('.edit-user-edit').prop('checked', getCheckStatus(role_prop.edit));
+                tr.find('.edit-user-delete').prop('checked', getCheckStatus(role_prop.delete));
+            }
+        }
+    });
+});
+
+function getCheckStatus(value) {
+    return (value === 1) ? true : false; 
+}
+
+$("#closeRolePrompt, #closeRoleEditPrompt").click(function () { 
     resetRoleForm();
 });
 
@@ -36,6 +72,7 @@ function resetRoleForm() {
         permissions[key]['edit'] = 0;
         permissions[key]['delete'] = 0;
     }
+    $("#roleNotif").html(null);
 }
 
 $("#saveRole").click(function () { 

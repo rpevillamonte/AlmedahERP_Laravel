@@ -507,7 +507,8 @@ Route::get('/teammembers', function () {
 });
 
 // User Role Routes
-Route::resource('/role', UserRoleController::class);
+Route::resource('/roles', UserRoleController::class);
+Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
 
 // Employment Type Route
 Route::get('/employmenttype', function () {

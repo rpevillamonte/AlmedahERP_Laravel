@@ -30,14 +30,20 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($roles as $role)
         <tr>
-            <td class="text-bold"><a href="#editRoleModal" data-toggle="modal" data-target="#editRoleModal">Admin
-                    Role</a></td>
+            <td class="text-bold">
+                <a href="#editRoleModal" data-toggle="modal" value="{{ $role->id }}" class="role-entity" data-target="#editRoleModal">
+                    {{ $role->role_name }}
+                </a>
+            </td>
         </tr>
+        @endforeach
+        {{--
         <tr>
             <td class="text-bold"><a href="#editRoleModal" data-toggle="modal" data-target="#editRoleModal">Manager
                     Role</a></td>
-        </tr>
+        </tr>--}}
     </tbody>
 </table>
 
@@ -64,7 +70,7 @@
                 @include('modules.userManagement.RoleManagement.newRoleForm')
             </div>
             <div class="modal-footer d-flex">
-                <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
+                <span id="roleNotif" class="mr-auto text-danger"></span>
             </div>
         </div>
     </div>
@@ -78,7 +84,11 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Edit Role</h5>
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#editRoleModal" id="saveRole">
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                        data-target="#editRoleModal" id="closeRoleEditPrompt">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary m-1" data-target="#editRoleModal" id="saveRole">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
@@ -93,7 +103,6 @@
                 @include('modules.userManagement.RoleManagement.editRole')
             </div>
             <div class="modal-footer d-flex">
-
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-<form action="{{ route('userrole.store') }}" method="POST" id="roleForm">
+<form action="{{ route('roles.store') }}" method="POST" id="roleForm">
     <div class="row">
         <div class="col-5">
             <label class=" text-nowrap align-middle">
