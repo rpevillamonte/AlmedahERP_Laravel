@@ -63,7 +63,7 @@
 
             </div>
             <div class="modal-body">
-                <?php include 'newDepartment.php' ?>
+                @include('modules.userManagement.Departments.newDepartment')
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
@@ -92,7 +92,7 @@
 
             </div>
             <div class="modal-body">
-                <?php include 'editDepartment.php' ?>
+                @include('modules.userManagement.Departments.editDepartment')
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">

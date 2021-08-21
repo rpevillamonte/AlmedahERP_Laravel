@@ -31,6 +31,7 @@ use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -516,9 +517,7 @@ Route::get('/employmenttype', function () {
 });
 
 // Departments Route
-Route::get('/departments', function () {
-    return view('modules.userManagement.Departments.Departments');
-});
+Route::resource('/departments', DepartmentController::class);
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
