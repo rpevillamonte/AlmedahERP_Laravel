@@ -88,15 +88,19 @@
                         data-target="#editRoleModal" id="closeRoleEditPrompt">
                         Close
                     </button>
-                    <button type="button" class="btn btn-primary m-1" data-target="#editRoleModal" id="saveRole">
+                    <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#editRoleModal" id="updateRole">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
-                    <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#editRoleModal"
-                        id="closeTracePrompt">
-                        Delete <span class="fas fa-trash"></span>
-                    </button>
+                    <form method="POST" id="deleteRoleForm">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#editRoleModal"
+                        id="deleteRole">
+                            Delete <span class="fas fa-trash"></span>
+                        </button>
+                    </form>
                 </div>
             </div>
             <div class="modal-body p-5">

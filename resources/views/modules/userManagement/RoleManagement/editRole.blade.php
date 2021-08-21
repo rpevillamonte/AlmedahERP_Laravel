@@ -1,4 +1,4 @@
-<form action="{{ route('roles.store') }}" method="POST" id="roleEditForm">
+<form method="POST" id="roleEditForm">
   @csrf
   @method('PATCH')
     <div class="row">
@@ -7,7 +7,8 @@
                 Role Name
             </label>
             <div class="d-flex">
-                <input type="text" class="form-input form-control" id="roleEditName" name="roleName">
+                <input type="text" class="form-input form-control" id="roleEditName" name="roleEditName">
+                <input type="text" name="hiddenRoleID" id="hiddenRoleID" hidden>
             </div>
         </div>
     </div>

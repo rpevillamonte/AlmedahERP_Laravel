@@ -13,12 +13,21 @@ $(document).ready(function () {
     }
 });
 
-$('.user-view, .user-create, .user-edit, .user-delete').change(function () { 
+$(
+    `.user-view, .user-create, .user-edit, .user-delete,
+    .edit-user-view, .edit-user-create, .edit-user-edit, .edit-user-delete`
+).change(function () { 
     var elem_class = $(this).attr('class');
-    var elem_func = elem_class.replace('user-', '');
+    var needle1 = 'edit-user-';
+    var needle2 = 'roleEdit';
+    if(elem_class.indexOf(needle1) === -1) {
+        needle1 = needle1.replace('edit-', '');
+        needle2 = needle2.replace('Edit', '');
+    }
+    var elem_func = elem_class.replace(needle1, '');
     var tr = $(this).parent('td').parent('tr');
     var tr_id = tr.attr('id');
-    var key = tr_id.replace('role', '');
+    var key = tr_id.replace(needle2, '');
     var value = $(this).prop('checked') == true ? 1 : 0;
     permissions[key][elem_func] = value;
 });
@@ -39,11 +48,10 @@ $(".role-entity").click(function() {
         processData: false,
         success: function (response) {
             var role = response.role;
-            console.log(role);
             $("#roleEditName").val(role.role_name);
+            $("#hiddenRoleID").val(role.id);
             permissions = role.permissions;
             for (let key in permissions) {
-                console.log(key);
                 var tr = $(`#roleEdit${key}`);
                 var role_prop = permissions[key];
                 tr.find('.edit-user-view').prop('checked', getCheckStatus(role_prop.view));
@@ -65,7 +73,9 @@ $("#closeRolePrompt, #closeRoleEditPrompt").click(function () {
 
 function resetRoleForm() {
     $('.user-view, .user-create, .user-edit, .user-delete').prop('checked', false);
+    $('.edit-user-view, .edit-user-create, .edit-user-edit, .edit-user-delete').prop('checked', false);
     $("#roleName").val(null);
+    $("#roleEditName").val(null);
     for(var key in permissions) {
         permissions[key]['view'] = 0;
         permissions[key]['create'] = 0;
@@ -79,8 +89,12 @@ $("#saveRole").click(function () {
     $("#roleForm").submit();
 });
 
+$("#updateRole").click(function () { 
+    $("#roleEditForm").submit();
+});
+
 $("#URRefresh").click(function () { 
-    $("#divMain").load('/userrole');
+    $("#contentRoles").load('/roles');
 });
 
 $("#roleForm").submit(function (e) {
@@ -100,7 +114,57 @@ $("#roleForm").submit(function (e) {
         processData: false,
         success: function (response) {
             resetRoleForm();
-            $("#newRoleFormPrompt").modal('hide');
+        }
+    });
+    
+    e.preventDefault();
+    return false;
+});
+
+$("#deleteRole").click(function () {
+    $("#deleteRoleForm").submit();
+});
+
+$("#deleteRoleForm").submit(function (e) { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    var id = $("#hiddenRoleID").val();
+    $.ajax({
+        type: "DELETE",
+        url: `/roles/${id}`,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log('deleted');
+        },
+    });
+    e.preventDefault();
+    return false;
+    
+});
+
+$("#roleEditForm").submit(function (e) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    var formData = new FormData(this);
+    var id = $("#hiddenRoleID").val();
+    formData.append('permissions', JSON.stringify(permissions));
+    $.ajax({
+        type: $(this).attr('method'),
+        url: `/roles/${id}`,
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            resetRoleForm();
         }
     });
     

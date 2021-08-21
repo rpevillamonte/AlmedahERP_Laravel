@@ -96,6 +96,19 @@ class UserRoleController extends Controller
     public function update(Request $request, $id)
     {
         //
+        try {
+
+            $form_data = $request->input();
+
+            $role = UserRole::find($id);
+            $role->role_name = $form_data['roleEditName'];
+            $role->description = 'sample_desc';
+            $role->permissions = $form_data['permissions'];
+    
+            $role->save();
+        } catch (Exception $e) {
+            return ['error' => $e];
+        } 
     }
 
     /**
@@ -107,5 +120,11 @@ class UserRoleController extends Controller
     public function destroy($id)
     {
         //
+        try{
+            $role = UserRole::find($id);
+            $role->delete();
+        } catch (Exception $e) {
+            return $e;
+        } 
     }
 }
