@@ -47,7 +47,7 @@ class UserRoleController extends Controller
         //
         try {
             $form_data = $request->input();
-            $last_role = UserRole::first();
+            $last_role = UserRole::orderby('id', 'desc')->first();
             $id = $last_role ? $last_role->id + 1 : 1;
             $role_id = "ROLE-";
             $role_id .= str_pad($id, 3, "0", STR_PAD_LEFT);

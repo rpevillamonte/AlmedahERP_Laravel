@@ -1,3 +1,4 @@
+<script src="{{ asset('js/departments.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Departments</h2>
@@ -45,13 +46,6 @@
         </tr>
     </tbody>
 </table>
-
-
-<script>
-    $(document).ready(function () {
-        x = $('#departmentsTable').DataTable();
-    });
-</script>
 
 <!-- Modal New Record-->
 <div class="modal fade" id="newDeptPrompt" tabindex="-1" role="dialog" aria-labelledby="newDeptPromptTitle"

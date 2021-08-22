@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
+use App\Models\Employee;
+use Exception;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -14,7 +17,9 @@ class DepartmentController extends Controller
     public function index()
     {
         //
-        return view('modules.userManagement.Departments.Departments');
+        return view('modules.userManagement.Departments.Departments',
+                    ['employees' => Employee::all(['employee_id', 'first_name', 'last_name'])]
+                    );
     }
 
     /**
@@ -36,6 +41,22 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         //
+        try{
+            $form_data = $request->input();
+            $dept = new Department();
+
+            $last_dept = Department::orderby('id', 'desc')->first();
+            $id = $last_dept ? $last_dept->id + 1 : 1;
+            $dept_id = 'DEPT-' . str_pad($id, 3, '0', STR_PAD_LEFT);
+            $dept->department_id = $dept_id;
+            $dept->department_name = $form_data['deptName'];
+            $dept->reports_to = $form_data['deptHead'];
+
+            $dept->save();
+        } catch (Exception $e) {
+            return $e;
+        }
+
     }
 
     /**

@@ -16,7 +16,7 @@
         Department Name
       </label>
       <div class="d-flex">
-        <input type="text" class="form-input form-control" id="deptName">
+        <input type="text" class="form-input form-control" name="deptName" id="deptName">
       </div>
     </div>
   </div>
@@ -27,7 +27,12 @@
         Department Head
       </label>
       <div class="d-flex">
-        <input type="text" class="form-input form-control" id="deptHead">
+        <select name="deptHead" class="form-control dept-select" data-live-search="true" id="deptHead">
+          <option value="non" data-subtext="None">No Selected Employee</option>
+          @foreach ($employees as $employee)
+              <option value="{{ $employee->employee_id }}" data-subtext="{{ $employee->employee_id }}">{{ $employee->last_name }}, {{ $employee->first_name }}</option>
+          @endforeach
+        </select>
       </div>
     </div>
   </div>

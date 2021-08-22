@@ -94,8 +94,12 @@ $("#updateRole").click(function () {
 });
 
 $("#URRefresh").click(function () { 
-    $("#contentRoles").load('/roles');
+    roleRefresh();
 });
+
+function roleRefresh() {
+    $("#contentRoles").load('/roles');
+}
 
 $("#roleForm").submit(function (e) {
     $.ajaxSetup({
