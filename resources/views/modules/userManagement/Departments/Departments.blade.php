@@ -9,8 +9,8 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
+                        id="deptRefresh">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newDeptPrompt">
@@ -31,19 +31,24 @@
         </tr>
     </thead>
     <tbody>
-
-        <tr>
-            <td class="text-bold"><a href="#editDeptPrompt" data-toggle="modal"
-                    data-target="#editDeptPrompt">DEPT-001</a></td>
-            <td>Department 1</td>
-            <td>Juan Dela Cruz</td>
-        </tr>
-        <tr>
+        @foreach ($departments as $department)
+            <tr>
+                <td class="text-bold">
+                    <a href="#editDeptPrompt" data-toggle="modal" data-target="#editDeptPrompt" class="dept-link"
+                        value="{{ $department->id }}">
+                        {{ $department->department_id }}
+                    </a>
+                </td>
+                <td>{{ $department->department_name }}</td>
+                <td>{{ $department->first_name }} {{ $department->last_name }}</td>
+            </tr>
+        @endforeach
+        {{-- <tr>
             <td class="text-bold"><a href="#editDeptPrompt" data-toggle="modal"
                     data-target="#editDeptPrompt">DEPT-002</a></td>
             <td>Department 2</td>
             <td>John Doe</td>
-        </tr>
+        </tr> --}}
     </tbody>
 </table>
 
@@ -61,13 +66,14 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newDeptPrompt" id="saveTrace1">
+                    <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#newDeptPrompt"
+                        id="saveNewDept">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
                     <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
-                        data-target="#newDeptPrompt" id="closeEmpTypePrompt">
+                        data-target="#newDeptPrompt" id="closeDeptCreate">
                         Close
                     </button>
                 </div>
@@ -90,14 +96,20 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#editDeptPrompt" id="saveTrace1">
+                    <button type="submit" class="btn btn-primary m-1" data-target="#editDeptPrompt" id="saveEditDept">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
-                    <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#editDeptPrompt"
-                        id="closeDeptPrompt">
-                        Delete <span class="fas fa-trash"></span>
+                    <form action="" id="deleteDeptForm" method="POST">
+                        <button type="button" class="btn btn-danger m-1" data-dismiss="modal"
+                            data-target="#editDeptPrompt" id="deleteDept">
+                            Delete <span class="fas fa-trash"></span>
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                        data-target="#newDeptPrompt" id="closeEditDept">
+                        Close
                     </button>
                 </div>
             </div>

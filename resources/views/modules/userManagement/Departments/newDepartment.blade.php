@@ -1,4 +1,4 @@
-<form action="" id="EmpTypeForm">
+<form action="{{ route('departments.store') }}" method="POST" id="EmpTypeForm">
   <div class="row">
     <div class="col-7">
       <label class=" text-nowrap align-middle">
