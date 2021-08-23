@@ -67,10 +67,9 @@
               <div class="d-flex">
                 <select name="Department" id="memberDept" class="form-control">
                   <option value="" selected disabled>Nothing Selected</option>
-                  <option value="Dept1">001: Dept 1</option>
-                  <option value="Dept1">002: Dept 2</option>
-                  <option value="Dept1">003: Dept 3</option>
-                  <option value="Dept1">004: Dept 4</option>
+                  @foreach ($departments as $department)
+                      <option value="{{ $department->department_id }}" data-subtext="{{ $department->department_id }}">{{ ucfirst($department->department_name) }}</option>
+                  @endforeach
                 </select>
               </div>
             </div>

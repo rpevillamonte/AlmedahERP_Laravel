@@ -38,7 +38,7 @@ use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
 use App\Http\Controllers\repairController;
 use App\Http\Controllers\UserRoleController;
-
+use App\Http\Controllers\TeamMembersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -503,9 +503,8 @@ Route::get('/stocktracing', function () {
 
 
 // Team Members Route
-Route::get('/teammembers', function () {
-    return view('modules.userManagement.TeamMembers.TeamMembers');
-});
+Route::get('/teammembers', [TeamMembersController::class, 'index']);
+
 
 // User Role Routes
 Route::resource('/roles', UserRoleController::class);

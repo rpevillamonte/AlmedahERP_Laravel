@@ -48,20 +48,25 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         //
-        try{
-            $form_data = $request->input();
+        $form_data = $request->input();
+        $dept_name = $form_data['deptName'];
+        $dept_head = $form_data['deptHead'];
+        $exists = Department::where('department_name', $dept_name)->first();
+
+        if($form_data['deptHead'] == 'non' || $exists){
+            return Response::json(['error' => 'Error msg'], 404);
+        }else{
+            
             $dept = new Department();
 
             $last_dept = Department::orderby('id', 'desc')->first();
             $id = $last_dept ? $last_dept->id + 1 : 1;
             $dept_id = 'DEPT-' . str_pad($id, 3, '0', STR_PAD_LEFT);
             $dept->department_id = $dept_id;
-            $dept->department_name = $form_data['deptName'];
-            $dept->reports_to = $form_data['deptHead'];
+            $dept->department_name = $dept_name;
+            $dept->reports_to = $dept_head;
 
             $dept->save();
-        } catch (Exception $e) {
-            return $e;
         }
 
     }
@@ -86,7 +91,7 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -98,7 +103,11 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $form_data = $request->input();
+
+        $dept_name = $form_data['deptEditHead'];
+        // $dept_head = $form_data['deptEditHead'];
+        return response($dept_name);
     }
 
     /**

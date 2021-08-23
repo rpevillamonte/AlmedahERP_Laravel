@@ -5,7 +5,7 @@
         Department ID
       </label>
       <div class="d-flex">
-        <input type="text" class="form-input form-control" id="deptID" disabled>
+        <input type="text" class="form-input form-control" id="deptID" value="DEPT-XXX" disabled>
       </div>
     </div>
   </div>
