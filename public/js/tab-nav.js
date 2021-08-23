@@ -1189,6 +1189,29 @@ function showItemsRet(trackingId) {
                 console.log("pass");
                 console.log(passValueArray);
             }
+
+            if (data["return_logs"]) {
+                let sorted_logs = JSON.parse(data["return_logs"]).sort(
+                    function (a, b) {
+                        return new Date(b.date) - new Date(a.date);
+                    }
+                );
+
+                sorted_logs.forEach((log, index) => {
+                    let date = log.date;
+                    $("#return_logs").append(
+                        `
+                    <div class="alert alert-secondary" role="alert">
+                      ` +
+                            log.message +
+                            `.
+                      <p class="card-text"><small class="text-muted">` +
+                            date +
+                            `</small></p>
+                    </div`
+                    );
+                });
+            }
         },
         error: function (data) {
             console.log("error");

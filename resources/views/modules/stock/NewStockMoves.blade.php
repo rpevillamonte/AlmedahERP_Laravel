@@ -632,8 +632,12 @@
                   selectedArrayForStations.push(valuesForStations);
                   selectedArrayForConditions.push(valuesForConditions);
                 });
+                
+                let sorted_logs = JSON.parse(data['transfer_logs']).sort(function(a, b){
+                  return new Date(b.date) - new Date(a.date);
+                });
 
-                JSON.parse(data['transfer_logs']).forEach((log,index) => {
+                sorted_logs.forEach((log,index) => {
                   let date = log.date;
                   $('#transfer_logs').append(`
                   <div class="alert alert-secondary" role="alert">
