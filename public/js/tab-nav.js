@@ -126,24 +126,6 @@ function loadTab(menu, moduleWithSpace) {
     $(`#tab${menu}`).tab("show");
 }
 
-function loadNewBOM() {
-    $(document).ready(function () {
-        $("#contentBOM").load("/newBOM");
-    });
-}
-
-function subloadNewBOM() {
-    $(document).ready(function () {
-        $("#contentBOM").load("/subNewBOM");
-    });
-}
-
-function loadBOM() {
-    $(document).ready(function () {
-        $("#contentBOM").load("/bom");
-    });
-}
-
 function openNewWorkorder() {
     $(document).ready(function () {
         $("#contentWorkOrder").load("/openNewWorkorder");
@@ -714,13 +696,13 @@ function openManufacturingWorkstationForm() {
 
 function loadManufacturingRouting() {
     $(document).ready(function () {
-        $("#contentRouting").load("/routing");
+        $("#contentRouting").load("/routing/create");
     });
 }
 function openManufacturingRoutingForm() {
     $(document).ready(function () {
-        $("#contentRouting").load("/newrouting");
-        $("#contentNewRouting").load("/newrouting");
+        $("#contentRouting").load("/routing/create");
+        $("#contentNewRouting").load("/routing/create");
     });
 }
 
@@ -816,13 +798,13 @@ function loadPurchaseOrder() {
 
 function viewPurchaseOrder(id) {
     $(document).ready(function () {
-        $("#contentPurchaseOrder").load(`/view-order/${id}`);
+        $("#contentPurchaseOrder").load(`/purchaseorder/${id}`);
     });
 }
 
 function openNewPurchaseOrder() {
     $(document).ready(function () {
-        $("#contentPurchaseOrder").load("/openNewPurchaseOrder");
+        $("#contentPurchaseOrder").load("/purchaseorder/create");
     });
 }
 
@@ -1324,7 +1306,7 @@ function openNewSupplierQuotation() {
 
 function openNewPurchaseInvoice() {
     $(document).ready(function () {
-        $("#contentPurchaseInvoice").load("/new-invoice");
+        $("#contentPurchaseInvoice").load("/purchaseinvoice/create");
     });
 }
 
@@ -1336,19 +1318,19 @@ function loadPurchaseInvoice() {
 
 function openPurchaseInvoiceInfo(id) {
     $(document).ready(function () {
-        $("#contentPurchaseInvoice").load(`/view-invoice/${id}`);
+        $("#contentPurchaseInvoice").load(`/purchaseinvoice/${id}`);
     });
 }
 
 function openNewPurchaseReceipt() {
     $(document).ready(function () {
-        $("#contentPurchaseReceipt").load("/new-receipt");
+        $("#contentPurchaseReceipt").load("/purchasereceipt/create");
     });
 }
 
 function openPurchaseReceiptInfo(id) {
     $(document).ready(function () {
-        $("#contentPurchaseReceipt").load(`/view-receipt/${id}`);
+        $("#contentPurchaseReceipt").load(`/purchasereceipt/${id}`);
     });
 }
 
@@ -1399,7 +1381,7 @@ function loadPricingRule() {
 }
 function openSupplierGroup() {
     $(document).ready(function () {
-        $("#contentSupplierGroup").load("/newsuppliergroup");
+        $("#contentSupplierGroup").load("/suppliergroup/create");
     });
 }
 
@@ -1471,13 +1453,13 @@ function loadAddress() {
 
 function loadBOMForm() {
     $(document).ready(function () {
-        $("#contentBom").load("/newbom");
+        $("#contentBom").load("/bom/create");
     });
 }
 
 function loadBOM(id) {
     $(document).ready(function () {
-        $("#contentBom").load(`/view-bom/${id}`);
+        $("#contentBom").load(`/bom/${id}`);
     });
 }
 
@@ -1489,13 +1471,13 @@ function loadBOMtable() {
 
 function loadmachineinfo(id) {
     $(document).ready(function () {
-        $("#contentMachineManual").load(`/machinemanualinfo/${id}`);
+        $("#contentMachineManual").load(`/machinemanual/${id}`);
     });
 }
 
 function loadNewMachineManual() {
     $(document).ready(function () {
-        $("#contentMachineManual").load("/create-new-mm");
+        $("#contentMachineManual").load("/machinemanual/create");
     });
 }
 
@@ -1513,7 +1495,7 @@ function loadnewworkcenter() {
 }
 function loadnewRouting() {
     $(document).ready(function () {
-        $("#contentRouting").load("/newrouting");
+        $("#contentRouting").load("/routing/create");
     });
 }
 
@@ -1557,8 +1539,8 @@ function newrepairrequest() {
         $("#contentRepair").load("/newrepairrequest");
     });
 }
-function repairinfo() {
+function repairinfo(id) {
     $(document).ready(function () {
-        $("#contentRepair").load("/repairinfo");
+        $("#contentRepair").load("/repairinfo/"+id);
     });
 }

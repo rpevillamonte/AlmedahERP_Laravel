@@ -27,11 +27,6 @@ function addRowbomOperation(){
         <td id="mr-code-input" class="mr-code-input"><input type="number" value="${nextID}" name="seq_id" id="seq_id${nextID}" class="form-control" readonly></td>
         <td class="mr-qty-input">
         <select name="operation" id="operation1" data-live-search="true" class="form-control operation selectpicker" onchange="operationSearch(1);">
-            @foreach ($operations as $operation)
-                <option data-subtext="{{ $operation->operation_id }}" value="{{ $operation->operation_id }}">
-                    {{ $operation->operation_name }}
-                </option>
-            @endforeach
         </select>
         </td>
         <td class="mr-unit-input"><input type="text" value=""  name="workcenter" id="workcenter${nextID}" class="form-control operation_field" disabled></td>
@@ -81,7 +76,20 @@ $("#routingsForm").submit(function () {
     });
     // create a routing first....
     var routingData = new FormData(this);
-    var routingId = "";
+
+    var operationsData = {};
+    operations = $("#newrouting-input-rows tr");
+
+    for(let i=1; i<=operations.length; i++) {
+        operationsData[i] = {
+            'seq_id' : $(`#seq_id${i}`).val(),
+            'operation' : $(`#operation${i}`).val(),
+            'hour_rate' : $(`#hour_rate${i}`).val(),
+            'operation_time' : $(`#operation_time${i}`).val()
+        }
+    }
+
+    routingData.append('routing_operations', JSON.stringify(operationsData))
 
     $.ajax({
         type: "POST",
@@ -92,33 +100,12 @@ $("#routingsForm").submit(function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            routingId = response.routing_id;
+            RoutingTable();
         }
     });
     //routingId = tempId;
     // ..then input the routing operations
-    var operationsData;
-    operations = $("#newrouting-input-rows tr");
-    for(let i=1; i<=operations.length; i++) {
-        operationsData = new FormData();
-        operationsData.append('seq_id', $(`#seq_id${i}`).val());
-        operationsData.append('operation', $(`#operation${i}`).val());
-        operationsData.append('routing_id', routingId);
-        operationsData.append('hour_rate', $(`#hour_rate${i}`).val());
-        operationsData.append('operation_time', $(`#operation_time${i}`).val());
-        $.ajax({
-            type: "POST",
-            url: '/routingoperation',
-            data: operationsData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                console.log("success");
-                RoutingTable();
-            }
-        });
-    }
+    
     return false;
 
 });

@@ -25,16 +25,19 @@ use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockMovesController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierGroupController;
 use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
-
+use App\Http\Controllers\repairController;
+use App\Http\Controllers\UserRoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +63,10 @@ Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
+Route::get('/login', function() {
+    return view('modules.login.login');
+});
+
 /*NOTIFICATION ROUTES */
 Route::get('/notification', [NotificationLogsController::class, 'get_notifications'])->name('get_notifications');
 
@@ -79,14 +86,8 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::get('/bom', [BOMController::class, 'index']);
-Route::get('/newbom', [BOMController::class, 'BOMForm']);
-Route::get('/get-product/{product_code}', [BOMController::class, 'getProduct']);
-Route::get('/get-component/{component_code}', [BOMController::class, 'getComponent']);
-Route::post('/create-bom', [BOMController::class, 'store']);
-Route::get('/view-bom/{bom_id}', [BOMController::class, 'viewBOM']);
-Route::patch('/update-bom/{bom_id}', [BOMController::class, 'update']);
-Route::delete('/delete-bom/{bom_id}', [BOMController::class, 'delete']);
+Route::resource('/bom', BOMController::class);
+Route::get('/get-item/{item_type}/{value}', [BOMController::class, 'getItem']);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -146,7 +147,7 @@ Route::get('/hr', function () {
 });
 
 Route::get('/employee', [EmployeeController::class, 'index']);
-
+Route::get('/get-employee/{id}', [EmployeeController::class, 'getEmployee']);
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
 Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
 Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
@@ -206,15 +207,8 @@ Route::put('/jobscheduling/{jobsched}/pauseOperation' , [JobSchedController::cla
 Route::put('/jobscheduling/{jobsched}/finishOperation' , [JobSchedController::class, 'finishOperation'])->name('jobscheduling.op.finish');
 
 /**MACHINES MANUAL ROUTES */
-Route::get('/machinemanual', [MachinesManualController::class , 'index']);
-Route::get('/create-new-mm', function() {
-    return view('modules.BOM.newmachinemanual');
-});
-Route::get('/machinemanualinfo/{id}', [MachinesManualController::class, 'view']);
-Route::post('/create-machine', [MachinesManualController::class, 'store']);
+Route::resource('/machinemanual', MachinesManualController::class);
 Route::get('/find-machine/{machine_code}', [MachinesManualController::class, 'getMachine']);
-Route::patch('/update-machine/{id}', [MachinesManualController::class, 'update']);
-Route::delete('/delete-machine/{id}', [MachinesManualController::class, 'delete']);
 
 /**MANUFACTURING ROUTES */
 Route::get('/manufacturing', function () {
@@ -242,12 +236,8 @@ Route::get('/openManufacturingItemPriceForm', function () {
 
 /**MANUFACTURING ROUTING ROUTES */
 Route::resource('/routing', RoutingsController::class);
-Route::get('/newrouting', [RoutingsController::class, 'openRoutingForm']);
 Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
-
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
-Route::patch('/update-routing/{id}', [RoutingsController::class, 'update']);
-Route::delete('/delete-routing/{id}', [RoutingsController::class, 'delete']);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -349,40 +339,25 @@ Route::get('/loadProjectTemplate', function () {
 });
 
 /**PURCHASE INVOICE ROUTES */
-Route::get('/purchaseinvoice', [PurchaseInvoiceController::class, 'index']);
-Route::get('/new-invoice', [PurchaseInvoiceController::class, 'openInvoiceForm']);
-Route::post('/create-invoice', [PurchaseInvoiceController::class, 'createInvoice']);
-Route::get('/view-invoice/{id}', [PurchaseInvoiceController::class, 'viewInvoice']);
+Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
 Route::post('/update-invoice-record/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoice']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/purchaseorder', [MaterialsPurchasedController::class, 'index']);
-Route::get('/openNewPurchaseOrder', [MaterialsPurchasedController::class, 'openOrderForm']);
-Route::post('/create-order', [MaterialsPurchasedController::class, 'store']);
-Route::get('/view-order/{id}', [MaterialsPurchasedController::class, 'view']);
-Route::post('/update-order', [MaterialsPurchasedController::class, 'update']);
+Route::resource('/purchaseorder', MaterialsPurchasedController::class);
+Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
+Route::get('/po-filter/{filter}/{value}', [MaterialsPurchasedController::class, 'filterBy']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
-Route::post('/get-materials', [MaterialsPurchasedController::class, 'getMaterials']);
-Route::post('/store-mp-materials/{purchase_id}', [MaterialsPurchasedController::class, 'storeMaterial']);
-Route::post('/delete-order/{purchase_id}', [MaterialsPurchasedController::class, 'deleteOrder']);
-Route::get('/po-all', [MaterialsPurchasedController::class, 'getAll']);
-Route::get('/po-by-status/{status}', [MaterialsPurchasedController::class, 'getByStatus']);
-Route::get('/po-by-item/{item_code}', [MaterialsPurchasedController::class, 'getByMaterial']);
-Route::get('/po-by-supplier/{supplier_id}', [MaterialsPurchasedController::class, 'getBySupplier']);
 
 /**PURCHASE RECEIPT ROUTES */
-Route::get('/purchasereceipt', [PurchaseReceiptController::class, 'index']);
-Route::get('/new-receipt', [PurchaseReceiptController::class, 'openReceiptForm']);
+Route::resource('/purchasereceipt', PurchaseReceiptController::class);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 Route::get('/get-materials-from-mp/{receipt_id}', [PurchaseReceiptController::class, 'getOrderedMaterialsFromInvoice']);
-Route::post('/create-receipt', [PurchaseReceiptController::class, 'createReceipt']);
-Route::get('/view-receipt/{receipt_id}', [PurchaseReceiptController::class, 'showReceipt']);
-Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
+Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
 Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
 
@@ -430,7 +405,7 @@ Route::get('/retail', function () {
 });
 
 /**ROUTING OPERATION ROUTES */
-Route::resource('/routingoperation', RoutingOperationController::class);
+//Route::resource('/routingoperation', RoutingOperationController::class);
 
 /**SALES ORDER ROUTES */
 Route::get('/view-sales-order/{id}', [SalesOrderController::class, 'get']);
@@ -522,19 +497,38 @@ Route::get('/loadStockEntry', function () {
     return view('modules.manufacturing.stockentry');
 });
 
+Route::get('/stocktracing', function () {
+    return view('modules.stock.StockTracing');
+});
+
+
+// Team Members Route
+Route::get('/teammembers', function () {
+    return view('modules.userManagement.TeamMembers.TeamMembers');
+});
+
+// User Role Routes
+Route::resource('/roles', UserRoleController::class);
+Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
+
+// Employment Type Route
+Route::get('/employmenttype', function () {
+    return view('modules.userManagement.EmploymentType.EmploymentType');
+});
+
+// Departments Route
+Route::resource('/departments', DepartmentController::class);
+
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
+Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
 Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
-Route::get('/supp-filter-sg/{supplier_group}', [SupplierController::class, 'filterBySupplierGroup']);
+Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
 /*SUPPLIER GROUP*/
-Route::get('/newsuppliergroup', function() {
-    return view('modules.NewUI.NewSupplierGroup');
-});
-Route::get('/suppliergroup', function() {
-    return view('modules.NewUI.SupplierGroup');
-});
+Route::resource('/suppliergroup', SupplierGroupController::class);
+Route::get('/sg-get-item/{material_id}', [SupplierGroupController::class, 'getRawMat']);
 Route::get('/newsuppliergrouptable', function() {
     return view('modules.NewUI.NewSupplierGrpTable');
 });
@@ -606,15 +600,15 @@ Route::get('/checkUpdateStatus/{work_order_no}/{product_code}', [WorkOrderContro
 Route::get('/onDateChange/{work_order_no}/{planned_date}/{date}', [WorkOrderController::class, 'onDateChange']);
 
 /**REPAIR ROUTES*/
-Route::get('/repair', function () {
-    return view('modules.manufacturing.repair');
-});
-Route::get('/newrepairrequest', function () {
-    return view('modules.manufacturing.newrepairrequest');
-});
-Route::get('/repairinfo', function () {
-    return view('modules.manufacturing.repairinfo');
-});
+Route::get('/repair', [repairController::class, 'index']);
+Route::get('/newrepairrequest', [repairController::class, 'createIndex']);
+
+Route::post('/getSerials', [repairController::class, 'getSerials']);
+Route::post('/getSerialWithWarranty', [repairController::class, 'getSerialWithWarranty']);
+Route::post('/getCustomerDetails', [repairController::class, 'getCustomerDetails']);
+Route::post('/createRepair', [repairController::class, 'store']);
+Route::get('/repairinfo/{id}', [repairController::class, 'viewEdit']);
+Route::patch('/editRepairReq/{id}', [repairController::class, 'update']);
 
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

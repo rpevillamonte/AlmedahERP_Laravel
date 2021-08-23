@@ -21,10 +21,10 @@ function onChangeFunction() {
 // Function for adding rows in the currency and price list
 $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
-    let nextRow = ($("#emptyRow").html()) ? 1 :("#itemTable tbody tr").length + 1;
+    let nextRow = ($("#emptyRow").html()) ? 1 : $("#itemTable tbody tr").length + 1;
     let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
     if($("#emptyRow").html()) {
-        $("#emptyRow").remove();
+        $("#emptyRow").parent('tr').remove();
     }
     tbl.append(`
     <tr id="item-${nextRow}">
@@ -60,12 +60,12 @@ $("#rowBtn").on('click', function () {
 
 // Function for deleting rows in currency and price list
 $("#deleteRow").click(function () {
-    if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable tbody tr").length) {
+    if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable-content tr").length) {
         //When all table rows are removed, leave one new field 
         $("#itemTable tbody tr").remove();
         $("#itemTable tbody").append(
             `
-            <tr id="item-1">
+            <tr>
                 <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
             </tr> 
             `
@@ -207,35 +207,38 @@ function viewQuotationItems(id) {
 }
 
 $("#cancelOrder").click(function () { 
+    $("#cancelPO").submit();
+});
+
+$("#cancelPO").submit(function () { 
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
     });
-    let cancel = confirm("Are you sure that you want to cancel this purchase order?");
 
-    if(cancel) {
-        $.ajax({
-            type: "POST",
-            url: `/delete-order/${$("#p_id").html()}`,
-            success: function (response) {
-                if(response.error) {
-                    alert(response.error);
-                    return;
-                }
-                loadPurchaseOrder();
-                if($("#contentPurchaseReceipt").length) {
-                    loadPurchaseReceipt();
-                }
-                if($("#contentPurchaseInvoice").length) {
-                    loadPurchaseInvoice();
-                }
-                if($("#contentPendingOrders").length) {
-                    loadPendingOrders();
-                }
+    $.ajax({
+        type: "DELETE",
+        url: `/purchaseorder/${$("#p_id").html()}`,
+        success: function (response) {
+            if(response.error) {
+                slideAlert(response.error, PO_FAIL);
+                return;
             }
-        });
-    }
+            loadPurchaseOrder();
+            if($("#contentPurchaseReceipt").length) {
+                loadPurchaseReceipt();
+            }
+            if($("#contentPurchaseInvoice").length) {
+                loadPurchaseInvoice();
+            }
+            if($("#contentPendingOrders").length) {
+                loadPendingOrders();
+            }
+        }
+    });
+
+    return false;
     
 });
 
@@ -369,7 +372,7 @@ function saveOrder() {
     form_data.append('total_price', $(`#totalPrice`).val().replace("₱ ", '').replaceAll(',', ''));
     form_data.set('materials_purchased', materials_list);
 
-    let url = !$("#mp_status").length ? '/create-order' : '/update-order';
+    let url = !$("#mp_status").length ? '/purchaseorder' : '/update-order';
     let purchase_id = '';
 
     $.ajax({
@@ -388,7 +391,8 @@ function saveOrder() {
 
 
     //Only store these materials when creating purchase order
-    if (!$("#purch_id").val()) {
+    /**
+     * if (!$("#purch_id").val()) {
         let materialData = new FormData();
         materialData.append('materials_list', materials_list);
 
@@ -404,6 +408,7 @@ function saveOrder() {
             }
         });
     }
+     */
 
 }
 
