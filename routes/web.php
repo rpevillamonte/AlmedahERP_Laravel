@@ -609,7 +609,7 @@ Route::post('/getCustomerDetails', [repairController::class, 'getCustomerDetails
 Route::post('/createRepair', [repairController::class, 'store']);
 Route::get('/repairinfo/{id}', [repairController::class, 'viewEdit']);
 Route::patch('/editRepairReq/{id}', [repairController::class, 'update']);
-
+Route::post('/deleteRepair', [repairController::class, 'delete']);
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
     return view('modules.stock.warehouse');

@@ -58,7 +58,7 @@
                     <td>{{$row->wclaim_id}}</td>
                     <td>{{$row->repair_status}}</td>
                     <td>{{$row->product_code}}</td>
-                    <td><button><i class="fa fa-trash"></i></button></td>
+                    <td><button onclick='delRow(this, "{{$row->id}}")'><i class="fa fa-trash"></i></button></td>
                 </tr>
                 @endforeach
             </tbody>
@@ -76,6 +76,31 @@
 
 <script>
 $(document).ready(function() {
-    $('#repair_table').DataTable();
-} );
+    mainTable = $('#repair_table').DataTable();
+});
+
+function delRow(elem, id){
+    mainTable.row(elem.closest('tr')).remove().draw();
+    data = {}
+    data["id"] = id
+
+    console.log(data)
+
+    $.ajaxSetup({
+       headers: {
+           'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+       }
+    });
+    $.ajax({
+      type:'POST',
+      url:"/deleteRepair",
+      data: data,
+      success: function(data) {
+          console.log(data)
+      },
+      error: function(data) {
+          console.log(data)
+      }
+  });
+}
 </script>
