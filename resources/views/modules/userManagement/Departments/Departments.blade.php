@@ -20,7 +20,14 @@
             </ul>
         </div>
     </div>
+    
 </nav>
+<div class="alert alert-success" style="display:none" role="alert">
+    Successfully created a <a href="#" class="alert-link">Department</a>.
+</div>
+<div class="alert alert-danger" style="display:none" role="alert">
+    There was an error in creating  <a href="#" class="alert-link">Department</a>.
+</div>
 <br>
 <table id="departmentsTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
@@ -96,11 +103,7 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#editDeptPrompt" id="saveEditDept">
-                        <a class="" href="#" style="text-decoration: none;color:white">
-                            Save
-                        </a>
-                    </button>
+                    <button type="submit" class="btn btn-primary m-1" id="saveEditDept" form="EmpEditTypeForm">Save</button>
                     <form action="" id="deleteDeptForm" method="POST">
                         <button type="button" class="btn btn-danger m-1" data-dismiss="modal"
                             data-target="#editDeptPrompt" id="deleteDept">

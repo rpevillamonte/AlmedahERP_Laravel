@@ -157,7 +157,13 @@
                   </div>
                 </div> --}}
         </div>
+        <hr>
+        <div class="card-body filter">
+          <h5>Logs</h5>
+          <div id="return_logs">
 
+          </div>
+        </div>
     </div>
     </div>
     <div class="modal fade" id="remarks" tabindex="-1" role="dialog">
@@ -299,39 +305,32 @@
             }
         });
         let qtyToReturn;
+        let checked_materials = [];
         var formData = new FormData(this);
           $('input:checkbox:checked', tableControl).each(function(index) {
               let obj; 
               let itemTransPassValue;
               let currentRow = $(this).closest('tr');
               let itemCode = currentRow.find('td:nth-child(2)').html();
-              // let qtyTransferred = currentRow.find('td:nth-child(3)').html();
-              // let consumable = currentRow.find('td:nth-child(4)').html();
-              // let sourceStation = currentRow.find('td:nth-child(5)').html();
-              // let targetStation = currentRow.find('td:nth-child(6)').html();
-              // let itemCondition = currentRow.find('td:nth-child(7)').html();
+              
               passValueArray.forEach((itemTrans, index)=>{
                 if(itemTrans.item_code === itemCode){
-                  // if(itemTrans.consumable == 'Yes' && itemTrans.qty_received < itemTrans.qty_checker){
-                    
-                    let newQtyTransferred = itemTrans.qty_checker - itemTrans.qty_received; 
-                    qtyToReturn = itemTrans.qty_received;
-                    itemsTrans[index].qty_received = newQtyTransferred; 
-                    // itemTrans.qty_received = newQtyTransferred;
-                  // }else{
-                  //   qtyToReturn = itemTrans.qty_received;
-                  //   itemsTrans[index].qty_received = qtyToReturn; 
-                  // }
 
+                  let newQtyTransferred = itemTrans.qty_checker - itemTrans.qty_received; 
+                  qtyToReturn = itemTrans.qty_received;
+                  itemsTrans[index].qty_received = newQtyTransferred; 
+   
                   obj = {
                       'item_code':itemCode, 
-                      'qty_transferred': qtyToReturn, 
+                      'qty_transferred': String(qtyToReturn), 
                       'consumable': itemTrans.consumable, 
                       'source_station': itemTrans.target_station, 
                       'target_station': itemTrans.source_station, 
                       'item_condition': itemTrans.item_condition,
                       'remarks': itemTrans.remarks
                     }
+
+                  checked_materials.push(obj);
                 }
               });
               
@@ -355,16 +354,22 @@
             itemsTrans.forEach((item, index)=>{ 
               if(ArrItem.item_code === item.item_code){
                 if(item.qty_checker == ArrItem.qty_transferred){
-                  itemsTrans.splice(index, 1)
+                  itemsTrans.splice(index, 1);
+                }else{
                 }
               }
             });
           });  
+          console.log('ret');
+          console.log(itemsRet);
+          console.log('trans');
+          console.log(itemsTrans);
           console.log('pass');
           console.log(passValueArray);
           if(changed){
             formData.append("item_code", JSON.stringify(itemsRet));
             formData.append("stockTransferItemsUpdated", JSON.stringify(itemsTrans));
+            formData.append("checkedMaterials", JSON.stringify(checked_materials));
             $.ajax({
               type:'POST',
               url:"/create-newstockmovesreturn",

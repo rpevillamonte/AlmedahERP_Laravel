@@ -1,9 +1,9 @@
 $(document).ready(function () {
-    x = $('#departmentsTable').DataTable();
+    x = $("#departmentsTable").DataTable();
     $(".dept-select").selectpicker();
 });
 
-$("#EmpTypeForm").submit(function (e) { 
+$("#EmpTypeForm").submit(function (e) {
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": CSRF_TOKEN,
@@ -13,49 +13,55 @@ $("#EmpTypeForm").submit(function (e) {
     var formData = new FormData(this);
 
     $.ajax({
-        type: $(this).attr('method'),
-        url: $(this).attr('action'),
+        type: $(this).attr("method"),
+        url: $(this).attr("action"),
         data: formData,
         contentType: false,
         processData: false,
         success: function (response) {
-            
-        }
+            $(".alert-success").show();
+            $(".alert-success").delay(4000).hide(1);
+        },
+        error: function (response) {
+            $(".alert-danger").show();
+            $(".alert-danger").delay(4000).hide(1);
+        },
     });
     e.preventDefault();
     return false;
 });
 
-$("#saveNewDept").click(function () { 
+$("#saveNewDept").click(function () {
     $("#EmpTypeForm").submit();
 });
 
-$("#deptRefresh").click(function () { 
-    $("#contentDepartments").load('/departments');
+$("#deptRefresh").click(function () {
+    $("#contentDepartments").load("/departments");
 });
 
-$(".dept-link").click(function() {
-    var id = $(this).attr('value');
+$(".dept-link").click(function () {
+    var id = $(this).attr("value");
     $.ajax({
         type: "GET",
         url: `/departments/${id}`,
         data: id,
-        contentType: false, 
+        contentType: false,
         processData: false,
         success: function (response) {
             var department = response.department;
             $("#deptEditID").val(department.department_id);
             $("#deptEditName").val(department.department_name);
+            // $("#deptEditHead").val(department.reports_to);
             $("#deptIDHidden").val(department.id);
-        }
+        },
     });
 });
 
-$('#deleteDept').click(function () { 
+$("#deleteDept").click(function () {
     $("#deleteDeptForm").submit();
 });
 
-$("#deleteDeptForm").submit(function (e) { 
+$("#deleteDeptForm").submit(function (e) {
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": CSRF_TOKEN,
@@ -69,12 +75,46 @@ $("#deleteDeptForm").submit(function (e) {
         contentType: false,
         processData: false,
         success: function (response) {
-            
-        }
+            $(".alert-success").show();
+            $(".alert-success").html(
+                `Successfully deleted a <a href="#" class="alert-link">Department</a>.`
+            );
+            $(".alert-success").delay(4000).hide(1);
+        },
     });
 
     e.preventDefault();
     return false;
-    
 });
 
+$("#saveEditDept").click(function () {
+    $("#EmpEditTypeForm").submit();
+});
+
+$("#EmpEditTypeForm").submit(function (e) {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": CSRF_TOKEN,
+        },
+    });
+
+    var id = $("#deptIDHidden").val();
+    var formData = new FormData(this);
+    $.ajax({
+        type: "PUT",
+        url: `/departments/${id}`,
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            alert(response);
+            // $(".alert-success").show();
+            // $(".alert-success").html(
+            //     `Successfully deleted a <a href="#" class="alert-link">Department</a>.`
+            // );
+            // $(".alert-success").delay(4000).hide(1);
+        },
+    });
+    e.preventDefault();
+    return false;
+});
