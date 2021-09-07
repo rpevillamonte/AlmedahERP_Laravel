@@ -475,14 +475,15 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 form-group">
-                                    <table class="table border-bottom table-hover table-bordered table-sm">
-                                    <thead class="border-top border-bottom bg-light">
+                                    <table class="display" id ="dtOrders" style="width:100%">
+                                    <thead>
                                         <tr class="text-muted">
-                                        <td class="font-weight-bold text-center">Product Code</td>
-                                        <td class="font-weight-bold text-center">Quantity</td>
+                                            <td class="font-weight-bold text-center">Product Code</td>
+                                            <td class="font-weight-bold text-center">Serial No.</td>
                                         </tr>
                                     </thead>
-                                    <tbody id= "viewProductsTable">
+                                    <tbody>
+
                                     </tbody>
                                     </table>
                                 </div>
@@ -726,6 +727,7 @@
     // From back-end: to show that data can be shown in table
     $(document).ready(function() {
         x = $('#salestable').DataTable();
+        dtOrders = $('#dtOrders').DataTable();
         // Gets Current date today
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
