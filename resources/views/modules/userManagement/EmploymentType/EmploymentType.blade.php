@@ -1,3 +1,4 @@
+<script src="{{ asset('js/employee_type.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Employment Type</h2>
@@ -29,12 +30,14 @@
         </tr>
     </thead>
     <tbody>
-
+        @foreach ($employment_types as $et)
         <tr>
             <td class="text-bold"><a href="#EditEmpTypePrompt" data-toggle="modal"
-                    data-target="#EditEmpTypePrompt">EMP-TYPE-001</a></td>
-            <td>Full-Time</td>
+                    data-target="#EditEmpTypePrompt" value="{{ $et->id }}">{{ $et->employment_id }}</a></td>
+            <td>{{ $et->employment_type }}</td>
         </tr>
+        @endforeach
+        {{--
         <tr>
             <td class="text-bold"><a href="#EditEmpTypePrompt" data-toggle="modal"
                     data-target="#EditEmpTypePrompt">EMP-TYPE-002</a></td>
@@ -50,15 +53,9 @@
                     data-target="#EditEmpTypePrompt">EMP-TYPE-004</a></td>
             <td>Probation</td>
         </tr>
+        --}}
     </tbody>
 </table>
-
-
-<script>
-    $(document).ready(function () {
-        x = $('#employmentTypeTable').DataTable();
-    });
-</script>
 
 <!-- Modal New Emp Type-->
 <div class="modal fade" id="newEmpTypePrompt" tabindex="-1" role="dialog" aria-labelledby="newEmpTypePromptTitle"
@@ -70,11 +67,11 @@
 
             </div>
             <div class="modal-body">
-                <?php include 'newEmpType.php' ?>
+                @include('modules.userManagement.EmploymentType.newEmpType')
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" id="saveTrace1">
+                    <button type="submit" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" id="saveEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
@@ -99,7 +96,7 @@
 
             </div>
             <div class="modal-body">
-                <?php include 'editEmpType.php' ?>
+                @include('modules.userManagement.EmploymentType.editEmpType')
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">

@@ -32,6 +32,7 @@ use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmploymentTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -511,9 +512,7 @@ Route::resource('/roles', UserRoleController::class);
 Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
 
 // Employment Type Route
-Route::get('/employmenttype', function () {
-    return view('modules.userManagement.EmploymentType.EmploymentType');
-});
+Route::resource('/employmenttype', EmploymentTypeController::class);
 
 // Departments Route
 Route::resource('/departments', DepartmentController::class);

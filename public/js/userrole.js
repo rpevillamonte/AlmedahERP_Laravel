@@ -86,11 +86,19 @@ function resetRoleForm() {
 }
 
 $("#saveRole").click(function () { 
-    $("#roleForm").submit();
+    if($("input[name='role-check']:checked").length > 0) {
+        $("#roleForm").submit();
+    } else {
+        console.log('not submitted');
+    }
 });
 
 $("#updateRole").click(function () { 
-    $("#roleEditForm").submit();
+    if($("input[name='edit-role-check']:checked").length > 0) {
+        $("#roleEditForm").submit();
+    } else {
+        console.log('not edited');
+    }
 });
 
 $("#URRefresh").click(function () { 
@@ -118,6 +126,10 @@ $("#roleForm").submit(function (e) {
         processData: false,
         success: function (response) {
             resetRoleForm();
+            $("#newRoleFormPrompt").remove();
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            roleRefresh();
         }
     });
     
@@ -144,6 +156,7 @@ $("#deleteRoleForm").submit(function (e) {
         processData: false,
         success: function (response) {
             console.log('deleted');
+            roleRefresh();
         },
     });
     e.preventDefault();

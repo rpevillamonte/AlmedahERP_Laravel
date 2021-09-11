@@ -3,7 +3,7 @@ $(document).ready(function () {
     $(".dept-select").selectpicker();
 });
 
-$("#EmpTypeForm").submit(function (e) {
+$("#departmentForm").submit(function (e) {
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": CSRF_TOKEN,
@@ -21,10 +21,12 @@ $("#EmpTypeForm").submit(function (e) {
         success: function (response) {
             $(".alert-success").show();
             $(".alert-success").delay(4000).hide(1);
+            $("#contentDepartments").load('/departments');
         },
         error: function (response) {
             $(".alert-danger").show();
             $(".alert-danger").delay(4000).hide(1);
+            $("#contentDepartments").load('/departments');
         },
     });
     e.preventDefault();
@@ -32,7 +34,7 @@ $("#EmpTypeForm").submit(function (e) {
 });
 
 $("#saveNewDept").click(function () {
-    $("#EmpTypeForm").submit();
+    $("#departmentForm").submit();
 });
 
 $("#deptRefresh").click(function () {
@@ -80,6 +82,7 @@ $("#deleteDeptForm").submit(function (e) {
                 `Successfully deleted a <a href="#" class="alert-link">Department</a>.`
             );
             $(".alert-success").delay(4000).hide(1);
+            $("#contentDepartments").load('/departments');
         },
     });
 
