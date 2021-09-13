@@ -32,8 +32,12 @@
     <tbody>
         @foreach ($employment_types as $et)
         <tr>
-            <td class="text-bold"><a href="#EditEmpTypePrompt" data-toggle="modal"
-                    data-target="#EditEmpTypePrompt" value="{{ $et->id }}">{{ $et->employment_id }}</a></td>
+            <td class="text-bold">
+                <a href="#EditEmpTypePrompt" data-toggle="modal" data-target="#EditEmpTypePrompt" 
+                value="{{ $et->id }}" class="emp-type">
+                    {{ $et->employment_id }}
+                </a>
+            </td>
             <td>{{ $et->employment_type }}</td>
         </tr>
         @endforeach
@@ -71,7 +75,7 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" id="saveEmpType">
+                    <button type="submit" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" data-dismiss="modal" id="saveEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
@@ -100,14 +104,18 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#EditEmpTypePrompt" id="saveTrace1">
+                    <button type="button" class="btn btn-primary m-1" data-target="#EditEmpTypePrompt" id="editEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
-                    <button type="button" class="btn btn-danger m-1" data-dismiss="modal"
-                        data-target="#EditEmpTypePrompt" id="closeEmpTypePrompt">
-                        Delete <span class="fas fa-trash"></span>
+                    <form action="" id="deleteEmpType" method="POST">
+                        <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#EditEmpTypePrompt" id="deleteET">
+                            Delete <span class="fas fa-trash"></span>
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" data-target="#EditEmpTypePrompt" id="closeET">
+                        Close 
                     </button>
                 </div>
             </div>

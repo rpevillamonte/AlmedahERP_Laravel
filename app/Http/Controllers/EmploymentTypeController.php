@@ -65,6 +65,7 @@ class EmploymentTypeController extends Controller
     public function show($id)
     {
         //
+        return ['emp_type' => EmploymentType::find($id)];
     }
 
     /**

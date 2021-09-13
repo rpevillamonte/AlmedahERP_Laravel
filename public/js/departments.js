@@ -34,7 +34,9 @@ $("#departmentForm").submit(function (e) {
 });
 
 $("#saveNewDept").click(function () {
-    $("#departmentForm").submit();
+    if(!$("#deptName, #deptHead").val()) {
+        $("#departmentForm").submit();
+    }
 });
 
 $("#deptRefresh").click(function () {
@@ -91,7 +93,9 @@ $("#deleteDeptForm").submit(function (e) {
 });
 
 $("#saveEditDept").click(function () {
-    $("#EmpEditTypeForm").submit();
+    if(!$("#deptEditName, #deptEditHead").val()) {
+        $("#EmpEditTypeForm").submit();
+    }
 });
 
 $("#EmpEditTypeForm").submit(function (e) {
