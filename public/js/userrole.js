@@ -5,6 +5,9 @@ var role_strings = ['Customers', 'Employees', 'Suppliers', 'Supplier_Group', 'In
                     'Pending_Orders', 'Machine_Manual', 'Work_Center', 'Operations', 'Routings', 'BOM', 'Job_Scheduling',
                     'Sales', 'Payment_Logs', 'Warranty', 'Serial_Numbers', 'Work_Order', 'Delivery', 'Warranty', 'Reports'];
 
+var ROLE_SUCCESS = "#role_success";
+var ROLE_FAIL = "#role_fail";
+
 $(document).ready(function () {
     $('#UserRoleTable').DataTable();
     for(let i=0; i<role_strings.length; i++) {
@@ -86,19 +89,29 @@ function resetRoleForm() {
 }
 
 $("#saveRole").click(function () { 
+    var message  = '', role_alert = '';
     if($("input[name='role-check']:checked").length > 0) {
         $("#roleForm").submit();
+        message = 'Role successfully developed.';
+        role_alert = ROLE_SUCCESS;
     } else {
-        console.log('not submitted');
+        message = 'Failed to create a role.';
+        role_alert = ROLE_FAIL;
     }
+    slideAlert(message, role_alert);
 });
 
 $("#updateRole").click(function () { 
+    var message  = '', role_alert = '';
     if($("input[name='edit-role-check']:checked").length > 0) {
         $("#roleEditForm").submit();
+        message = 'Successfully edited role.';
+        role_alert = ROLE_SUCCESS;
     } else {
-        console.log('not edited');
+        message = 'Failed to edit role.';
+        role_alert = ROLE_FAIL;
     }
+    slideAlert(message, role_alert);
 });
 
 $("#URRefresh").click(function () { 
@@ -139,6 +152,7 @@ $("#roleForm").submit(function (e) {
 
 $("#deleteRole").click(function () {
     $("#deleteRoleForm").submit();
+    slideAlert('Deleted a role.', ROLE_SUCCESS);
 });
 
 $("#deleteRoleForm").submit(function (e) { 

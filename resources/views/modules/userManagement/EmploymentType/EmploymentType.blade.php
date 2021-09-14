@@ -21,6 +21,13 @@
         </div>
     </div>
 </nav>
+
+<div id="et_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="et_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <br>
 <table id="employmentTypeTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>

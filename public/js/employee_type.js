@@ -1,11 +1,22 @@
+var ET_SUCCESS = "#et_success_message";
+var ET_FAIL = "#et_alert_message";
+
 $(document).ready(function () {
     x = $('#employmentTypeTable').DataTable();
 });
 
 $("#saveEmpType").click(function () { 
+    var message = '', use_alert = '';
     if(!$("#empTypeName").val()) {
         $("#EmpTypeForm").submit();
+        message = 'Successfully created an employment type.';
+        use_alert = ET_SUCCESS;
     }
+    else {
+        message = 'Failed to create an employment type.';
+        use_alert = ET_FAIL;
+    }
+    slideAlert(message, use_alert);
 });
 
 $("#EmpTypeForm").submit(function (e) { 
