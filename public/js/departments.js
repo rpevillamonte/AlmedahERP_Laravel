@@ -114,7 +114,7 @@ $("#deleteDeptForm").submit(function (e) {
 $("#saveEditDept").click(function () {
     var msg = '', dept_alert = '';
     if($("#deptEditName").val() && $("#deptEditHead").val() !== 'non') {
-        $("#EmpEditTypeForm").submit();
+        $("#editDepartment").submit();
         msg = 'Successfully edited department data.';
         dept_alert = DEPT_SUCCESS;
     } else {
@@ -136,7 +136,7 @@ $("#closeEditDept").click(function () {
     deptEditRefresh();
 });
 
-$("#EmpEditTypeForm").submit(function (e) {
+$("#editDepartment").submit(function (e) {
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": CSRF_TOKEN,
