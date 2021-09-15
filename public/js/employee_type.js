@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 $("#saveEmpType").click(function () { 
     var message = '', use_alert = '';
-    if(!$("#empTypeName").val()) {
+    if($("#empTypeName").val()) {
         $("#EmpTypeForm").submit();
         message = 'Successfully created an employment type.';
         use_alert = ET_SUCCESS;
@@ -18,6 +18,10 @@ $("#saveEmpType").click(function () {
     }
     slideAlert(message, use_alert);
 });
+
+function etRefresh() {
+    $("#contentEmploymentType").load('/employmenttype');
+}
 
 $("#EmpTypeForm").submit(function (e) { 
     $.ajaxSetup({
@@ -36,6 +40,7 @@ $("#EmpTypeForm").submit(function (e) {
         processData: false,
         success: function (response) {
             console.log('submitted');
+            etRefresh();
         }
     });
 
@@ -69,11 +74,94 @@ $(".emp-type").click(function () {
     
 });
 
-$("#closeEmpTypePrompt").click(function () { 
+function clearETForm() {
     $("#empTypeID, #empTypeName").val(null);
-    
+}
+
+$("#closeEmpTypePrompt").click(function () { 
+    clearETForm();
 });
 
 $("#closeET").click(function () { 
     $("#hiddenETID, #editEmpTypeID, #editEmpTypeName").val(null);
+});
+
+$("#etRefresh").click(function (e) { 
+    etRefresh();
+
+    e.preventDefault();
+    
+});
+
+$("#editEmpType").click(function () { 
+    var msg = '', et_alert = '';
+    if($('#editEmpTypeName').val()) {
+        $("#editEmpTypeForm").submit();
+        msg = 'Edited employment type data.';
+        et_alert = ET_SUCCESS;
+    }
+    else {
+        flag = false;
+        msg = 'Failed to edit employment type data.';
+        et_alert = ET_FAIL;
+    }
+    slideAlert(msg, et_alert);
+});
+
+$("#deleteET").click(function (e) { 
+    slideAlert('Deleted an employment type.', ET_SUCCESS);
+    $("#deleteEmpType").submit();
+});
+
+$("#deleteEmpType").submit(function (e) { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+
+    var id = $("#hiddenETID").val();
+
+    $.ajax({
+        type: 'DELETE',
+        url: `/employmenttype/${id}`,
+        data: id,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log('edited');
+            etRefresh();
+        }
+    });
+
+    e.preventDefault();
+    return false;
+    
+});
+
+$("#editEmpTypeForm").submit(function (e) { 
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+
+    var id = $("#hiddenETID").val();
+    var formData = new FormData(this);
+
+    $.ajax({
+        type: $(this).attr('method'),
+        url: `/employmenttype/${id}`,
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log('edited');
+            etRefresh();
+        }
+    });
+
+    e.preventDefault();
+    return false;
 });

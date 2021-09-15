@@ -1,4 +1,6 @@
-<form action="" id="EmpTypeForm">
+<form action="" method="POST" id="editEmpTypeForm">
+  @csrf
+  @method('PUT')
   <div class="row">
     <br>
     <div class="col">

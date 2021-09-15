@@ -104,8 +104,11 @@ class DepartmentController extends Controller
     public function update(Request $request, $id)
     {
         $form_data = $request->input();
-
-        $dept_name = $form_data['deptEditHead'];
+        $dept = Department::find($id);
+        $dept_name = $form_data['deptEditName'];
+        $dept->department_name = $dept_name;
+        $dept->reports_to = $form_data['deptEditHead'];
+        $dept->save();
         // $dept_head = $form_data['deptEditHead'];
         return response($dept_name);
     }

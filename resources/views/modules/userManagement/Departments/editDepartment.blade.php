@@ -1,4 +1,6 @@
 <form action="" method="POST" id="EmpEditTypeForm">
+  @csrf
+  @method('PUT')
   <div class="row">
     <div class="col-7">
       <label class=" text-nowrap align-middle">

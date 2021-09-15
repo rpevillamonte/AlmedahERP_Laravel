@@ -41,17 +41,16 @@ class EmploymentTypeController extends Controller
         try {
             $emp_type = new EmploymentType();
             $form_data = $request->input();
-            
+
             $last_et = EmploymentType::orderby('id', 'desc')->first();
             $last_id = $last_et ? $last_et->id + 1 : 1;
-            
+
             $et_id = 'EMP-TYPE-' . str_pad($last_id, 3, '0', STR_PAD_LEFT);
             $emp_type->employment_id = $et_id;
             $emp_type->employment_type = $form_data['empTypeName'];
 
             $emp_type->save();
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $e;
         }
     }
@@ -89,6 +88,15 @@ class EmploymentTypeController extends Controller
     public function update(Request $request, $id)
     {
         //
+        try {
+            $form_data = $request->input();
+
+            $et = EmploymentType::find($id);
+            $et->employment_type = $form_data['editEmpTypeName'];
+            $et->save();
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 
     /**
@@ -100,5 +108,11 @@ class EmploymentTypeController extends Controller
     public function destroy($id)
     {
         //
+        try {
+            $et = EmploymentType::find($id);
+            $et->delete();
+        } catch (Exception $e) {
+            return $e;
+        }
     }
 }

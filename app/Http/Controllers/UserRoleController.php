@@ -30,12 +30,6 @@ class UserRoleController extends Controller
         //
     }
 
-    public function getRole($id) {
-        $role = UserRole::find($id);
-        $role->permissions = $role->permissions(); 
-        return response()->json(['role' => $role]);
-    } 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -73,6 +67,9 @@ class UserRoleController extends Controller
     public function show($id)
     {
         //
+        $role = UserRole::find($id);
+        $role->permissions = $role->permissions(); 
+        return response()->json(['role' => $role]);
     }
 
     /**

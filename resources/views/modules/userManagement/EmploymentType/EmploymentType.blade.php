@@ -9,8 +9,8 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
+                        id="etRefresh">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newEmpTypePrompt">
@@ -82,7 +82,7 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" data-dismiss="modal" id="saveEmpType">
+                    <button type="button" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" data-dismiss="modal" id="saveEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
@@ -111,12 +111,14 @@
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="button" class="btn btn-primary m-1" data-target="#EditEmpTypePrompt" id="editEmpType">
+                    <button type="button" class="btn btn-primary m-1" data-target="#EditEmpTypePrompt" data-dismiss="modal" id="editEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
                     <form action="" id="deleteEmpType" method="POST">
+                        @csrf
+                        @method('DELETE')
                         <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#EditEmpTypePrompt" id="deleteET">
                             Delete <span class="fas fa-trash"></span>
                         </button>

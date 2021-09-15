@@ -78,7 +78,7 @@
                 @include('modules.userManagement.RoleManagement.newRoleForm')
             </div>
             <div class="modal-footer d-flex">
-                <span id="roleNotif" class="mr-auto text-danger"></span>
+                <span id="roleNotif" class="mr-auto text-danger" style="display: none;"></span>
             </div>
         </div>
     </div>

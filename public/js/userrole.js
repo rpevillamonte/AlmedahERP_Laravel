@@ -7,6 +7,7 @@ var role_strings = ['Customers', 'Employees', 'Suppliers', 'Supplier_Group', 'In
 
 var ROLE_SUCCESS = "#role_success";
 var ROLE_FAIL = "#role_fail";
+var ROLE_FORM_NOTIF = "#roleNotif";
 
 $(document).ready(function () {
     $('#UserRoleTable').DataTable();
@@ -44,7 +45,7 @@ $(".role-entity").click(function() {
     var id = $(this).attr('value');
     $.ajax({
         type: "GET",
-        url: `/get-role/${id}`,
+        url: `/roles/${id}`,
         data: id,
         cache: false,
         contentType: false,
@@ -95,8 +96,12 @@ $("#saveRole").click(function () {
         message = 'Role successfully developed.';
         role_alert = ROLE_SUCCESS;
     } else {
-        message = 'Failed to create a role.';
-        role_alert = ROLE_FAIL;
+        if(!$("#roleName").val()) {
+            message = 'No name provided for this role.';
+        } else {
+            message = 'This role has no privileges.';
+        }
+        role_alert = ROLE_FORM_NOTIF;
     }
     slideAlert(message, role_alert);
 });
@@ -108,7 +113,7 @@ $("#updateRole").click(function () {
         message = 'Successfully edited role.';
         role_alert = ROLE_SUCCESS;
     } else {
-        message = 'Failed to edit role.';
+        message = 'Failed to edit role. No privileges have been granted.';
         role_alert = ROLE_FAIL;
     }
     slideAlert(message, role_alert);
