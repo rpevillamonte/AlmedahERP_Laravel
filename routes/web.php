@@ -31,13 +31,15 @@ use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmploymentTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
 use App\Http\Controllers\NotificationLogsController;
 use App\Http\Controllers\repairController;
 use App\Http\Controllers\UserRoleController;
-
+use App\Http\Controllers\TeamMembersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -502,12 +504,18 @@ Route::get('/stocktracing', function () {
 
 
 // Team Members Route
-Route::get('/teammembers', function () {
-    return view('modules.teamsAndRoles.TeamMembers');
-});
+Route::get('/teammembers', [TeamMembersController::class, 'index']);
+
 
 // User Role Routes
-Route::resource('/userrole', UserRoleController::class);
+Route::resource('/roles', UserRoleController::class);
+Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
+
+// Employment Type Route
+Route::resource('/employmenttype', EmploymentTypeController::class);
+
+// Departments Route
+Route::resource('/departments', DepartmentController::class);
 
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
@@ -605,6 +613,7 @@ Route::get('/operators', function () {
     return view('modules.NewUI.operators');
 });
 
+Route::post('/deleteRepair', [repairController::class, 'delete']);
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {
     return view('modules.stock.warehouse');

@@ -8,16 +8,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown li-bom">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        More
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                        <li><a class="dropdown-item" href="#">Delete</a></li>
-                    </ul>
-                </li>
+
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
                         onclick="" id="URRefresh">Refresh</button>
@@ -32,6 +23,14 @@
     </div>
 </nav>
 <br>
+
+<div id="role_success" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="role_fail" class="alert alert-danger" style="display: none;">
+</div>
+
+
 <table id="UserRoleTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
         <tr>
@@ -39,12 +38,20 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($roles as $role)
         <tr>
-            <td class="text-bold"><a href="#">Admin Role</a></td>
+            <td class="text-bold">
+                <a href="#editRoleModal" data-toggle="modal" value="{{ $role->id }}" class="role-entity" data-target="#editRoleModal">
+                    {{ $role->role_name }}
+                </a>
+            </td>
         </tr>
+        @endforeach
+        {{--
         <tr>
-            <td class="text-bold"><a href="#">Manager Role</a></td>
-        </tr>
+            <td class="text-bold"><a href="#editRoleModal" data-toggle="modal" data-target="#editRoleModal">Manager
+                    Role</a></td>
+        </tr>--}}
     </tbody>
 </table>
 
@@ -68,10 +75,46 @@
                 </div>
             </div>
             <div class="modal-body p-5">
-                @include('modules.teamsAndRoles.newRoleForm')
+                @include('modules.userManagement.RoleManagement.newRoleForm')
             </div>
             <div class="modal-footer d-flex">
-                <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>
+                <span id="roleNotif" class="mr-auto text-danger" style="display: none;"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal New Record-->
+<div class="modal fade" id="editRoleModal" tabindex="-1" role="dialog" aria-labelledby="newTracePromptTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit Role</h5>
+                <div class="d-flex flex-row-reverse">
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal"
+                        data-target="#editRoleModal" id="closeRoleEditPrompt">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary m-1" data-dismiss="modal" data-target="#editRoleModal" id="updateRole">
+                        <a class="" href="#" style="text-decoration: none;color:white">
+                            Save
+                        </a>
+                    </button>
+                    <form method="POST" id="deleteRoleForm">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#editRoleModal"
+                        id="deleteRole">
+                            Delete <span class="fas fa-trash"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-body p-5">
+                @include('modules.userManagement.RoleManagement.editRole')
+            </div>
+            <div class="modal-footer d-flex">
             </div>
         </div>
     </div>

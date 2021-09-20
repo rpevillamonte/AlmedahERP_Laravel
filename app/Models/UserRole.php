@@ -16,4 +16,6 @@ class UserRole extends Model
         'permissions'
     ];
     public $timestamps = false;
+
+    public function permissions() { return json_decode($this->permissions); }
 }

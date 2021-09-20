@@ -18,6 +18,7 @@ use App\Models\StockTransfer;
 use App\Models\StockMovesReturn;
 use DB;
 use Exception;
+use \stdClass;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
@@ -74,8 +75,9 @@ class NewStockMovesController extends Controller
         $stations = Station::get();
         $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
         $item_code = $stock_transfer->item_code;
+        $transfer_logs = $stock_transfer->transfer_logs;
         $transfer_status = $stock_transfer->transfer_status;
-        return response()->json(['item_code'=>$item_code, 'transfer_status'=>$transfer_status, 'stations'=>$stations, 'station_name'=>$station->station_name ?? null, 'consumable_data'=>$consumable_data ?? null]);
+        return response()->json(['item_code'=>$item_code, 'transfer_logs'=>$transfer_logs, 'transfer_status'=>$transfer_status, 'stations'=>$stations, 'station_name'=>$station->station_name ?? null, 'consumable_data'=>$consumable_data ?? null]);
     }
     public function showItemsNew($matOrderedId){
         $matOrdered = MaterialsOrdered::where('mat_ordered_id', $matOrderedId)->first();
@@ -112,15 +114,18 @@ class NewStockMovesController extends Controller
         $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
         $items_to_be_transferred = $stock_transfer->item_code;
         $stock_return = StockMovesReturn::where('tracking_id', $trackingId)->first();
+        $return_logs = $stock_return->return_logs ?? null;
         $stock_moves = StockMoves::where('tracking_id', $trackingId)->first();
         $mat_ordered_id = $stock_moves->mat_ordered_id;
         $mat_ordered = MaterialsOrdered::where('mat_ordered_id', $mat_ordered_id)->first();
-        $items_list_received = $mat_ordered->items_list_received;
+        if($mat_ordered){
+            $items_list_received = $mat_ordered->items_list_received;
+        }
 
         if($stock_return){
             $items_to_be_returned = $stock_return->item_code;
         }
-        return response()->json(['transfer'=>$items_to_be_transferred,'return'=>$items_to_be_returned ?? null, 'return_date'=>$stock_return->return_date ?? null, 'items_list_received'=>$items_list_received]);
+        return response()->json(['return_logs'=>$return_logs, 'transfer'=>$items_to_be_transferred ?? null,'return'=>$items_to_be_returned ?? null, 'return_date'=>$stock_return->return_date ?? null, 'items_list_received'=>$items_list_received ?? null]);
     }
 
     public function store(Request $request){
@@ -157,6 +162,11 @@ class NewStockMovesController extends Controller
                 $stockMoves->tracking_id = "STO-".$stockMovesTypeInitial.Carbon::now()->year."-".str_pad($stockMoves->id, 5, '0', STR_PAD_LEFT);
                 $stockMoves->save();
 
+                $transfer_logs = array();
+                $obj = new stdClass();
+                $obj->message = 'Stock Transfer created';
+                $obj->date = Carbon::now()->format('F d Y h:i:s A');
+                array_push($transfer_logs, $obj);
 
                 $stockMovesTransfer = new StockTransfer();
                 $stockMovesTransfer->tracking_id = $stockMoves->tracking_id;
@@ -165,6 +175,7 @@ class NewStockMovesController extends Controller
                 $stockMovesTransfer->source_station = request('source_station') ?? null;
                 $stockMovesTransfer->target_station = request('target_station');
                 $stockMovesTransfer->transfer_status = "Pending (Transfer)";
+                $stockMovesTransfer->transfer_logs = json_encode($transfer_logs);
                 $stockMovesTransfer->save();
 
                 return response($stockMovesTransfer);
@@ -188,19 +199,116 @@ class NewStockMovesController extends Controller
 
     public function saveStockTransfer($trackingId, Request $request){
         $item_code = request('item_code');
+        $item_code_obj = json_decode($item_code, true);
+
+        $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
+        $stock_moves = StockMoves::where('tracking_id', $trackingId)->first();
+        $stock_transfer_item_code = json_decode($stock_transfer->item_code, true);
+        $stock_transfer_move_date = $stock_transfer->move_date;
+        $stock_transfer_employee_id = $stock_moves->employee_id;
+        $transfer_logs = json_decode($stock_transfer->transfer_logs, true);
+
+        foreach ($item_code_obj as $index=>$item) {
+            $keys = array_keys($item);
+        }
+
+        $changes = array();
+        foreach ($item_code_obj as $index=>$item) {
+            foreach ($keys as $key) {
+                if($item[$key] != $stock_transfer_item_code[$index][$key]){
+                    
+                    $obj = new stdClass();
+                    $obj->message = "Raw Material with item code ".$item['item_code']. " changed its ".str_replace("_", " ", $key)." to ".$item[$key];
+                    $obj->date = Carbon::now()->format('F d Y h:i:s A');
+                    array_push($changes, $obj);
+                }
+            }
+        }
+
+        foreach($changes as $change){
+            array_push($transfer_logs, $change);
+        }
+
+        
         $employee_id = request('employee_id');
         $move_date = request('move_date');
+
+        if($move_date != $stock_transfer_move_date){
+            $obj = new stdClass();
+            $obj->message = "Stock Transfer with tracking ID ".$trackingId." changed its move date to ". $move_date;
+            $obj->date = Carbon::now()->format('F d Y h:i:s A');
+            array_push($transfer_logs, $obj);
+        }
+        if($employee_id != $stock_transfer_employee_id){
+            $obj = new stdClass();
+            $obj->message = "Stock Transfer with tracking ID ".$trackingId." changed employee resposible to id ". $employee_id;
+            $obj->date = Carbon::now()->format('F d Y h:i:s A');
+            array_push($transfer_logs, $obj);
+        }
+
         $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
-        $stock_transfer->update(['transfer_status' => 'Pending (Transfer)', 'item_code'=>$item_code, 'employee_id'=>$employee_id, 'move_date'=>$move_date]);
-        return response($stock_transfer);
+        $stock_transfer->update(['transfer_logs'=> $transfer_logs, 'transfer_status' => 'Pending (Transfer)', 'item_code'=>$item_code, 'employee_id'=>$employee_id, 'move_date'=>$move_date]);
+        return response(json_encode($changes));
     }
 
     public function confirmStockTransfer($trackingId, Request $request){
-        $item_code = $request->get('item_code');
+        $item_code = request('item_code');
+        $item_code_obj = json_decode($item_code, true);
+
+        $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
+        $stock_moves = StockMoves::where('tracking_id', $trackingId)->first();
+        $stock_transfer_item_code = json_decode($stock_transfer->item_code, true);
+        $stock_transfer_move_date = $stock_transfer->move_date;
+        $stock_transfer_employee_id = $stock_moves->employee_id;
+        $transfer_logs = json_decode($stock_transfer->transfer_logs, true);
+
+        foreach ($item_code_obj as $index=>$item) {
+            $keys = array_keys($item);
+        }
+
+        $changes = array();
+        foreach ($item_code_obj as $index=>$item) {
+            foreach ($keys as $key) {
+                if($item[$key] != $stock_transfer_item_code[$index][$key]){
+                    
+                    $obj = new stdClass();
+                    $obj->message = "Raw Material with item code ".$item['item_code']. " changed its ".str_replace("_", " ", $key)." to ".$item[$key];
+                    $obj->date = Carbon::now()->format('F d Y h:i:s A');
+                    array_push($changes, $obj);
+                }
+            }
+        }
+
+        foreach($changes as $change){
+            array_push($transfer_logs, $change);
+        }
+
+        
         $employee_id = request('employee_id');
         $move_date = request('move_date');
-        $stock_transfer = StockTransfer::where('tracking_id', $trackingId)->first();
-        $stock_transfer->update(['transfer_status' => 'Successfully Transferred', 'item_code'=>$item_code, 'employee_id'=>$employee_id, 'move_date'=>$move_date]);
+
+        if($move_date != $stock_transfer_move_date){
+            $obj = new stdClass();
+            $obj->message = "Stock Transfer with tracking ID ".$trackingId." changed its move date to ". $move_date;
+            $obj->date = Carbon::now()->format('F d Y h:i:s A');
+            array_push($transfer_logs, $obj);
+        }
+        if($employee_id != $stock_transfer_employee_id){
+            $obj = new stdClass();
+            $obj->message = "Stock Transfer with tracking ID ".$trackingId." changed employee resposible to id ". $employee_id;
+            $obj->date = Carbon::now()->format('F d Y h:i:s A');
+            array_push($transfer_logs, $obj);
+        }
+
+        sleep(1);
+
+        $obj = new stdClass();
+        $obj->message = "Stock Transfer with tracking ID ".$trackingId." was tranferred successfully";
+        $obj->date = Carbon::now()->format('F d Y h:i:s A');
+        array_push($transfer_logs, $obj);
+
+
+        $stock_transfer->update(['transfer_logs'=>$transfer_logs, 'transfer_status' => 'Successfully Transferred', 'item_code'=>$item_code, 'employee_id'=>$employee_id, 'move_date'=>$move_date]);
         $stock_moves = StockMoves::where('tracking_id', $trackingId)->first();
         $stock_moves->update(['status'=>'Successfully Transferred']);
         return response($stock_moves);

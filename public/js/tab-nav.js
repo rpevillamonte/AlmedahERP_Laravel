@@ -5,7 +5,7 @@ if ($("#divMain").children().length == 0) {
     });
 }
 
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+var CSRF_TOKEN = $('meta[name="csrf-token"]').attr("content");
 
 //if (sessionStorage.getItem("route")) {
 //    $("#divMain").load(sessionStorage.getItem("route"));
@@ -105,19 +105,14 @@ function loadTab(menu, moduleWithSpace) {
         linkString,
         function (responseTxt, statusTxt, xhr) {
             if (statusTxt == "error") {
-                console.log(
-                    "Error: " + xhr.status + ": " + xhr.statusText
-                );
+                console.log("Error: " + xhr.status + ": " + xhr.statusText);
                 console.log($parent);
                 $(`#content${menu}`).load(
                     linkString,
                     function (responseTxt, statusTxt, xhr) {
                         if (statusTxt == "error")
                             alert(
-                                "Error: " +
-                                xhr.status +
-                                ": " +
-                                xhr.statusText
+                                "Error: " + xhr.status + ": " + xhr.statusText
                             );
                     }
                 );
@@ -185,7 +180,7 @@ function getQuantityFromMatOrdered(work_order_no) {
         success: function (data) {
             dataToReturn = JSON.parse(data);
         },
-        error: function (request, error) { },
+        error: function (request, error) {},
     });
     return dataToReturn;
 }
@@ -247,7 +242,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) { },
+                    error: function (request, error) {},
                 });
             } else {
                 $.ajax({
@@ -260,7 +255,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) { },
+                    error: function (request, error) {},
                 });
             }
 
@@ -314,8 +309,8 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                         materials_complete.push(false);
                         percentage_array.push(
                             required_qty /
-                            transferred_qty[productCode][index]
-                                .transferred_qty
+                                transferred_qty[productCode][index]
+                                    .transferred_qty
                         );
                     }
                 } else {
@@ -329,23 +324,23 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                     <div class="row m-1">
                       <div class="d-flex justify-content-start">
                         <label for="" class="ml-5">` +
-                    sequence +
-                    `</label>
+                        sequence +
+                        `</label>
                       </div>
                     </div>
                   </td>
                   <td>` +
-                    el["item_code"] +
-                    `</td>
+                        el["item_code"] +
+                        `</td>
                   <td>Test` +
-                    index +
-                    `</td>
+                        index +
+                        `</td>
                   <td>` +
-                    required_qty +
-                    `</td>
+                        required_qty +
+                        `</td>
                   <td>` +
-                    tq +
-                    `</td>
+                        tq +
+                        `</td>
                   
                </tr>`
                 );
@@ -381,7 +376,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                                 );
                             }
                         },
-                        error: function (request, error) { },
+                        error: function (request, error) {},
                     });
                 }
             } else {
@@ -396,7 +391,7 @@ function loadWorkOrderInfoWithoutSales(workOrderDetails) {
                             $("#startWorkOrder").prop("disabled", false);
                             $("#componentStatus").text(data.work_order_status);
                         },
-                        error: function (request, error) { },
+                        error: function (request, error) {},
                     });
                 }
             }
@@ -482,7 +477,7 @@ function loadWorkOrderInfo(
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) { },
+                    error: function (request, error) {},
                 });
             } else {
                 $.ajax({
@@ -495,7 +490,7 @@ function loadWorkOrderInfo(
                     success: function (data) {
                         $("#bomNumber").val(data);
                     },
-                    error: function (request, error) { },
+                    error: function (request, error) {},
                 });
             }
             $.ajax({
@@ -548,8 +543,8 @@ function loadWorkOrderInfo(
                                 materials_complete.push(false);
                                 percentage_array.push(
                                     required_qty /
-                                    transferred_qty[productCode][index]
-                                        .quantity_avail
+                                        transferred_qty[productCode][index]
+                                            .quantity_avail
                                 );
                             }
                         } else {
@@ -563,23 +558,23 @@ function loadWorkOrderInfo(
                             <div class="row m-1">
                               <div class="d-flex justify-content-start">
                                 <label for="" class="ml-5">` +
-                            sequence +
-                            `</label>
+                                sequence +
+                                `</label>
                               </div>
                             </div>
                           </td>
                           <td>` +
-                            rawMat["item_code"] +
-                            `</td>
+                                rawMat["item_code"] +
+                                `</td>
                           <td>Test` +
-                            index +
-                            `</td>
+                                index +
+                                `</td>
                           <td>` +
-                            required_qty +
-                            `</td>
+                                required_qty +
+                                `</td>
                           <td>` +
-                            tq +
-                            `</td>
+                                tq +
+                                `</td>
                        </tr>`
                         );
                     }
@@ -619,7 +614,7 @@ function loadWorkOrderInfo(
                                         data.work_order_status
                                     );
                                 },
-                                error: function (request, error) { },
+                                error: function (request, error) {},
                             });
                         }
                     } else {
@@ -643,7 +638,7 @@ function loadWorkOrderInfo(
                                         data.work_order_status
                                     );
                                 },
-                                error: function (request, error) { },
+                                error: function (request, error) {},
                             });
                         }
                     }
@@ -1016,7 +1011,7 @@ function writeRemark(el) {
     let currentRow = $(el).closest("tr");
     let itemCodeFound = currentRow.find("td:nth-child(2)").html();
     console.log(itemsRet);
-    itemsRet.forEach((itemRet) => {
+    passValueArray.forEach((itemRet) => {
         if (itemCodeFound == itemRet.item_code) {
             console.log(itemRet.remarks);
             $("#remarkText").val(function (text) {
@@ -1052,20 +1047,15 @@ function showItemsRet(trackingId) {
         type: "GET",
         url: "/showItemsRet/" + trackingId,
         success: function (data) {
-            let qty_checker = [];
-            JSON.parse(data["items_list_received"]).forEach((item) => {
-                qty_checker.push(item.qty_received);
-            });
-            console.log(qty_checker);
             if (data["return_date"]) {
                 $("#return_date_ret").val(data["return_date"]);
             }
             let items_list_received = JSON.parse(data["transfer"]);
-            items_list_received.forEach((item, index) => {
+            items_list_received.forEach((item) => {
                 let obj = {
                     item_code: item.item_code,
                     qty_received: item.qty_received,
-                    qty_checker: qty_checker[index],
+                    qty_checker: item.qty_checker,
                     source_station: item.source_station,
                     target_station: item.target_station,
                     consumable: item.consumable,
@@ -1078,7 +1068,7 @@ function showItemsRet(trackingId) {
                 let obj = {
                     item_code: item.item_code,
                     qty_received: item.qty_received,
-                    qty_checker: item.qty_received,
+                    qty_checker: item.qty_checker,
                     source_station: item.source_station,
                     target_station: item.target_station,
                     consumable: item.consumable,
@@ -1097,34 +1087,38 @@ function showItemsRet(trackingId) {
                           </div>
                       </td>
                       <td>` +
-                    item.item_code +
-                    `</td>
+                        item.item_code +
+                        `</td>
                     <td>` +
-                    item.qty_received +
-                    `</td>
+                        item.qty_received +
+                        `</td>
                     <td><input type="number" onchange="onChangeItemTransQty(this.value, this)" class="form-control w-75" max=` +
-                    item.qty_received +
-                    ` value=` +
-                    item.qty_received +
-                    `></td>
+                        item.qty_received +
+                        ` value=` +
+                        item.qty_received +
+                        `></td>
                     <td>` +
-                    item.consumable +
-                    `</td>
+                        item.consumable +
+                        `</td>
                     <td>` +
-                    item.source_station +
-                    `</td>
+                        item.source_station +
+                        `</td>
                     <td>` +
-                    item.target_station +
-                    `</td>
+                        item.target_station +
+                        `</td>
                     <td>` +
-                    item.item_condition +
-                    `</td>
+                        item.item_condition +
+                        `</td>
                     <td>
                         <button class="btn btn-sm btn-warning" onclick="writeRemark(this)" disabled>Write</button>
                     </td></tr>
                     `
                 );
             });
+
+            // if (items_list_received.length == 0) {
+
+            // }
 
             // -------------
             if (data["return"]) {
@@ -1150,23 +1144,53 @@ function showItemsRet(trackingId) {
                             </div>
                         </td>
                         <td>` +
-                        item.item_code +
-                        `</td>
+                            item.item_code +
+                            `</td>
                         <td>` +
-                        item.qty_transferred +
-                        `</td>
+                            item.qty_transferred +
+                            `</td>
                         <td>` +
-                        item.consumable +
-                        `</td>
+                            item.consumable +
+                            `</td>
                         <td>` +
-                        item.source_station +
-                        `</td>
+                            item.source_station +
+                            `</td>
                         <td>` +
-                        item.target_station +
-                        `</td>
+                            item.target_station +
+                            `</td>
                         <td>` +
-                        item.item_condition +
-                        `</td></tr>`
+                            item.item_condition +
+                            `</td></tr>`
+                    );
+                });
+
+                console.log("ret");
+                console.log(itemsRet);
+                console.log("trans");
+                console.log(itemsTrans);
+                console.log("pass");
+                console.log(passValueArray);
+            }
+
+            if (data["return_logs"]) {
+                let sorted_logs = JSON.parse(data["return_logs"]).sort(
+                    function (a, b) {
+                        return new Date(b.date) - new Date(a.date);
+                    }
+                );
+
+                sorted_logs.forEach((log, index) => {
+                    let date = log.date;
+                    $("#return_logs").append(
+                        `
+                    <div class="alert alert-secondary" role="alert">
+                      ` +
+                            log.message +
+                            `.
+                      <p class="card-text"><small class="text-muted">` +
+                            date +
+                            `</small></p>
+                    </div`
                     );
                 });
             }

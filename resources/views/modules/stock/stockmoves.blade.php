@@ -17,7 +17,26 @@
         </div>
     </div>
 </nav>
+
 <div class="container">
+    <div class="d-flex">
+        <div class="card text-white bg-primary my-3 mx-1">
+            <div class="card-body">
+                <h4 class="card-title"><strong>Transfers</strong></h4>
+                <h2 class="card-text"><strong class='mr-4'>{{ $transferred_qty }}</strong><i class="fas fa-paper-plane"></i></h2>
+                <small>Total as of today</small>
+            </div>
+                
+        </div>
+        <div class="card text-white bg-danger my-3 mx-1">
+            <div class="card-body">
+              <h4 class="card-title"><strong>Returns</strong></h4>
+              <h2 class="card-text"><strong class='mr-4'>{{ $returned_qty }}</strong><i class="fas fa-undo"></i></h2>
+              <small>Total as of today</small>
+              
+            </div>
+        </div>
+    </div>
     <div class="card my-2 p-4"> 
         <div class="card-body filter">
             <div class="row">
@@ -29,7 +48,7 @@
                 </div>
             </div>
         </div>
-
+        
         <table id="stockMovesTable" class="table table-striped table-bordered hover" style="width:100%">
             <thead>
                 <tr>

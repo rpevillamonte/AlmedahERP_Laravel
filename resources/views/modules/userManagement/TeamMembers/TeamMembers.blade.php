@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="modal-body p-5">
-                <?php include 'newMemberForm.php' ?>
+                @include('modules.userManagement.TeamMembers.newMemberForm')
             </div>
             <div class="modal-footer d-flex">
                 <span id="notif" class="mr-auto text-danger">There are Missing inputs!</span>

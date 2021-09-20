@@ -481,7 +481,7 @@ class SalesOrderController extends Controller
     }
 
     function viewId($id){
-        $ordered = ordered_products::where('sales_id', $id)->get();
+        $ordered = serial_numbers::where('sales_id', $id)->get();
         return response($ordered);
     }
 

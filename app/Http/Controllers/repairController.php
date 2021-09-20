@@ -132,4 +132,12 @@ class repairController extends Controller
 
         return response($form_data);
     }
+
+    function delete(Request $request){
+        $form_data = $request->input();
+        
+        $wc = WarrantyClaims::find($form_data['id']);
+        $wc->delete();
+        return response("Del OK");
+    }
 }
