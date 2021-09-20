@@ -1544,3 +1544,19 @@ function repairinfo(id) {
         $("#contentRepair").load("/repairinfo/"+id);
     });
 }
+
+function addEmployee() {
+    $(document).ready(function () {
+        $("#contentEmployee").load("/addemployee");
+    });
+}
+function Employee() {
+    $(document).ready(function () {
+        $("#contentEmployee").load("/employee");
+    });
+}
+function EditEmployee() {
+    $(document).ready(function () {
+        $("#contentEmployee").load("/editemployee");
+    });
+}

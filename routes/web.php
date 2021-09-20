@@ -573,6 +573,16 @@ Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
 
+/**ADD EMPLOYEE */
+Route::get('/addemployee', function () {
+    return view('modules.hr.AddEmployee');
+});
+Route::get('/editemployee', function () {
+    return view('modules.hr.editEmployee');
+});
+
+
+
 /**WORK CENTER ROUTES **/
 Route::resource('/workcenter', WorkCenterController::class);
 Route::get('/newworkcenter', function () {
