@@ -574,9 +574,8 @@ Route::get('/openUOMEdit', function () {
 });
 
 /**ADD EMPLOYEE */
-Route::get('/addemployee', function () {
-    return view('modules.hr.AddEmployee');
-});
+Route::get('/addemployee', [EmployeeController::class, 'addEmployee']);
+
 Route::get('/editemployee', function () {
     return view('modules.hr.editEmployee');
 });

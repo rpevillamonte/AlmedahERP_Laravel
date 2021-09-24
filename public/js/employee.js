@@ -81,24 +81,27 @@ $("#Click").on("click", function () {
 });
 
 function employeeCreate() {
-    $("#create-employee-form").on("submit", function (e) {
-        console.log("success");
+    console.log("burat");
+    $("#addemployee").on("submit", function (e) {
         e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "/create-employee",
-            data: $("#create-employee-form").serialize(),
-            success: function (response) {
-                successNotification("Employee SuccessFully Added!");
-                $("#create-employee-form")[0].reset();
-                $("#create-employee-modal").modal("toggle");
-            },
-            error: function () {
-                dangerNotification(
-                    "An existing account with the same Email exists!"
-                );
-            },
-        });
+        console.log("success");
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/create-employee",
+        //     data: $("#addemployee").serialize(),
+        //     success: function (response) {
+        //         console.log(response);
+        //         successNotification("Employee SuccessFully Added!");
+        //         $("#create-employee-form")[0].reset();
+        //         $("#create-employee-modal").modal("toggle");
+        //     },
+        //     error: function () {
+        //         console.log("FUCK");
+        //         dangerNotification(
+        //             "An existing account with the same Email exists!"
+        //         );
+        //     },
+        // });
     });
 }
 

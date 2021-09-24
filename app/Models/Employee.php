@@ -20,6 +20,16 @@ class Employee extends Authenticatable
         'gender',
         'contact_number',
         'email',
+        'date_of_birth',
+        'department_id',
+        'employment_id',
+        'hired_date',
+        'salary',
+        'salary_term',
+        'role_id',
+        'is_admin',
+        'address',
+        'status',
     ];
     
     protected $hidden = [

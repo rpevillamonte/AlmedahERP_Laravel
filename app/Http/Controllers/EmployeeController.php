@@ -4,14 +4,31 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Employee;
+use \App\Models\Department;
+use \App\Models\UserRole;
 use DB;
 class EmployeeController extends Controller
 {
     public function index(){
         // $position = Employee::whereNotNull('position')->distinct();
         $employees = Employee::get();
+        $departments = Department::get();
+        $roles = UserRole::get();
+        // $spec_rolesModel::all(['id'])->toArray()
         return view('modules.hr.employee', [
             'employees' => $employees,
+            'departments' => $departments,
+            'roles' => $roles,
+        ]);
+    }
+
+    public function addEmployee(){
+        $departments = Department::get();
+        $roles = UserRole::get();
+
+        return view('modules.hr.AddEmployee', [
+            'departments' => $departments,
+            'roles' => $roles,
         ]);
     }
     public function store(Request $request)
@@ -23,6 +40,14 @@ class EmployeeController extends Controller
             'contact_number' => 'required|numeric',
             'email' => 'required|unique:env_employees,email',
             'gender' => 'required',
+            'date_of_birth' => 'required',
+            'department_id' => 'required',
+            'hired_date' => 'required',
+            'salary' => 'required',
+            'salary_term' => 'required',
+            'role_id' => 'required',
+            'status' => 'required',
+            'address' => 'required',
         ]);
 
         try {
@@ -34,7 +59,20 @@ class EmployeeController extends Controller
             $data->position = $form_data['position'];
             $data->gender = $form_data['gender'];
             $data->email = $form_data['email'];
+
             $data->contact_number = $form_data['contact_number'];
+            $data->salary_term = $form_data['salary_term'];
+            $data->salary = $form_data['salary'];
+            $data->hired_date = $form_data['hired_date'];
+            $data->date_of_birth = $form_data['date_of_birth'];
+            $data->password = $form_data['password'];
+
+            $data->is_admin = $form_data['is_admin'];
+            $data->address = $form_data['address'];
+            $data->status = $form_data['status'];
+            $data->department_id = $form_data['department_id'];
+            $data->role_id = $form_data['role_id'];
+            $data->employment_id = $form_data['employment_type'];
             $data->save();
             return response($data);
         } catch (Exception $e) {

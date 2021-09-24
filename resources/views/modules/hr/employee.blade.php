@@ -43,8 +43,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                
-                    <tr>
+                        
+                    @foreach ($employees as $row)
+                    <tr id="<?=$row["id"]?>">
+                        <td class="text-black-50"><?=$row["employee_id"]?></td>
+                        <td class="text-black-50"><?=$row["first_name"]?> <?=$row["last_name"]?></td>
+                        <td class="text-black-50"><?=$row["position"]?></td>
+                        <td class="text-black-50"><?=$row["email"]?></td>
+                        <td class="text-black-50"><?=$row["role_id"]?></td>
+                        {{-- <td class="text-black-50"><?=$row["address"]?></td>
+                        <td><img src="images/img.png" class="customer-modal-image" height="37" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
+                        <td class="text-black-50"><?=$row["email_address"]?></td>
+                        <td class="text-black-50"><?=$row["company_name"]?></td>
+                        <td class="">
+                            <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
+                        </td> --}}
+                    </tr>
+                    @endforeach
+                    {{-- <tr>
                        <td class="text-bold"><a href="javascript:onclick=EditEmployee();">EMP001</a></td>
                        <td>Juan Dela Cruz</td>
                        <td class="text-bold">Supervisor</td>
@@ -57,7 +73,7 @@
                        <td class="text-bold">Manager</td>
                        <td>johndoe@gmail.com</td>
                        <td>Role2</td>
-                    </tr>
+                    </tr> --}}
                    
                     </tbody>
                 </table>  
