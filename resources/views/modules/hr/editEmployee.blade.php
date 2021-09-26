@@ -10,15 +10,23 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" onclick="Employee()">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit" style="background-color: #007bff;" >Save</button>
+                    <button class="btn btn-primary" form="editemployee" type="submit" style="background-color: #007bff;" >Save</button>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+<div class="alert alert-success alert-dismissible" id="editemployee-success" style="display:none;">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+</div>
+<div class="alert alert-danger alert-dismissible" id="editemployee-danger" style="display:none;">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+</div>
 
 <div class="container">
-	<form id="editemployee" name="editemployee" role="form">
+	<form id="editemployee" method="post">
+    @csrf
+    @method('PUT')
         <hr>
         <div class="row">
           <div class="col-3">
@@ -71,7 +79,7 @@
             <div class="col-3">
             <div class="form-group">
               <label >Employment Type</label>
-              <select class="form-control" name="eType" id="eType">
+              <select class="form-control" name="eType" id="eType" readonly>
                   <option value="" selected disabled>Choose</option>
                   <option value="Full-Time">Full-Time</option>
                   <option value="Contract">Contract</option>
@@ -86,7 +94,7 @@
             <div class="col-3">
             <div class="form-group">
               <label>Department ID</label>
-              <input type="text" name="deptID" id="deptID" class="form-control" >
+              <input type="text" name="deptID" id="deptID" class="form-control" readonly>
             </div>
             </div>      
         </div>  
@@ -119,7 +127,7 @@
             <div class="col-3">
             <div class="form-group">
               <label>Role ID</label>
-              <input type="text" name="roleID" id="roleID" class="form-control" >
+              <input type="text" name="roleID" id="roleID" class="form-control" readonly>
             </div>
             </div>  
         </div>
@@ -133,14 +141,15 @@
             <div class="col-6">
             <div class="form-group">
               <label>Password</label>
-              <input type="text" name="Password" id="Password" class="form-control">
+              <input type="text" name="Password" id="empPassEdit" class="form-control">
+              <input type="checkbox" onclick="togglePassword()" class="ml-1 mt-2"> Show Password
             </div>
             </div>  
         </div>
         <div class="row">
         <div class="col-6">
             <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="isadmin">
+            <input class="form-check-input" type="checkbox" value="" name="isadminEdit" id="isadmin">
             <label class="form-check-label">
                 IS Admin
             </label>
@@ -158,12 +167,12 @@
         <div class="col-6">
           <div class="form-group">
               <label>Status</label>
-              <select class="form-control" name="Status" id="Status">
+              <select class="form-control" name="Status" id="statusEdit">
                   <option value="" selected disabled>Choose</option>
-                  <option value="Weekly">Active</option>
-                  <option value="Monthly">Inactive</option>
-                  <option value="Monthly">Suspended</option>
-                  <option value="Monthly">Left</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                  <option value="Suspended">Suspended</option>
+                  <option value="Left">Left</option>
                 </select>
         </div>
         </div>
@@ -179,3 +188,55 @@
     </form>
 
 </div>
+
+<script>
+
+  $('#isadmin').on('change', function(){
+      $('#isadmin').val(this.checked ? 1 : 0);
+      console.log($('#isadmin').val());
+    });
+    
+  $("#editemployee").on("submit", function (e) {
+        e.preventDefault();
+        let id = $('#employeeID').val();
+        console.log('edits'+id);
+        $.ajax({
+            type: "PUT",
+            url: "/update-employee/"+id,
+            data: $("#editemployee").serialize(),
+            success: function (response) {
+                console.log(response);
+                successNotification("Employee SuccessFully Updated!");
+            },
+            error: function () {
+                console.log("ERROR");
+                dangerNotification(
+                    "There was a problem upon updating Employee"
+                );
+            },
+        });
+    });
+
+    function dangerNotification(text) {
+      $("#editemployee-danger").show();
+      $("#editemployee-danger").html(text);
+      $("#editemployee-danger").delay(4000).hide(1);
+    }
+
+    function successNotification(text) {
+        $("#editemployee-success").show();
+        $("#editemployee-success").html(text);
+        $("#editemployee-success").delay(4000).hide(1);
+        loadAll();
+    }
+
+    function togglePassword() {
+      var x = document.getElementById("empPassEdit");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+
+</script>
