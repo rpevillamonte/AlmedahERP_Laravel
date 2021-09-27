@@ -12,6 +12,10 @@ class Employee extends Authenticatable
     use Notifiable;
     use HasFactory;
     protected $table = 'env_employees';
+    protected $primaryKey = 'employee_id';
+
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'employee_id',
         'last_name',

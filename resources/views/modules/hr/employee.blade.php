@@ -44,13 +44,13 @@
                     </thead>
                     <tbody>
                         
-                    @foreach ($employees as $row)
+                    @foreach ($employees as $key=>$row)
                     <tr id="<?=$row["id"]?>">
-                        <td class="text-black-50"><?=$row["employee_id"]?></td>
+                        <td class="text-black-50"><a href="javascript:onclick=EditEmployee('<?=$row["employee_id"]?>');"><?=$row["employee_id"]?></a></td>
                         <td class="text-black-50"><?=$row["first_name"]?> <?=$row["last_name"]?></td>
                         <td class="text-black-50"><?=$row["position"]?></td>
                         <td class="text-black-50"><?=$row["email"]?></td>
-                        <td class="text-black-50"><?=$row["role_id"]?></td>
+                        <td class="text-black-50">{{ $role_names[$key ]}}</td>
                         {{-- <td class="text-black-50"><?=$row["address"]?></td>
                         <td><img src="images/img.png" class="customer-modal-image" height="37" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
                         <td class="text-black-50"><?=$row["email_address"]?></td>

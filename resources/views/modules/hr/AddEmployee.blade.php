@@ -154,7 +154,8 @@
             <div class="col-6">
             <div class="form-group">
               <label>Password</label>
-              <input type="text" name="password" id="password" class="form-control">
+              <input type="password" name="password" id="empPass" class="form-control" autocomplete="off">
+              <input type="checkbox" onclick="togglePassword()" class="ml-1 mt-2"> Show Password
             </div>
             </div>  
         </div>
@@ -202,6 +203,7 @@
 </div>
 
 <script>
+
    $("#addemployee").on("submit", function (e) {
         e.preventDefault();
         $.ajax({
@@ -238,5 +240,14 @@
         $("#addemployee-success").html(text);
         $("#addemployee-success").delay(4000).hide(1);
         loadAll();
+    }
+
+    function togglePassword() {
+      var x = document.getElementById("empPass");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
     }
 </script>

@@ -1555,8 +1555,58 @@ function Employee() {
         $("#contentEmployee").load("/employee");
     });
 }
-function EditEmployee() {
+function EditEmployee(employee_id) {
+    console.log(employee_id);
     $(document).ready(function () {
-        $("#contentEmployee").load("/editemployee");
+        $.ajax({
+            url: "/getEmployeeDetails/" + employee_id,
+            type: "get",
+            success: function (data) {
+                console.log(data);
+                $("#contentEmployee").load("/editemployee", function () {
+                    $("#employeeID").val(data["employee_id"]);
+                    $("#fname").val(data["first_name"]);
+                    $("#lname").val(data["last_name"]);
+                    $("#memberGender").val(data["gender"]);
+                    $("#bday").val(data["date_of_birth"]);
+                    $("#employeeID").val(data["employee_id"]);
+                    $("#position").val(data["position"]);
+                    $("#eType").val(getEmpType(data["employment_id"]));
+                    $("#deptID").val(data["department_id"]);
+                    $("#Hdate").val(data["hired_date"]);
+                    $("#Salary").val(data["salary"]);
+                    $("#salaryTerm").val(data["salary_term"]);
+                    $("#roleID").val(data["role_id"]);
+                    $("#Email").val(data["email"]);
+
+                    setCheckbox(data["is_admin"]);
+
+                    $("#contactno").val(data["contact_number"]);
+                    $("#statusEdit").val(data["status"]);
+                    $("#Address").val(data["addressstatus"]);
+                });
+            },
+            error: function (request, error) {},
+        });
     });
+}
+
+function getEmpType(employment_type) {
+    if (employment_type == "EMP-FT") {
+        return "Full-Time";
+    } else if (employment_type == "EMP-C") {
+        return "Contract";
+    } else if (employment_type == "EMP-P") {
+        return "Probation";
+    } else if (employment_type == "EMP-PT") {
+        return "Part-Time";
+    }
+}
+
+function setCheckbox(is_admin) {
+    if (is_admin) {
+        $("#isadmin").prop("checked", true);
+    } else {
+        $("#isadmin").prop("checked", false);
+    }
 }
