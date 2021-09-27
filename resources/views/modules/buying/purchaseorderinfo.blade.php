@@ -244,7 +244,7 @@
                             <thead class="border-top border-bottom bg-light">
                                 <tr class="text-muted">
                                     <th>
-                                        <input type="checkbox" id="masterChk" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
+                                        <input type="checkbox" id="masterChk" {{ $purchase_order->mp_status !== 'Draft' ? 'disabled' : "onchange='onChangeFunction();'" }}>
                                     </th>
                                     <th>Item Code</th>
                                     <th>Item Name</th>
@@ -258,7 +258,7 @@
                                 @foreach ($items_purchased as $item)
                                     <tr id="item-{{ $loop->index + 1 }}">
                                         <td>
-                                            <input type="checkbox" name="item-chk" id="chk{{ $loop->index + 1 }}" @if ($purchase_order->mp_status !== 'Draft') disabled @else onchange="onChangeFunction();" @endif>
+                                            <input type="checkbox" name="item-chk" id="chk{{ $loop->index + 1 }}" {{ $purchase_order->mp_status !== 'Draft' ? 'disabled' : "onchange='onChangeFunction();'" }}>
                                         </td>
                                         <td class="text-black-50">
                                             <span type="text" name="item{{ $loop->index + 1 }}"
@@ -270,7 +270,7 @@
                                         </td>
                                         <td class="text-black-50">
                                             <input type="date" name="date{{ $loop->index + 1 }}"
-                                                id="date{{ $loop->index + 1 }}" value="{{ $item['req_date'] }}" @if ($purchase_order->mp_status !== 'Draft') readonly @else onchange="onChangeFunction();" @endif>
+                                                id="date{{ $loop->index + 1 }}" value="{{ $item['req_date'] }}" {{ $purchase_order->mp_status !== 'Draft' ? 'readonly' : "onchange='onChangeFunction();'" }}>
                                         </td>
                                         <td class="text-black-50">
                                             <span name="qty{{ $loop->index + 1 }}"
@@ -295,9 +295,9 @@
                                             Row</button>
                                         <button type="button" id="deleteRow"
                                             style="background-color: red; display:none;">Delete</button>
+                                    @endif
                                 </td>
                             </tfoot>
-                            @endif
                             <style>
                                 #multBtn,
                                 #rowBtn,

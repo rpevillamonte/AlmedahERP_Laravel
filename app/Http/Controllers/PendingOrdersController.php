@@ -22,7 +22,7 @@ class PendingOrdersController extends Controller
                 $total_received += $item['qty_received'];
                 $total_quantity += $item['qty_ordered'];
             }
-            $result = intval(($total_received / $total_quantity)*100);
+            $result = ($total_quantity == 0 && $total_received == 0) ? 0 : intval(($total_received / $total_quantity)*100);
             array_push(
                 $order_progress,
                 $result

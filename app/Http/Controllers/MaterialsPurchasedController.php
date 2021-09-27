@@ -25,9 +25,9 @@ class MaterialsPurchasedController extends Controller
     public function index()
     {
         //
-        $materials_purchased = MaterialPurchased::all();
-        $materials = ManufacturingMaterials::all();
-        $suppliers = Supplier::all();
+        $materials_purchased = MaterialPurchased::all(['id', 'purchase_id', 'purchase_date', 'mp_status', 'total_cost']);
+        $materials = ManufacturingMaterials::all(['id', 'item_code', 'item_name']);
+        $suppliers = Supplier::all(['id', 'supplier_id', 'company_name']);
         return view('modules.buying.purchaseorder', 
                     ['materials_purchased' => $materials_purchased, 
                      'materials' => $materials,
@@ -103,7 +103,7 @@ class MaterialsPurchasedController extends Controller
     public function show($id)
     {
         //
-        $purchase_order = MaterialPurchased::find($id);
+        $purchase_order = MaterialPurchased::with('supplier_quotation')->find($id);
         $r_quotation = $purchase_order->supplier_quotation->req_quotation;
         $items_purchased = $purchase_order->itemsPurchased();
         $req_date = ($r_quotation != null) ? $r_quotation->material_request->required_date : $items_purchased[0]['req_date'];
