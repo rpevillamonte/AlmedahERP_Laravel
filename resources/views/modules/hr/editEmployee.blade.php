@@ -94,7 +94,7 @@
             <div class="col-3">
             <div class="form-group">
               <label>Department ID</label>
-              <input type="text" name="deptID" id="deptID" class="form-control" readonly>
+              <input type="text" name="deptID" id="deptID" class="form-control" disabled>
             </div>
             </div>      
         </div>  
@@ -127,7 +127,7 @@
             <div class="col-3">
             <div class="form-group">
               <label>Role ID</label>
-              <input type="text" name="roleID" id="roleID" class="form-control" readonly>
+              <input type="text" name="roleID" id="roleID" class="form-control" disabled>
             </div>
             </div>  
         </div>
@@ -135,14 +135,14 @@
             <div class="col-6">
             <div class="form-group">
               <label>Email</label>
-              <input type="email" name="Email" id="Email" class="form-control">
+              <input type="email" name="Email" id="Email" class="form-control" disabled>
             </div>
             </div>  
             <div class="col-6">
             <div class="form-group">
               <label>Password</label>
               <input type="text" name="Password" id="empPassEdit" class="form-control">
-              <input type="checkbox" onclick="togglePassword()" class="ml-1 mt-2"> Show Password
+              <input type="checkbox" onclick="togglePassword('empPassEdit')" class="ml-1 mt-2"> Show Password
             </div>
             </div>  
         </div>
@@ -190,53 +190,7 @@
 </div>
 
 <script>
-
-  $('#isadmin').on('change', function(){
-      $('#isadmin').val(this.checked ? 1 : 0);
-      console.log($('#isadmin').val());
-    });
-    
-  $("#editemployee").on("submit", function (e) {
-        e.preventDefault();
-        let id = $('#employeeID').val();
-        console.log('edits'+id);
-        $.ajax({
-            type: "PUT",
-            url: "/update-employee/"+id,
-            data: $("#editemployee").serialize(),
-            success: function (response) {
-                console.log(response);
-                successNotification("Employee SuccessFully Updated!");
-            },
-            error: function () {
-                console.log("ERROR");
-                dangerNotification(
-                    "There was a problem upon updating Employee"
-                );
-            },
-        });
-    });
-
-    function dangerNotification(text) {
-      $("#editemployee-danger").show();
-      $("#editemployee-danger").html(text);
-      $("#editemployee-danger").delay(4000).hide(1);
-    }
-
-    function successNotification(text) {
-        $("#editemployee-success").show();
-        $("#editemployee-success").html(text);
-        $("#editemployee-success").delay(4000).hide(1);
-        loadAll();
-    }
-
-    function togglePassword() {
-      var x = document.getElementById("empPassEdit");
-      if (x.type === "password") {
-        x.type = "text";
-      } else {
-        x.type = "password";
-      }
-    }
-
+  var url = "js/employee.js";
+  $.getScript(url);
 </script>
+
