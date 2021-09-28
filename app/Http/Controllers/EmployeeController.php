@@ -73,7 +73,10 @@ class EmployeeController extends Controller
             $data->salary = $form_data['salary'];
             $data->hired_date = $form_data['hired_date'];
             $data->date_of_birth = $form_data['date_of_birth'];
+
+
             $data->password = Hash::make($form_data['password']);
+            
 
             $data->is_admin = $form_data['is_admin'];
             $data->address = $form_data['address'];
@@ -83,7 +86,7 @@ class EmployeeController extends Controller
 
             $data->employment_id = $form_data['employment_type'];
             $data->save();
-            return response($role_name);
+            return response($data);
         } catch (Exception $e) {
             return $e;
         }
@@ -91,22 +94,20 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $validation = $request->validate([
-        //     'last_name' => 'required|max:30',
-        //     'first_name' => 'required|max:30',
-        //     'position' => 'required|max:50',
-        //     'contact_number' => 'required|numeric',
-        //     'email' => 'required|email',
-        //     'gender' => 'required',
-        //     'date_of_birth' => 'required',
-        //     'department_id' => 'required',
-        //     'hired_date' => 'required',
-        //     'salary' => 'required',
-        //     'salary_term' => 'required',
-        //     'role_id' => 'required',
-        //     'status' => 'required',
-        //     'address' => 'required',
-        // ]);
+        $validation = $request->validate([
+            'lname' => 'required|max:30',
+            'fname' => 'required|max:30',
+            'position' => 'required|max:50',
+            'contactno' => 'required|numeric',
+            'Email' => 'required|email',
+            'mamberGender' => 'required',
+            'bday' => 'required',
+            'Hdate' => 'required',
+            'Salary' => 'required',
+            'salaryTerm' => 'required',
+            'Status' => 'required',
+            'Address' => 'required',
+        ]);
 
         try {
             $employee = Employee::where('employee_id', $id)->first();
@@ -115,14 +116,16 @@ class EmployeeController extends Controller
             $employee->first_name = $request->input('fname');
             $employee->position = $request->input('position');
             $employee->gender = $request->input('memberGender');
-            $employee->email = $request->input('Email');
 
             $employee->contact_number = $request->input('contactno');
             $employee->salary_term = $request->input('salaryTerm');
             $employee->salary = $request->input('Salary');
             $employee->hired_date = $request->input('Hdate');
             $employee->date_of_birth = $request->input('bday');
-            $employee->password = $request->input('Password');
+
+            if($request->input('Password')){
+                $employee->password = Hash::make($request->input('Password'));
+            }
 
             $employee->is_admin = $request->input('isadminEdit');
             $employee->address = $request->input('Address');

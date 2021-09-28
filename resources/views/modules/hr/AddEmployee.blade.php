@@ -155,7 +155,7 @@
             <div class="form-group">
               <label>Password</label>
               <input type="password" name="password" id="empPass" class="form-control" autocomplete="off">
-              <input type="checkbox" onclick="togglePassword()" class="ml-1 mt-2"> Show Password
+              <input type="checkbox" onclick="togglePassword('empPass')" class="ml-1 mt-2"> Show Password
             </div>
             </div>  
         </div>
@@ -203,51 +203,6 @@
 </div>
 
 <script>
-
-   $("#addemployee").on("submit", function (e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "/create-employee",
-            data: $("#addemployee").serialize(),
-            success: function (response) {
-                console.log(response);
-                successNotification("Employee SuccessFully Added!");
-                $("#addemployee")[0].reset();
-            },
-            error: function () {
-                console.log("ERROR");
-                dangerNotification(
-                    "An existing account with the same Email exists!"
-                );
-            },
-        });
-    });
-
-    $('#is_admin').on('change', function(){
-      $('#is_admin').val(this.checked ? 1 : 0);
-      console.log($('#is_admin').val());
-    });
-
-    function dangerNotification(text) {
-      $("#addemployee-danger").show();
-      $("#addemployee-danger").html(text);
-      $("#addemployee-danger").delay(4000).hide(1);
-    }
-
-    function successNotification(text) {
-        $("#addemployee-success").show();
-        $("#addemployee-success").html(text);
-        $("#addemployee-success").delay(4000).hide(1);
-        loadAll();
-    }
-
-    function togglePassword() {
-      var x = document.getElementById("empPass");
-      if (x.type === "password") {
-        x.type = "text";
-      } else {
-        x.type = "password";
-      }
-    }
+  var url = "js/employee.js";
+  $.getScript(url);
 </script>
