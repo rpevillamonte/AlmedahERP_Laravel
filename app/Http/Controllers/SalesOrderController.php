@@ -16,10 +16,11 @@ use App\Models\MaterialRequest;
 use App\Models\ordered_products;
 use App\Models\warranty;
 use App\Models\serial_numbers;
-use Illuminate\Support\Carbon;
 use DB;
 use \stdClass;
 use Exception;
+use Carbon;
+
 class SalesOrderController extends Controller
 {
     //
@@ -544,18 +545,18 @@ class SalesOrderController extends Controller
 
     function addPayment(Request $request){
 
+
         $request->validate([
-            'view_totalamount' => 'required|numeric|gt:0',
-            'view_paymentType' => 'required|alpha_dash',
-            'view_account_no' => 'required',
-            'view_cheque_no' => 'required|alpha_dash',
+            'view_totalamount' => 'nullable|numeric|gt:0',
+            'view_paymentType' => 'nullable|alpha_dash',
+            'view_account_no' => 'nullable',
+            'view_cheque_no' => 'nullable|alpha_dash',
             'view_account_name' => 'nullable',
             'view_bank_name' => 'nullable',
             'view_branch_location' => 'nullable',
        
             
             'view_totalamount' => 'required|numeric|gt:0',
-            'view_salePaymentMethod' => 'required|numeric',
             'view_paymentType' => 'required|alpha',
             'view_customer_rep' => 'required',
             'view_totalamount' => 'required|numeric|gt:0',
