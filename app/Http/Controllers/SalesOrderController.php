@@ -19,7 +19,7 @@ use App\Models\serial_numbers;
 use DB;
 use \stdClass;
 use Exception;
-use Carbon;
+use Carbon\Carbon;
 
 class SalesOrderController extends Controller
 {
@@ -571,7 +571,7 @@ class SalesOrderController extends Controller
         $payment = payment_logs::where('sales_id',$id)->latest('id')->first();
 
         //Get current date
-        $currDate = Carbon\Carbon::now();
+        $currDate = Carbon::now();
         $currDate = $currDate->toDateString();
 
         $data->date_of_payment = $currDate;
