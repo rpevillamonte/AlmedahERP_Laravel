@@ -836,6 +836,8 @@
             success: function(data) {
                 console.log(data);
                 $('#saveSaleOrder1').click(function() {
+                    $("#ajaxStart").attr("disabled", false);
+                    $("#toWorkOrder").attr("disabled", false);
                     $('#newSalePrompt').modal('hide');
                 });
                 document.getElementById('closeSaleOrderModal').click();
@@ -966,7 +968,8 @@
                                                             ` + row['product_code'] + ` (` + row['sale_supply_method'] + `)` +`</option>`
                     );
                 })
-                
+                $("#ajaxStart").attr("disabled", true);
+                $("#toWorkOrder").attr("disabled", true);
             },
             error: function (response, error) {
                 // alert("Request: " + JSON.stringify(request));
