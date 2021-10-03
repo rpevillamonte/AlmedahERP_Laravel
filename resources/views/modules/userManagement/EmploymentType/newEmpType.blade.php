@@ -1,4 +1,4 @@
-<form action="" id="EmpTypeForm">
+<form action="{{ route('employmenttype.store') }}" id="EmpTypeForm" method="POST">
   <div class="row">
     <br>
     <div class="col">
@@ -17,7 +17,7 @@
         Employment Type Name
       </label>
       <div class="d-flex">
-        <input type="text" class="form-input form-control" id="empTypeName">
+        <input type="text" class="form-input form-control" name="empTypeName" id="empTypeName">
       </div>
     </div>
   </div>

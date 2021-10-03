@@ -1,148 +1,141 @@
-$.ajaxSetup({
-    headers: {
-        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-    },
-});
-
-$(document).ready(function (e) {
-    loadAll();
-});
-
-function loadAll() {
-    employeeUpdateModal();
-    employeeUpdate();
-    employeeCreate();
-}
-function dangerNotification(text) {
-    $("#employee-danger").show();
-    $("#employee-danger").html(text);
-    $("#employee-danger").delay(4000).hide(1);
-}
-
-function successNotification(text) {
-    $("#employee-success").show();
-    $("#employee-success").html(text);
-    $("#employee-success").delay(4000).hide(1);
-    loadAll();
-}
-
-// Fetches data and places it into update-employee-modal form
-function employeeUpdateModal() {
-    $(".editBtn").on("click", function (e) {
-        $("#update-employee-modal").modal("show");
-        $tr = $(this).closest("tr");
-        var data = $tr
-            .children("td")
-            .map(function () {
-                return $(this).text();
-            })
-            .get();
-        $("#id").val(data[0]);
-        $("#last_name_up").val(data[1]);
-        $("#first_name_up").val(data[2]);
-        $("#position_up").val(data[3]);
-        $("#contact_number_up").val(data[6]);
-        $("#active_status_up").val(data[9]);
-        const status = data[9];
-        if (status == 0) {
-            $(".employeeStatus").html(
-                '<div class="form-check form-switch"><input class="form-check-input toggle" id="active_status_up" name="active_status" type="checkbox" value="1"><label for="active_status_up" class="pl-3">Activate Account</label></div>'
-            );
-        } else {
-            $(".employeeStatus").html(
-                '<div class="form-check form-switch"><input class="form-check-input toggle" id="active_status_up" name="active_status" type="checkbox" value="0"><label for="active_status_up" class="pl-3">Deactivate Account</label></div>'
-            );
-        }
-    });
-}
-
-//Update Employee Upon Submitting Modal Form
-function employeeUpdate() {
-    $("#update-employee-form").on("submit", function (e) {
-        e.preventDefault();
-        var id = $("#id").val();
+function EditEmployee(employee_id) {
+    console.log(employee_id);
+    $(document).ready(function () {
         $.ajax({
-            type: "PUT",
-            url: "/update-employee/" + id,
-            data: $("#update-employee-form").serialize(),
-            success: function (response) {
-                successNotification("Employee SuccessFully Updated!");
-                $("#update-employee-modal").modal("hide");
-                $("#update-employee-form")[0].reset();
+            url: "/getEmployeeDetails/" + employee_id,
+            type: "get",
+            success: function (data) {
+                console.log(data);
+                $("#contentEmployee").load("/editemployee", function () {
+                    $("#employeeID").val(data["employee_id"]);
+                    $("#fname").val(data["first_name"]);
+                    $("#lname").val(data["last_name"]);
+                    $("#memberGender").val(data["gender"]);
+                    $("#bday").val(data["date_of_birth"]);
+                    $("#employeeID").val(data["employee_id"]);
+                    $("#position").val(data["position"]);
+
+                    $("#eType").val(getEmpType(data["employment_id"]));
+
+                    $("#deptID").val(data["department_id"]);
+                    $("#Hdate").val(data["hired_date"]);
+                    $("#Salary").val(data["salary"]);
+                    $("#salaryTerm").val(data["salary_term"]);
+                    $("#roleID").val(data["role_id"]);
+                    $("#Email").val(data["email"]);
+
+                    setCheckbox(data["is_admin"]);
+
+                    $("#contactno").val(data["contact_number"]);
+                    $("#statusEdit").val(data["status"]);
+                    $("#Address").val(data["address"]);
+                });
             },
-            error: () =>
-                dangerNotification("There was an error upon updating!"),
+            error: function (request, error) {},
         });
     });
 }
 
-$("#Click").on("click", function () {
-    alert("clicked");
-});
-
-function employeeCreate() {
-    $("#create-employee-form").on("submit", function (e) {
-        console.log("success");
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: "/create-employee",
-            data: $("#create-employee-form").serialize(),
-            success: function (response) {
-                successNotification("Employee SuccessFully Added!");
-                $("#create-employee-form")[0].reset();
-                $("#create-employee-modal").modal("toggle");
-            },
-            error: function () {
-                dangerNotification(
-                    "An existing account with the same Email exists!"
-                );
-            },
-        });
-    });
+function getEmpType(employment_type) {
+    if (employment_type == "EMP-FT") {
+        return "Full-Time";
+    } else if (employment_type == "EMP-C") {
+        return "Contract";
+    } else if (employment_type == "EMP-P") {
+        return "Probation";
+    } else if (employment_type == "EMP-PT") {
+        return "Part-Time";
+    }
 }
 
-$("body").on("click", ".employee-edit-btn", function (e) {
+function setCheckbox(is_admin) {
+    if (is_admin) {
+        $("#isadmin").prop("checked", true);
+    } else {
+        $("#isadmin").prop("checked", false);
+    }
+}
+
+$("#editemployee").on("submit", function (e) {
     e.preventDefault();
-    let element = this;
-    let id = element.id;
-    console.log(id);
+    let id = $("#employeeID").val();
+    console.log("edits" + id);
     $.ajax({
-        type: "GET",
-        url: "/get-employee/" + id,
-        success: function (data) {
-            console.log(data);
+        type: "PUT",
+        url: "/update-employee/" + id,
+        data: $("#editemployee").serialize(),
+        success: function (response) {
+            console.log(response);
+            successNotification(
+                "Employee SuccessFully Updated!",
+                "editemployee-success"
+            );
         },
-        error: function (data) {
-            console.log("error");
-            console.log(data.status);
-            $(document).ready(function () {
-                sessionStorage.setItem("status", "error");
-                $("#divMain").load("/employee");
-            });
+        error: function () {
+            console.log("ERROR");
+            dangerNotification(
+                "There was a problem upon updating Employee",
+                "editemployee-danger"
+            );
         },
     });
-    // $("#updateComponentModal").modal("toggle");
-    // var element = this;
-    // var id = element.dataset.id;
-    // // Adding the ID to a variable accessible to the ajax call
-    // sessionStorage.setItem('material-edit-id', id);
-    // var form = $('#update-material-form');
-    // var modal = $('#update-material-form-modal');
-    // form.attr('action', '/update-material/' + id);
-
-    // // Finding the element being edited and returning the details
-    // $.get('/inventory/' + sessionStorage.getItem('material-edit-id'), function(data, status) {
-    //     let images = JSON.parse(data.item_image);
-    //     $('#material_name').val(data.item_name);
-    //     $('#material_code').val(data.item_code);
-    //     $('#material_category').val(data.category_id);
-    //     $('#img_tmp_edit').attr('src', 'storage/' + images[0]);
-    //     sessionStorage.setItem('old_image', 'storage/' + images[0]);
-    //     $('#rm_status').val(data.rm_status);
-    //     $('#unit_price').val(data.unit_price);
-    //     $('#total_amount').val(data.total_amount);
-    // });
-
-    // modal.modal('show');
 });
+
+$("#addemployee").on("submit", function (e) {
+    e.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "/create-employee",
+        data: $("#addemployee").serialize(),
+        success: function (response) {
+            console.log(response);
+            successNotification(
+                "Employee SuccessFully Added!",
+                "addemployee-success"
+            );
+            $("#addemployee")[0].reset();
+        },
+        error: function () {
+            console.log("ERROR");
+            dangerNotification(
+                "An existing account with the same Email exists!",
+                "addemployee-danger"
+            );
+        },
+    });
+});
+
+$("#isadmin").on("change", function () {
+    $("#isadmin").val(this.checked ? 1 : 0);
+    console.log($("#isadmin").val());
+});
+
+$("#is_admin").on("change", function () {
+    $("#is_admin").val(this.checked ? 1 : 0);
+    console.log($("#is_admin").val());
+});
+
+function dangerNotification(text, name) {
+    $("#" + name).show();
+    $("#" + name).html(text);
+    $("#" + name)
+        .delay(4000)
+        .hide(1);
+}
+
+function successNotification(text, name) {
+    $("#" + name).show();
+    $("#" + name).html(text);
+    $("#" + name)
+        .delay(4000)
+        .hide(1);
+}
+
+function togglePassword(name) {
+    var x = document.getElementById(name);
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}

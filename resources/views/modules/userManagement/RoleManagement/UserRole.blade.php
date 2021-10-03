@@ -23,6 +23,14 @@
     </div>
 </nav>
 <br>
+
+<div id="role_success" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="role_fail" class="alert alert-danger" style="display: none;">
+</div>
+
+
 <table id="UserRoleTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
         <tr>
@@ -70,7 +78,7 @@
                 @include('modules.userManagement.RoleManagement.newRoleForm')
             </div>
             <div class="modal-footer d-flex">
-                <span id="roleNotif" class="mr-auto text-danger"></span>
+                <span id="roleNotif" class="mr-auto text-danger" style="display: none;"></span>
             </div>
         </div>
     </div>

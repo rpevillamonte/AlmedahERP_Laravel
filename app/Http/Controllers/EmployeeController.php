@@ -4,14 +4,42 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Employee;
+use \App\Models\Department;
+use App\Models\EmploymentType;
+use \App\Models\UserRole;
 use DB;
+use Illuminate\Support\Facades\Hash;
 class EmployeeController extends Controller
 {
     public function index(){
         // $position = Employee::whereNotNull('position')->distinct();
-        $employees = Employee::get();
+        $employees = Employee::employees()->get(['employee_id', 'last_name', 'first_name', 'email']);
+        // $departments = Department::get();
+
+        // $roles = Employee::get()->pluck('role_id');
+        // $role_names = array();
+        // foreach($roles as $role){
+        //     $user_role = UserRole::where('role_id', $role)->first();
+        //     $role_name = $user_role->role_name ?? null;
+        //     array_push($role_names, $role_name);
+        // }
+        // $spec_rolesModel::all(['id'])->toArray()
         return view('modules.hr.employee', [
-            'employees' => $employees,
+            'employees' => $employees
+            // 'departments' => $departments,
+            // 'role_names' => $role_names,
+        ]);
+    }
+
+    public function addEmployee(){
+        $departments = Department::get();
+        $roles = UserRole::get();
+        $e_types = EmploymentType::get();
+
+        return view('modules.hr.AddEmployee', [
+            'departments' => $departments,
+            'roles' => $roles,
+            'e_types' => $e_types
         ]);
     }
     public function store(Request $request)
@@ -23,6 +51,14 @@ class EmployeeController extends Controller
             'contact_number' => 'required|numeric',
             'email' => 'required|unique:env_employees,email',
             'gender' => 'required',
+            'date_of_birth' => 'required',
+            'department_id' => 'required',
+            'hired_date' => 'required',
+            'salary' => 'required',
+            'salary_term' => 'required',
+            'role_id' => 'required',
+            'status' => 'required',
+            'address' => 'required',
         ]);
 
         try {
@@ -34,7 +70,24 @@ class EmployeeController extends Controller
             $data->position = $form_data['position'];
             $data->gender = $form_data['gender'];
             $data->email = $form_data['email'];
+
             $data->contact_number = $form_data['contact_number'];
+            $data->salary_term = $form_data['salary_term'];
+            $data->salary = $form_data['salary'];
+            $data->hired_date = $form_data['hired_date'];
+            $data->date_of_birth = $form_data['date_of_birth'];
+
+
+            $data->password = Hash::make($form_data['password']);
+            
+
+            $data->is_admin = $form_data['is_admin'];
+            $data->address = $form_data['address'];
+            $data->status = $form_data['status'];
+            $data->department_id = $form_data['department_id'];
+            $data->role_id = $form_data['role_id'];
+
+            $data->employment_id = $form_data['employment_type'];
             $data->save();
             return response($data);
         } catch (Exception $e) {
@@ -45,12 +98,50 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $validation = $request->validate([
-            'last_name' => 'required|max:30',
-            'first_name' => 'required|max:30',
+            'lname' => 'required|max:30',
+            'fname' => 'required|max:30',
             'position' => 'required|max:50',
-            'contact_number' => 'required|numeric',
-            'gender' => 'required',
+            'contactno' => 'required|numeric',
+            'Email' => 'required|email',
+            'mamberGender' => 'required',
+            'bday' => 'required',
+            'Hdate' => 'required',
+            'Salary' => 'required',
+            'salaryTerm' => 'required',
+            'Status' => 'required',
+            'Address' => 'required',
         ]);
+
+        try {
+            $employee = Employee::where('employee_id', $id)->first();
+
+            $employee->last_name = $request->input('lname');
+            $employee->first_name = $request->input('fname');
+            $employee->position = $request->input('position');
+            $employee->gender = $request->input('memberGender');
+
+            $employee->contact_number = $request->input('contactno');
+            $employee->salary_term = $request->input('salaryTerm');
+            $employee->salary = $request->input('Salary');
+            $employee->hired_date = $request->input('Hdate');
+            $employee->date_of_birth = $request->input('bday');
+
+            if($request->input('Password')){
+                $employee->password = Hash::make($request->input('Password'));
+            }
+
+            $employee->is_admin = $request->input('isadminEdit');
+            $employee->address = $request->input('Address');
+            $employee->status = $request->input('Status');
+            // $employee->department_id = $request->input('deptID');
+            // $employee->role_id = $request->input('roleID');
+            // $employee->employment_id = $request->input('eType');
+
+            $employee->save();
+            return response($employee);
+        } catch (Exception $e) {
+            return response('There was an error upon updating!');
+        }
 
         try {
             $employee = Employee::where('id', $id)->first();
@@ -104,10 +195,10 @@ class EmployeeController extends Controller
     //         ]);
     //     }
     // }
-    public function getEmployee($id)
-    {
+
+    public function getEmployeeDetails($employee_id){
         try {
-            $employee = Employee::where('employee_id', $id)->first();
+            $employee = Employee::where('employee_id', $employee_id)->first();
             return response($employee);
         } catch (Exception $e) {
             return response()->json([

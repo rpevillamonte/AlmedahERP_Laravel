@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserRole;
+use App\Models\EmploymentType;
 use Exception;
 use Illuminate\Http\Request;
 
-class UserRoleController extends Controller
+class EmploymentTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,7 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::get(['role_name'])]);
-    
+        return view('modules.userManagement.EmploymentType.EmploymentType', ['employment_types' => EmploymentType::all()]);
     }
 
     /**
@@ -40,22 +39,20 @@ class UserRoleController extends Controller
     {
         //
         try {
+            $emp_type = new EmploymentType();
             $form_data = $request->input();
-            $last_role = UserRole::orderby('id', 'desc')->first();
-            $id = $last_role ? $last_role->id + 1 : 1;
-            $role_id = "ROLE-";
-            $role_id .= str_pad($id, 3, "0", STR_PAD_LEFT);
-    
-            $role = new UserRole();
-            $role->role_id = $role_id;
-            $role->role_name = $form_data['roleName'];
-            $role->description = 'sample_desc'; // Filler data, idk sa silbi ng description di naman siya visible sa frontend.
-            $role->permissions = $form_data['permissions'];
-    
-            $role->save();
+
+            $last_et = EmploymentType::orderby('id', 'desc')->first();
+            $last_id = $last_et ? $last_et->id + 1 : 1;
+
+            $et_id = 'EMP-TYPE-' . str_pad($last_id, 3, '0', STR_PAD_LEFT);
+            $emp_type->employment_id = $et_id;
+            $emp_type->employment_type = $form_data['empTypeName'];
+
+            $emp_type->save();
         } catch (Exception $e) {
-            return ['error' => $e];
-        } 
+            return $e;
+        }
     }
 
     /**
@@ -67,9 +64,7 @@ class UserRoleController extends Controller
     public function show($id)
     {
         //
-        $role = UserRole::find($id);
-        $role->permissions = $role->permissions(); 
-        return response()->json(['role' => $role]);
+        return ['emp_type' => EmploymentType::find($id)];
     }
 
     /**
@@ -94,18 +89,14 @@ class UserRoleController extends Controller
     {
         //
         try {
-
             $form_data = $request->input();
 
-            $role = UserRole::find($id);
-            $role->role_name = $form_data['roleEditName'];
-            $role->description = 'sample_desc';
-            $role->permissions = $form_data['permissions'];
-    
-            $role->save();
+            $et = EmploymentType::find($id);
+            $et->employment_type = $form_data['editEmpTypeName'];
+            $et->save();
         } catch (Exception $e) {
-            return ['error' => $e];
-        } 
+            return $e;
+        }
     }
 
     /**
@@ -117,11 +108,11 @@ class UserRoleController extends Controller
     public function destroy($id)
     {
         //
-        try{
-            $role = UserRole::find($id);
-            $role->delete();
+        try {
+            $et = EmploymentType::find($id);
+            $et->delete();
         } catch (Exception $e) {
             return $e;
-        } 
+        }
     }
 }

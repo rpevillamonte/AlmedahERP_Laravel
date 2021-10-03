@@ -32,6 +32,7 @@ use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmploymentTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoutingsController;
 use App\Http\Controllers\WorkCenterController;
@@ -511,9 +512,7 @@ Route::resource('/roles', UserRoleController::class);
 Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
 
 // Employment Type Route
-Route::get('/employmenttype', function () {
-    return view('modules.userManagement.EmploymentType.EmploymentType');
-});
+Route::resource('/employmenttype', EmploymentTypeController::class);
 
 // Departments Route
 Route::resource('/departments', DepartmentController::class);
@@ -521,7 +520,7 @@ Route::resource('/departments', DepartmentController::class);
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
-Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
+Route::get('/supp-filter/{name}', [SupplierController::class, 'filterByID']);
 Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 
@@ -574,6 +573,15 @@ Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
 
+/**ADD EMPLOYEE */
+Route::get('/addemployee', [EmployeeController::class, 'addEmployee']);
+Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
+Route::get('/editemployee', function () {
+    return view('modules.hr.editEmployee');
+});
+
+
+
 /**WORK CENTER ROUTES **/
 Route::resource('/workcenter', WorkCenterController::class);
 Route::get('/newworkcenter', function () {
@@ -608,6 +616,12 @@ Route::post('/getCustomerDetails', [repairController::class, 'getCustomerDetails
 Route::post('/createRepair', [repairController::class, 'store']);
 Route::get('/repairinfo/{id}', [repairController::class, 'viewEdit']);
 Route::patch('/editRepairReq/{id}', [repairController::class, 'update']);
+
+/** OPERATORS ROUTES*/
+Route::get('/operators', function () {
+    return view('modules.NewUI.operators');
+});
+
 Route::post('/deleteRepair', [repairController::class, 'delete']);
 /**WAREHOUSE ROUTES */
 Route::get('/loadWarehouse', function () {

@@ -19,7 +19,9 @@ class PurchaseInvoiceController extends Controller
     public function index()
     {
         //
-        $purchase_invoice = PurchaseInvoice::all();
+        $purchase_invoice = PurchaseInvoice::get(
+            ['id', 'p_invoice_id', 'date_created', 'p_receipt_id', 'total_amount_paid', 'grand_total', 'payment_balance', 'pi_status']
+        );
         return view('modules.buying.purchaseinvoice', ['invoices' => $purchase_invoice]);
     }
 
@@ -81,7 +83,7 @@ class PurchaseInvoiceController extends Controller
     public function show($id)
     {
         //
-        $invoice = PurchaseInvoice::find($id);
+        $invoice = PurchaseInvoice::with(['receipt', 'invoice_logs'])->find($id);
         $received_items = $invoice->receipt->order->itemsPurchased();
         $supplier = $invoice->receipt->order->supplier_quotation->supplier;
         $logs = $invoice->invoice_logs;
@@ -163,14 +165,9 @@ class PurchaseInvoiceController extends Controller
             if(is_null($last_data)) {
                 $description = "Downpayment";
             } else {
-                $all_data = $last_data = PaymentInvoiceLog::where('p_invoice_id', $form_data['invoice_id']);
+                $all_data = PaymentInvoiceLog::where('p_invoice_id', $form_data['invoice_id']);
                 $current_count = $all_data->count() + 1;
-                $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-                if ((($current_count % 100) >= 11) && (($current_count%100) <= 13))
-                    $ordinal_string = $current_count. 'th';
-                else
-                    $ordinal_string = $current_count. $ends[$current_count % 10];
-                echo $ordinal_string;
+                $ordinal_string = $this->ordinal($current_count);
                 $description = strval($ordinal_string) . " Installment";
             }
         } else {
@@ -230,7 +227,8 @@ class PurchaseInvoiceController extends Controller
 
     public function viewCheck($id) {
         $log = PaymentInvoiceLog::find($id);
-        return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no, 'bank_name' => $log->bank_name, 'branch' => $log->bank_location];
+        return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no, 
+                'bank_name' => $log->bank_name, 'branch' => $log->bank_location];
     }
 
     /**
@@ -245,7 +243,11 @@ class PurchaseInvoiceController extends Controller
     }
 
     //Generate ordinal numbers
-    function ordinal($number) {
-        
+    private function ordinal($number) {
+        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+        if ((($number % 100) >= 11) && (($number%100) <= 13))
+            $ordinal_string = $number. 'th';
+        else
+            $ordinal_string = $number. $ends[$number % 10];
     }
 }

@@ -243,12 +243,6 @@
                 <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
                         class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Team Members</span>
-                    </a>
-                </div>
-                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
-                        class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Roles</span>
                     </a>
                 </div>
@@ -980,6 +974,10 @@
                 <!-- End of Menu Item Messages -->
                 <!-- Submenu Messages content -->
                 <div id='submenunewUI' class="collapse sidebar-submenu">
+                    <a href="#" id="address-toggle" data-parent="NewUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Operators</span>
+                    </a>
                     <a href="#" id="address-toggle" data-parent="NewUI"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Address</span>

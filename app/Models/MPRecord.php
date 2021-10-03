@@ -19,4 +19,8 @@ class MPRecord extends Model
         'rate',
         'subtotal'
     ];
+
+    public function material() {
+        return $this->hasOne(ManufacturingMaterials::class, 'item_code', 'item_code');
+    }
 }

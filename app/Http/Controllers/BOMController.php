@@ -23,7 +23,11 @@ class BOMController extends Controller
     public function index()
     {
         //
-        $bills_of_materials = BillOfMaterials::all();
+        $bills_of_materials = BillOfMaterials::get(['bom_name', 'product_code', 'component_code', 'is_active', 'is_default']);
+        foreach ($bills_of_materials as $bom) {
+            # code...
+            $bom->item_code = is_null($bom->product_code) ? $bom->component_code : $bom->product_code;    
+        }
         return view('modules.BOM.bom', ['boms' => $bills_of_materials]);
     }
 
@@ -35,9 +39,9 @@ class BOMController extends Controller
     public function create()
     {
         //
-        $man_prod = ManufacturingProducts::all();
-        $components = Component::all();
-        $routings = Routings::all();
+        $man_prod = ManufacturingProducts::get(['product_code', 'product_name']);
+        $components = Component::get(['component_code', 'component_name']);
+        $routings = Routings::get(['routing_id', 'routing_name']);
         return view('modules.BOM.newbom', ['man_prods' => $man_prod, 'components' => $components, 'routings' => $routings]);
     }
 
@@ -57,22 +61,26 @@ class BOMController extends Controller
             $bom_name = "BOM-"; //initialize "BOM-"
 
             $bom = new BillOfMaterials();
-
+            
+            $item_key = isset($form_data['product_code']) ? 'product_code' : 'component_code';
+            $code = $form_data[$item_key];
+            
             if (isset($form_data['product_code'])) {
-                $bom->product_code = $form_data['product_code'];
-                $code = $form_data['product_code'];
-                $product = ManufacturingProducts::where('product_code', $form_data['product_code'])->first();
-                $name = $product->product_name;
+                $bom->product_code = $code;
+                $item = ManufacturingProducts::where('product_code', $code)->first();
+                
             } else {
-                $bom->component_code = $form_data['component_code'];
-                $code = $form_data['component_code'];
-                $component = Component::where('component_code', $form_data['component_code'])->first();
-                $name = $component->component_name;
+                $bom->component_code = $code;
+                $item = Component::where('component_code', $code)->first();
             }
+
+            $name = is_null($item->product_name) ? $item->component_name : $item->product_name;
 
             $bom_name .= $name . "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
 
-            $matching_boms = BillOfMaterials::where('product_code', $code)->orWhere('component_code', $code)->get();
+            $matching_boms = BillOfMaterials::where('product_code', $code)
+                                            ->orWhere('component_code', $code)
+                                            ->get();
 
             $is_default_boms = $matching_boms->where('is_default', 1)->first();
 
@@ -117,9 +125,9 @@ class BOMController extends Controller
         $item = ($bom->product != null) ? $bom->product : $bom->component;
         $routing_ops = $routing->operations();
         $rateList = $bom->rateList();
-        $man_prod = ManufacturingProducts::all();
-        $components = Component::all();
-        $routings = Routings::all();
+        $man_prod = ManufacturingProducts::get(['product_code', 'product_name']);
+        $components = Component::get(['component_code', 'component_name']);
+        $routings = Routings::get(['routing_id', 'routing_name']);
         return view(
             'modules.BOM.bominfo',
             [

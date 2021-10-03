@@ -1541,6 +1541,17 @@ function newrepairrequest() {
 }
 function repairinfo(id) {
     $(document).ready(function () {
-        $("#contentRepair").load("/repairinfo/"+id);
+        $("#contentRepair").load("/repairinfo/" + id);
+    });
+}
+
+function addEmployee() {
+    $(document).ready(function () {
+        $("#contentEmployee").load("/addemployee");
+    });
+}
+function Employee() {
+    $(document).ready(function () {
+        $("#contentEmployee").load("/employee");
     });
 }

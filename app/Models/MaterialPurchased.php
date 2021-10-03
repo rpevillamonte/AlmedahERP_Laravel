@@ -24,25 +24,26 @@ class MaterialPurchased extends Model
     //];
 
     public function itemsPurchased() {
-        $items_purchased = json_decode($this->items_list_purchased);
+        //$items_purchased = json_decode($this->items_list_purchased);
         // sometimes, one json_decode is not enough to convert json string to json object
-        while(is_string($items_purchased)) {
-            $items_purchased = json_decode($items_purchased);
-        }
+        // while(is_string($items_purchased)) {
+        //     $items_purchased = json_decode($items_purchased);
+        // }
+        $material_records = $this->materialRecords;
         $items_purchased_array = array();
-        foreach($items_purchased as $item) {
-            $material = ManufacturingMaterials::where('item_code', $item->item_code)->first();
+        foreach($material_records as $mp) {
+            $material = ManufacturingMaterials::where('item_code', $mp->item_code)->first();
             array_push($items_purchased_array,
                 array(
                     //'purchase_id' => $this->purchase_id,
-                    //'supplier' => $item->supplier_id,
-                    'item_code' => $item->item_code,
+                    //'supplier' => $mp->supplier_id,
+                    'item_code' => $mp->item_code,
                     'item' => $material,
                     'uom' => $material->uom,
-                    'req_date' => $item->req_date,
-                    'qty' => $item->qty,
-                    'rate' => $item->rate,
-                    'subtotal' => $item->subtotal
+                    'req_date' => $mp->required_date,
+                    'qty' => $mp->qty,
+                    'rate' => $mp->rate,
+                    'subtotal' => $mp->subtotal
                 )
             );
         }

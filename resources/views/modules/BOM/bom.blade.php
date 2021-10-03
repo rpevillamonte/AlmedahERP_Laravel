@@ -52,11 +52,7 @@
                         </a>
                     </td>
                     <td>
-                        @if (isset($bom->product_code))
-                            {{ $bom->product_code }}
-                        @else
-                            {{ $bom->component_code }}
-                        @endif
+                        {{ $bom->item_code }}
                     </td>
                     <td>
                         @if ($bom->is_active == true)

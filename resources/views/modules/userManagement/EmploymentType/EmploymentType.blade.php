@@ -1,3 +1,4 @@
+<script src="{{ asset('js/employee_type.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Employment Type</h2>
@@ -8,8 +9,8 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="">Refresh</button>
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
+                        id="etRefresh">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newEmpTypePrompt">
@@ -20,6 +21,13 @@
         </div>
     </div>
 </nav>
+
+<div id="et_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="et_alert_message" class="alert alert-danger" style="display: none;">
+</div>
+
 <br>
 <table id="employmentTypeTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
@@ -29,12 +37,18 @@
         </tr>
     </thead>
     <tbody>
-
+        @foreach ($employment_types as $et)
         <tr>
-            <td class="text-bold"><a href="#EditEmpTypePrompt" data-toggle="modal"
-                    data-target="#EditEmpTypePrompt">EMP-TYPE-001</a></td>
-            <td>Full-Time</td>
+            <td class="text-bold">
+                <a href="#EditEmpTypePrompt" data-toggle="modal" data-target="#EditEmpTypePrompt" 
+                value="{{ $et->id }}" class="emp-type">
+                    {{ $et->employment_id }}
+                </a>
+            </td>
+            <td>{{ $et->employment_type }}</td>
         </tr>
+        @endforeach
+        {{--
         <tr>
             <td class="text-bold"><a href="#EditEmpTypePrompt" data-toggle="modal"
                     data-target="#EditEmpTypePrompt">EMP-TYPE-002</a></td>
@@ -50,15 +64,9 @@
                     data-target="#EditEmpTypePrompt">EMP-TYPE-004</a></td>
             <td>Probation</td>
         </tr>
+        --}}
     </tbody>
 </table>
-
-
-<script>
-    $(document).ready(function () {
-        x = $('#employmentTypeTable').DataTable();
-    });
-</script>
 
 <!-- Modal New Emp Type-->
 <div class="modal fade" id="newEmpTypePrompt" tabindex="-1" role="dialog" aria-labelledby="newEmpTypePromptTitle"
@@ -70,11 +78,11 @@
 
             </div>
             <div class="modal-body">
-                <?php include 'newEmpType.php' ?>
+                @include('modules.userManagement.EmploymentType.newEmpType')
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" id="saveTrace1">
+                    <button type="button" class="btn btn-primary m-1" data-target="#newEmpTypePrompt" data-dismiss="modal" id="saveEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
@@ -99,18 +107,24 @@
 
             </div>
             <div class="modal-body">
-                <?php include 'editEmpType.php' ?>
+                @include('modules.userManagement.EmploymentType.editEmpType')
             </div>
             <div class="modal-footer d-flex">
                 <div class="d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary m-1" data-target="#EditEmpTypePrompt" id="saveTrace1">
+                    <button type="button" class="btn btn-primary m-1" data-target="#EditEmpTypePrompt" data-dismiss="modal" id="editEmpType">
                         <a class="" href="#" style="text-decoration: none;color:white">
                             Save
                         </a>
                     </button>
-                    <button type="button" class="btn btn-danger m-1" data-dismiss="modal"
-                        data-target="#EditEmpTypePrompt" id="closeEmpTypePrompt">
-                        Delete <span class="fas fa-trash"></span>
+                    <form action="" id="deleteEmpType" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn btn-danger m-1" data-dismiss="modal" data-target="#EditEmpTypePrompt" id="deleteET">
+                            Delete <span class="fas fa-trash"></span>
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-secondary m-1" data-dismiss="modal" data-target="#EditEmpTypePrompt" id="closeET">
+                        Close 
                     </button>
                 </div>
             </div>

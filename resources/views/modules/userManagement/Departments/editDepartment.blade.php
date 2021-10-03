@@ -1,4 +1,6 @@
-<form action="" method="POST" id="EmpEditTypeForm">
+<form action="" method="POST" id="editDepartment">
+  @csrf
+  @method('PUT')
   <div class="row">
     <div class="col-7">
       <label class=" text-nowrap align-middle">
@@ -27,7 +29,7 @@
       <label class=" text-nowrap align-middle">
         Department Head
       </label>
-      <select name="deptEditHead" class="form-control dept-select" id="edit-department-head" data-live-search="true">
+      <select name="deptEditHead" id="deptEditHead" class="form-control dept-select" id="edit-department-head" data-live-search="true">
         <option val="non" data-subtext="None" selected></option>
         @foreach ($employees as $employee)
             <option value="{{ $employee->employee_id }}" data-subtext="{{ $employee->employee_id }}">{{ $employee->last_name }}, {{ $employee->first_name }}</option>
