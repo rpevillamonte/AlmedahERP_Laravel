@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Models\Employee;
 use \App\Models\Department;
+use App\Models\EmploymentType;
 use \App\Models\UserRole;
 use DB;
 use Illuminate\Support\Facades\Hash;
@@ -12,31 +13,33 @@ class EmployeeController extends Controller
 {
     public function index(){
         // $position = Employee::whereNotNull('position')->distinct();
-        $employees = Employee::get();
-        $departments = Department::get();
+        $employees = Employee::employees()->get(['employee_id', 'last_name', 'first_name', 'email']);
+        // $departments = Department::get();
 
-        $roles = Employee::get()->pluck('role_id');
-        $role_names = array();
-        foreach($roles as $role){
-            $user_role = UserRole::where('role_id', $role)->first();
-            $role_name = $user_role->role_name ?? null;
-            array_push($role_names, $role_name);
-        }
+        // $roles = Employee::get()->pluck('role_id');
+        // $role_names = array();
+        // foreach($roles as $role){
+        //     $user_role = UserRole::where('role_id', $role)->first();
+        //     $role_name = $user_role->role_name ?? null;
+        //     array_push($role_names, $role_name);
+        // }
         // $spec_rolesModel::all(['id'])->toArray()
         return view('modules.hr.employee', [
-            'employees' => $employees,
-            'departments' => $departments,
-            'role_names' => $role_names,
+            'employees' => $employees
+            // 'departments' => $departments,
+            // 'role_names' => $role_names,
         ]);
     }
 
     public function addEmployee(){
         $departments = Department::get();
         $roles = UserRole::get();
+        $e_types = EmploymentType::get();
 
         return view('modules.hr.AddEmployee', [
             'departments' => $departments,
             'roles' => $roles,
+            'e_types' => $e_types
         ]);
     }
     public function store(Request $request)

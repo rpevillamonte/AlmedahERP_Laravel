@@ -520,7 +520,7 @@ Route::resource('/departments', DepartmentController::class);
 /**SUPPLIER ROUTES */
 Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
-Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
+Route::get('/supp-filter/{name}', [SupplierController::class, 'filterByID']);
 Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
 

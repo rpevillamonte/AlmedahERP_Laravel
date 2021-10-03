@@ -3,19 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\MaterialsOrdered;
-use App\Models\MaterialRequest;
 use App\Models\MaterialPurchased;
-use App\Models\MaterialQuotation;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
-use App\Models\Supplier;
-use App\Models\SuppliersQuotation;
-use App\Models\RequestQuotationSuppliers;
 use App\Models\WorkOrder;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseReceiptController extends Controller
 {
@@ -26,7 +20,7 @@ class PurchaseReceiptController extends Controller
      */
     public function index()
     {
-        $purchase_receipts = PurchaseReceipt::all();
+        $purchase_receipts = PurchaseReceipt::get(['p_receipt_id', 'date_created', 'purchase_id', 'grand_total', 'pr_status']);
         return view('modules.buying.purchasereceipt', ['receipts' => $purchase_receipts]);
     }
 
@@ -103,7 +97,9 @@ class PurchaseReceiptController extends Controller
     {
         //
         $receipt = PurchaseReceipt::find($id);
-        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
+        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')
+                                    ->with('supplier')
+                                    ->get();
         $materials = $receipt->receivedMats();
         $mat_purchased = $receipt->order;
         $supplier = $mat_purchased->supplier_quotation->supplier;
@@ -167,7 +163,7 @@ class PurchaseReceiptController extends Controller
     public function getOrderedMaterials($id)
     {
         try {
-            $mat_purchased = MaterialPurchased::find($id);
+            $mat_purchased = MaterialPurchased::with('supplier')->find($id);
             $supplier = $mat_purchased->supplier_quotation->supplier;
             $ordered_mats = $mat_purchased->itemsPurchased();
             $purchase_id = $mat_purchased->purchase_id;
