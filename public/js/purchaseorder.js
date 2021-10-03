@@ -386,6 +386,7 @@ function saveOrder() {
         success: function (data) {
             slideAlert("Purchase Order successfully created!", PO_SUCCESS);
             purchase_id = data.purchase_id;
+            loadPurchaseOrder();
         }
     });
 
