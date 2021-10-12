@@ -81,6 +81,8 @@ class OperationsController extends Controller
     public function show($id)
     {
         //
+        $operation = Operation::find($id);
+        return ['operation' => $operation, 'wc' => $operation->work_center];
     }
 
     /**

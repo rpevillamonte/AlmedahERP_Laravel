@@ -87,8 +87,8 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::resource('/bom', BOMController::class);
 Route::get('/get-item/{item_type}/{value}', [BOMController::class, 'getItem']);
+Route::resource('/bom', BOMController::class);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -147,6 +147,13 @@ Route::get('/hr', function () {
     return view('modules.hr.hr');
 });
 
+/**EMPLOYEE ROUTES */
+// Pakitanggal na po yung mga routes na di ginagamit dito. Ang gulo basahin ng mga routes dito.
+Route::get('/addemployee', [EmployeeController::class, 'addEmployee']);
+Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
+Route::get('/editemployee', function () {
+    return view('modules.hr.editEmployee');
+});
 Route::get('/employee', [EmployeeController::class, 'index']);
 Route::get('/get-employee/{id}', [EmployeeController::class, 'getEmployee']);
 Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
@@ -236,9 +243,9 @@ Route::get('/openManufacturingItemPriceForm', function () {
 });
 
 /**MANUFACTURING ROUTING ROUTES */
-Route::resource('/routing', RoutingsController::class);
 Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
+Route::resource('/routing', RoutingsController::class);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -259,8 +266,8 @@ Route::get('/archived', function () {
 });
 
 /**OPERATIONS ROUTES */
-Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
+Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -340,27 +347,27 @@ Route::get('/loadProjectTemplate', function () {
 });
 
 /**PURCHASE INVOICE ROUTES */
-Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
 Route::post('/update-invoice-record/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoice']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
+Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 
 /**PURCHASE ORDER ROUTES */
-Route::resource('/purchaseorder', MaterialsPurchasedController::class);
-Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
 Route::get('/po-filter/{filter}/{value}', [MaterialsPurchasedController::class, 'filterBy']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
+Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
+Route::resource('/purchaseorder', MaterialsPurchasedController::class);
 
 /**PURCHASE RECEIPT ROUTES */
-Route::resource('/purchasereceipt', PurchaseReceiptController::class);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 Route::get('/get-materials-from-mp/{receipt_id}', [PurchaseReceiptController::class, 'getOrderedMaterialsFromInvoice']);
 Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
 Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
 Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
+Route::resource('/purchasereceipt', PurchaseReceiptController::class);
 
 /*PURCHASE TAXES*/
 Route::get('/purchasetaxes', function() {
@@ -518,18 +525,19 @@ Route::resource('/employmenttype', EmploymentTypeController::class);
 Route::resource('/departments', DepartmentController::class);
 
 /**SUPPLIER ROUTES */
-Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
 Route::get('/supp-filter/{name}', [SupplierController::class, 'filterByID']);
 Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
+Route::resource('/supplier', SupplierController::class);
+
 
 /*SUPPLIER GROUP*/
-Route::resource('/suppliergroup', SupplierGroupController::class);
 Route::get('/sg-get-item/{material_id}', [SupplierGroupController::class, 'getRawMat']);
 Route::get('/newsuppliergrouptable', function() {
     return view('modules.NewUI.NewSupplierGrpTable');
 });
+Route::resource('/suppliergroup', SupplierGroupController::class);
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
@@ -572,15 +580,6 @@ Route::get('/openUOMNew', function () {
 Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
-
-/**ADD EMPLOYEE */
-Route::get('/addemployee', [EmployeeController::class, 'addEmployee']);
-Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
-Route::get('/editemployee', function () {
-    return view('modules.hr.editEmployee');
-});
-
-
 
 /**WORK CENTER ROUTES **/
 Route::resource('/workcenter', WorkCenterController::class);

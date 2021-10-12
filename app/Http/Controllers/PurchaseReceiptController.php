@@ -9,7 +9,6 @@ use App\Models\PurchaseReceipt;
 use App\Models\WorkOrder;
 use Illuminate\Http\Request;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class PurchaseReceiptController extends Controller
 {
@@ -107,30 +106,6 @@ class PurchaseReceiptController extends Controller
         ['receipt' => $receipt, 'materials' => $materials, 'orders' => $orders, 'supplier' => $supplier]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-        
-    }
-
     public function updateReceipt(Request $request)
     {
         try {
@@ -147,17 +122,6 @@ class PurchaseReceiptController extends Controller
         } catch (Exception $e) {
             return $e;
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     public function getOrderedMaterials($id)

@@ -8,12 +8,10 @@ use App\Models\MaterialPurchased;
 use App\Models\MPRecord;
 use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class MaterialsPurchasedController extends Controller
 {
@@ -119,28 +117,6 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-    }
-
     public function updateOrder(Request $request)
     {
         try {
@@ -242,7 +218,7 @@ class MaterialsPurchasedController extends Controller
     {
         try {
             $data = MaterialPurchased::where('purchase_id', $purchase_id)
-                                        ->with(['supplier'])                            
+                                        ->with(['supplier_quotation'])                            
                                         ->first();
             $data->mp_status = "To Receive and Bill";
             $supplier = $data->supplier_quotation->supplier;
@@ -256,15 +232,15 @@ class MaterialsPurchasedController extends Controller
     public function filterBy($filter, $value) {
         $order_data = null;
         if($filter !== 'all') {
-            if($filter !== 'mp_status') {
-                $filter = 'items_list_purchased';
-                $value = '%'.$value.'%';
-                $order_data = MaterialPurchased::where($filter, 'LIKE', $value)->get();
-            }
-            else
-                $order_data = MaterialPurchased::where($filter, $value)->get();
+            $order_data = $this->getFilterValue($filter, '%'.$value.'%', $filter !== 'mp_status');
         }
-        else $order_data = MaterialPurchased::all();
+        else $order_data = MaterialPurchased::get(['id', 'purchase_id', 'purchase_date', 'mp_status', 'total_cost']);
         return response()->json(['items' => $order_data]);
+    }
+
+    private function getFilterValue($filter, $value, $condition) {
+        $data = $condition == true ? MaterialPurchased::where('items_list_purchased', 'LIKE', $value) : 
+                                     MaterialPurchased::where($filter, $value);
+        return $data->get(['id', 'purchase_id', 'purchase_date', 'mp_status', 'total_cost']);
     }
 }

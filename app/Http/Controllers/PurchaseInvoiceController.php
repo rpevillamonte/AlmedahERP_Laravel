@@ -6,7 +6,6 @@ use App\Models\PaymentInvoiceLog;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
 use Illuminate\Http\Request;
-use DB;
 use Exception;
 
 class PurchaseInvoiceController extends Controller
@@ -87,22 +86,15 @@ class PurchaseInvoiceController extends Controller
         $received_items = $invoice->receipt->order->itemsPurchased();
         $supplier = $invoice->receipt->order->supplier_quotation->supplier;
         $logs = $invoice->invoice_logs;
-        return view('modules.buying.purchaseInvoiceInfo', 
-                    ['invoice' => $invoice, 
-                     'received_items' => $received_items, 
-                     'supplier' => $supplier, 
-                     'logs' => $logs]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return view(
+            'modules.buying.purchaseInvoiceInfo',
+            [
+                'invoice' => $invoice,
+                'received_items' => $received_items,
+                'supplier' => $supplier,
+                'logs' => $logs
+            ]
+        );
     }
 
     /**
@@ -117,7 +109,8 @@ class PurchaseInvoiceController extends Controller
         //
     }
 
-    public function updateInvoice(Request $request) {
+    public function updateInvoice(Request $request)
+    {
         try {
 
             $form_data = $request->input();
@@ -147,12 +140,12 @@ class PurchaseInvoiceController extends Controller
 
     public function payInvoice(Request $request)
     {
-
         //form data here
         $form_data = $request->input();
 
         //get the corresponding invoice
-        $invoice = PurchaseInvoice::where('p_invoice_id', $form_data['invoice_id'])->first();
+        $invoice = PurchaseInvoice::where('p_invoice_id', $form_data['invoice_id'])
+            ->with(['receipt'])->first();
 
         $lastLog = PaymentInvoiceLog::orderby('id', 'desc')->first();
         $nextID = ($lastLog) ? PaymentInvoiceLog::orderby('id', 'desc')->first()->id + 1 : 1;
@@ -161,19 +154,8 @@ class PurchaseInvoiceController extends Controller
         //try to find the last log corresponding to the invoice and then 
         //create a description
         $last_data = PaymentInvoiceLog::where('p_invoice_id', $form_data['invoice_id'])->orderby('id', 'desc')->first();
-        if($invoice->payment_mode === 'Installment') {
-            if(is_null($last_data)) {
-                $description = "Downpayment";
-            } else {
-                $all_data = PaymentInvoiceLog::where('p_invoice_id', $form_data['invoice_id']);
-                $current_count = $all_data->count() + 1;
-                $ordinal_string = $this->ordinal($current_count);
-                $description = strval($ordinal_string) . " Installment";
-            }
-        } else {
-            $description = "Fully Paid";
-        }
-        
+        $description = $this->generateDescription($invoice, $last_data);
+
         $data = new PaymentInvoiceLog();
 
         $pi_log_id = "PI-LOG-" . str_pad($nextID, 3, '0', STR_PAD_LEFT);
@@ -183,7 +165,8 @@ class PurchaseInvoiceController extends Controller
         $data->payment_method = $form_data['payment_method'];
         $data->payment_description = $description;
         $data->amount_paid = $form_data['amount_paid'];
-        if(
+
+        if (
             isset($form_data['account_no']) && isset($form_data['cheque_no'])
             && isset($form_data['bank_name']) && isset($form_data['bank_location'])
         ) {
@@ -198,14 +181,16 @@ class PurchaseInvoiceController extends Controller
         $new_balance = $invoice->payment_balance - $form_data['amount_paid'];
         $invoice->total_amount_paid = $new_price;
         $invoice->payment_balance = $new_balance;
-        if($description === 'Downpayment') {
+        
+
+        if ($description === 'Downpayment') {
             $invoice->grand_total = $new_balance;
             //$invoice->total_amount_paid = 0;
         }
         if ($new_price == $invoice->grand_total) {
             $new_status = "Paid";
             $receipt = $invoice->receipt;
-            if($receipt->pr_status === 'To Receive and Bill') {
+            if ($receipt->pr_status === 'To Receive and Bill') {
                 $new_pr_status = "To Receive";
             } else {
                 $new_pr_status = "Completed";
@@ -219,35 +204,40 @@ class PurchaseInvoiceController extends Controller
         } else {
             $new_status = "With Outstanding Balance";
         }
+
         $invoice->pi_status = $new_status;
         $invoice->save();
         //more logic here
 
     }
 
-    public function viewCheck($id) {
-        $log = PaymentInvoiceLog::find($id);
-        return ['acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no, 
-                'bank_name' => $log->bank_name, 'branch' => $log->bank_location];
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function viewCheck($id)
     {
-        //
+        $log = PaymentInvoiceLog::find($id);
+        return [
+            'acct_no' =>  $log->account_no, 'chq_no' => $log->cheque_no,
+            'bank_name' => $log->bank_name, 'branch' => $log->bank_location
+        ];
     }
 
     //Generate ordinal numbers
-    private function ordinal($number) {
-        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-        if ((($number % 100) >= 11) && (($number%100) <= 13))
-            $ordinal_string = $number. 'th';
-        else
-            $ordinal_string = $number. $ends[$number % 10];
+    private function ordinal(int $number)
+    {
+        $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+        return (($number % 100) >= 11) && (($number % 100) <= 13) ? $number . 'th' : $number . $ends[$number % 10];
     }
+
+    private function generateDescription(PurchaseInvoice $invoice, PaymentInvoiceLog $pi_log)
+    {
+        if ($invoice->payment_mode === 'Installment') {
+            if (is_null($pi_log)) return "Downpayment";
+            $all_data = PaymentInvoiceLog::where('p_invoice_id', $invoice->p_invoice_id);
+            $current_count = $all_data->count() + 1;
+            $ordinal_string = $this->ordinal($current_count);
+            return strval($ordinal_string) . " Installment";
+        } else {
+            return "Fully Paid";
+        }
+    }
+
 }
