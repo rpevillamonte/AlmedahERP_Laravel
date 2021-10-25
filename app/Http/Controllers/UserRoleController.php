@@ -16,7 +16,7 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::get(['role_name'])]);
+        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::get(['id', 'role_name'])]);
     
     }
 
@@ -69,7 +69,7 @@ class UserRoleController extends Controller
         //
         $role = UserRole::find($id);
         $role->permissions = $role->permissions(); 
-        return response()->json(['role' => $role]);
+        return ['role' => $role];
     }
 
     /**

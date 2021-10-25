@@ -151,6 +151,12 @@
     </div>
 
     <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+            }
+        });
+
         $(document).ready(function() {
             for (let i = 1; i <= $("#tbl-buying-purchaseorder tbody tr").length; i++) {
                 let price = parseFloat($(`#totalPrice${i}`).html());
@@ -160,45 +166,8 @@
 
             $(".po-datatable-search").selectpicker();
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': CSRF_TOKEN,
-                }
-            });
             $(".po-datatable-search").change(function() {
-                let url = "/po-search";
-
-                var fData = getFilters();
-
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: fData,
-                    contentType: false,
-                    processData: false,
-                    success: function(data) {
-                        var tbl = $("#tbl-buying-purchaseorder").DataTable();
-                        tbl.rows('tr').remove();
-                        var items = data.items;
-                        if (items.length > 0) {
-                            for (let i = 1; i <= items.length; i++) {
-                                var item = items[i - 1];
-                                let price_string = numberWithCommas(item
-                                    .total_cost
-                                    .toFixed(
-                                        2));
-                                tbl.row.add([
-                                    `<a href="javascript:onclick=viewPurchaseOrder(${item.id})">${item.purchase_id}</a>`,
-                                    item.mp_status,
-                                    item.purchase_date,
-                                    `₱ ${price_string}`
-                                ]);
-                            }
-                        }
-                        tbl.draw();
-                    }
-                });
-
+                getFilters();
             });
 
         });
@@ -206,17 +175,26 @@
         $("#poClearFilters").click(function() {
             $(".po-datatable-search").val("None");
             $(".po-datatable-search").selectpicker('refresh');
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': CSRF_TOKEN,
-                }
-            });
+            
+            getFilters();
+        });
 
-            var fData = getFilters();
-
+        function getFilters() {
+            var filters = {
+                'status-search': '',
+                'mat-search': '',
+                'supplier-search': ''
+            };
+            var keys = ['status-search', 'mat-search', 'supplier-search'];
+            for (let i = 0; i < keys.length; i++) {
+                let po_element = $(`#po-${keys[i]}`);
+                filters[keys[i]] = po_element.val();
+            }
+            var fData = new FormData();
+            fData.append('po-filters', JSON.stringify(filters));
             $.ajax({
                 type: 'POST',
-                url: '/po-search',
+                url: "/po-search",
                 data: fData,
                 contentType: false,
                 processData: false,
@@ -242,22 +220,7 @@
                     tbl.draw();
                 }
             });
-        });
 
-        function getFilters() {
-            var filters = {
-                'status-search': '',
-                'mat-search': '',
-                'supplier-search': ''
-            };
-            var keys = ['status-search', 'mat-search', 'supplier-search'];
-            for (let i = 0; i < keys.length; i++) {
-                let po_element = $(`#po-${keys[i]}`);
-                filters[keys[i]] = po_element.val();
-            }
-            var fData = new FormData();
-            fData.append('po-filters', JSON.stringify(filters));
-            return fData;
         }
 
         /**From internet function */

@@ -47,9 +47,6 @@ $(".role-entity").click(function() {
         type: "GET",
         url: `/roles/${id}`,
         data: id,
-        cache: false,
-        contentType: false,
-        processData: false,
         success: function (response) {
             var role = response.role;
             $("#roleEditName").val(role.role_name);
