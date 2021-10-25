@@ -19,24 +19,13 @@ class MaterialPurchased extends Model
         'total_cost'
     ];
 
-    //protected $casts = [
-    //    'items_list_purchased' => 'array'
-    //];
-
     public function itemsPurchased() {
-        //$items_purchased = json_decode($this->items_list_purchased);
-        // sometimes, one json_decode is not enough to convert json string to json object
-        // while(is_string($items_purchased)) {
-        //     $items_purchased = json_decode($items_purchased);
-        // }
         $material_records = $this->materialRecords;
         $items_purchased_array = array();
         foreach($material_records as $mp) {
             $material = ManufacturingMaterials::where('item_code', $mp->item_code)->first();
             array_push($items_purchased_array,
                 array(
-                    //'purchase_id' => $this->purchase_id,
-                    //'supplier' => $mp->supplier_id,
                     'item_code' => $mp->item_code,
                     'item' => $material,
                     'uom' => $material->uom,
@@ -64,6 +53,13 @@ class MaterialPurchased extends Model
                 return $material; 
             }
         }
+    }
+
+    public function scopeFilter($query, $filters) {
+        foreach ($filters as $f) {
+            $query->where($f[0], $f[1], $f[2]);
+        }
+        return $query;
     }
 
     public function supplier_quotation() {

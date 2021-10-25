@@ -354,8 +354,8 @@ Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'pay
 Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/po-filter/{filter}/{value}', [MaterialsPurchasedController::class, 'filterBy']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
+Route::post('/po-search', [MaterialsPurchasedController::class, 'filterBy']);
 Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::resource('/purchaseorder', MaterialsPurchasedController::class);

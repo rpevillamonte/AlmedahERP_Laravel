@@ -47,7 +47,7 @@
                     </div>
                 </div> --}}
                 <div class="col-4">
-                    <select id="status-search" class="form-control selectpicker po-datatable-search">
+                    <select id="po-status-search" class="form-control selectpicker po-datatable-search">
                         <option value="None" data-subtext="None" selected>Search By Status...</option>
                         <option value="Draft" data-subtext="">Draft</option>
                         <option value="To Receive" data-subtext="">To Receive</option>
@@ -102,7 +102,7 @@
                     <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
                         Add Filter
                     </button>
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm">
+                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm" id="poClearFilters">
                         Clear Filters
                     </button>
                 </div>
@@ -159,31 +159,21 @@
             }
 
             $(".po-datatable-search").selectpicker();
-            $(".po-datatable-search").change(function() {
-                let url = "/po-filter/";
-                let id = $(this).attr('id');
-                if ($(this).val() === 'None') {
-                    url = url + 'all/all';
-                } else {
-                    switch (id) {
-                        case 'status-search':
-                            url = url + 'mp_status'
-                            break;
-                        case 'po-mat-search':
-                            url = url + 'material'
-                            break;
-                        case 'po-supplier-search':
-                            url = url + 'supplier'
-                            break;
-                    }
-                    url = url + `/${$(this).val()}`;
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
                 }
-                if(url === '/') return;
-                //$(`.po-datatable-search:not(#${id})`).val("None").selectpicker('refresh');
+            });
+            $(".po-datatable-search").change(function() {
+                let url = "/po-search";
+
+                var fData = getFilters();
+
                 $.ajax({
-                    type: 'GET',
+                    type: 'POST',
                     url: url,
-                    data: $(this).val(),
+                    data: fData,
                     contentType: false,
                     processData: false,
                     success: function(data) {
@@ -208,9 +198,67 @@
                         tbl.draw();
                     }
                 });
+
             });
 
         });
+
+        $("#poClearFilters").click(function() {
+            $(".po-datatable-search").val("None");
+            $(".po-datatable-search").selectpicker('refresh');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
+                }
+            });
+
+            var fData = getFilters();
+
+            $.ajax({
+                type: 'POST',
+                url: '/po-search',
+                data: fData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    var tbl = $("#tbl-buying-purchaseorder").DataTable();
+                    tbl.rows('tr').remove();
+                    var items = data.items;
+                    if (items.length > 0) {
+                        for (let i = 1; i <= items.length; i++) {
+                            var item = items[i - 1];
+                            let price_string = numberWithCommas(item
+                                .total_cost
+                                .toFixed(
+                                    2));
+                            tbl.row.add([
+                                `<a href="javascript:onclick=viewPurchaseOrder(${item.id})">${item.purchase_id}</a>`,
+                                item.mp_status,
+                                item.purchase_date,
+                                `₱ ${price_string}`
+                            ]);
+                        }
+                    }
+                    tbl.draw();
+                }
+            });
+        });
+
+        function getFilters() {
+            var filters = {
+                'status-search': '',
+                'mat-search': '',
+                'supplier-search': ''
+            };
+            var keys = ['status-search', 'mat-search', 'supplier-search'];
+            for (let i = 0; i < keys.length; i++) {
+                let po_element = $(`#po-${keys[i]}`);
+                filters[keys[i]] = po_element.val();
+            }
+            var fData = new FormData();
+            fData.append('po-filters', JSON.stringify(filters));
+            return fData;
+        }
 
         /**From internet function */
         function numberWithCommas(x) {
