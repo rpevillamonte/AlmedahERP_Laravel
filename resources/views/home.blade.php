@@ -328,6 +328,12 @@
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="BOM"
                         class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Work Center Listing</span>
+                    </a>
+                </div>
+                <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="BOM"
+                        class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Operations</span>
                     </a>
                 </div>
