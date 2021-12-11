@@ -37,10 +37,11 @@ function viewChequeDetails(id) {
         contentType: false,
         processData: false,
         success: function (response) {
-            $('#chq-accNo').html(response.acct_no);
-            $('#chq-num').html(response.chq_no);
-            $('#chq-bank').html(response.bank_name);
-            $('#chq-branch').html(response.branch);
+            var log = response.log;
+            $('#chq-accNo').html(log.account_no);
+            $('#chq-num').html(log.cheque_no);
+            $('#chq-bank').html(log.bank_name);
+            $('#chq-branch').html(log.bank_location);
         }
     });
 }

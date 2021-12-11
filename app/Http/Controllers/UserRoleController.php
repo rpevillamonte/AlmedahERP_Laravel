@@ -21,16 +21,6 @@ class UserRoleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -49,7 +39,6 @@ class UserRoleController extends Controller
             $role = new UserRole();
             $role->role_id = $role_id;
             $role->role_name = $form_data['roleName'];
-            $role->description = 'sample_desc'; // Filler data, idk sa silbi ng description di naman siya visible sa frontend.
             $role->permissions = $form_data['permissions'];
     
             $role->save();
@@ -70,17 +59,6 @@ class UserRoleController extends Controller
         $role = UserRole::find($id);
         $role->permissions = $role->permissions(); 
         return ['role' => $role];
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**

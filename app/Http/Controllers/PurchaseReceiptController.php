@@ -225,15 +225,9 @@ class PurchaseReceiptController extends Controller
         try {
             $form_data = $request->input();
 
-            $receipt_id = $form_data['receipt_id'];
-            $received_mats = $form_data['mat_received'];
-
-            $received_mats = json_decode($received_mats, true);
-
-            $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
-            $receipt_mats = $receipt->item_list_received;
-
-            $receipt_mats = json_decode($receipt_mats, true);
+            $receipt = PurchaseReceipt::where('p_receipt_id', $form_data['receipt_id'])->with(['order', 'invoice', 'order_record'])->first();
+            $received_mats = json_decode($form_data['mat_received'], true);
+            $receipt_mats = json_decode($receipt->item_list_received, true);
 
             $i = 1;
 
@@ -253,11 +247,10 @@ class PurchaseReceiptController extends Controller
             $order_items = $pending_order->items_list_received;
             
             foreach ($order_items as $index => $order_item) {
-                $order_items[$index]['qty_received'] = strval(intval($order_items[$index]['qty_received']) + 
-                                                        intval($received_mats[$i]['qty_received']));
+                $new_qty = intval($order_items[$index]['qty_received']) + intval($received_mats[$i]['qty_received']);
+                $order_items[$index]['qty_received'] = strval($new_qty);
                 $i++;
             }
-            //dd($order_items);
             $pending_order->items_list_received = json_encode($order_items);
             $pending_order->save();
 
@@ -267,7 +260,7 @@ class PurchaseReceiptController extends Controller
 
             foreach($pending_order_items as $item) {
                 if($item['curr_progress'] != '100') {
-                    $is_complete = false;
+                    $is_complete = !$is_complete;
                     break;
                 }
             } 

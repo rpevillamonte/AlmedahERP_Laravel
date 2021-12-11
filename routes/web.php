@@ -19,8 +19,6 @@ use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
-use App\Http\Controllers\RequestQuotationController;
-use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockMovesController;
@@ -516,7 +514,6 @@ Route::get('/teammembers', [TeamMembersController::class, 'index']);
 
 // User Role Routes
 Route::resource('/roles', UserRoleController::class);
-Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
 
 // Employment Type Route
 Route::resource('/employmenttype', EmploymentTypeController::class);

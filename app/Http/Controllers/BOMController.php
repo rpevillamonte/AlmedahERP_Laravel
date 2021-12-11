@@ -23,7 +23,7 @@ class BOMController extends Controller
     public function index()
     {
         //
-        $bills_of_materials = BillOfMaterials::get(['bom_name', 'product_code', 'component_code', 'is_active', 'is_default']);
+        $bills_of_materials = BillOfMaterials::get(['bom_id', 'bom_name', 'product_code', 'component_code', 'is_active', 'is_default']);
         foreach ($bills_of_materials as $bom) {
             # code...
             $bom->item_code = is_null($bom->product_code) ? $bom->component_code : $bom->product_code;    

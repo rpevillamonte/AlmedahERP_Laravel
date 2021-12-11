@@ -41,7 +41,6 @@ class MachinesManualController extends Controller
         //
         $machine_manual = new MachinesManual();
         $form_data = $request->input();
-        /**code here */
         $machine_name = $form_data['Machine_name'];
         $words = explode(' ', $machine_name);
         $machine_code = "MM_";
@@ -68,17 +67,6 @@ class MachinesManualController extends Controller
         //
         $machine_manual = MachinesManual::find($id);
         return view('modules.BOM.machineinfo', ['manual' => $machine_manual]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
