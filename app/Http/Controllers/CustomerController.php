@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Customer;
+use \App\Models\Employee;
+use \App\Models\UserRole;
+use Auth;
 use DB;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -11,8 +14,17 @@ class CustomerController extends Controller
 {
     public function index(){
         $customers = Customer::get();
+
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         return view('modules.manufacturing.customer', [
             'customers' => $customers,
+            'permissions' => $permissions
         ]);
     }
     public function store(Request $request)

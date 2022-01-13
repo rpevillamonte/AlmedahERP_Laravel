@@ -8,8 +8,10 @@ use App\Models\ManufacturingMaterials;
 use App\Models\ManufacturingProducts;
 use App\Models\MaterialPurchased;
 use App\Models\Routings;
+use \App\Models\UserRole;
 use Illuminate\Http\Request;
 use Exception;
+use Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -22,9 +24,16 @@ class BOMController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
         $bills_of_materials = BillOfMaterials::all();
-        return view('modules.BOM.bom', ['boms' => $bills_of_materials]);
+        return view('modules.BOM.bom', ['boms' => $bills_of_materials, 'permissions' => $permissions]);
     }
 
     /**

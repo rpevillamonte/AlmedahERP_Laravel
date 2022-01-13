@@ -19,7 +19,9 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary ml-1" href="#" onclick="loadManufacturingWorkstation();">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="openManufacturingWorkstationForm()" href="#">New</button>
+                @if (($permissions['Station']['create'] ?? null) === 1 || !auth()->user()) 
+                    <button type="button" class="btn btn-info ml-1" onclick="openManufacturingWorkstationForm()" href="#">New</button>
+                @endif
             </div>
         </div>
     </div>
@@ -97,7 +99,9 @@
                                     <td colspan="8">
                                         <div class="text-center" style="padding-top: 100px; padding-bottom: 100px;">
                                             <h4>No Workstation Found</h4><br>
-                                            <button class="btn btn-primary" onclick="openManufacturingWorkstationForm()">Create a new Workstation</button>
+                                            @if (($permissions['Station']['create'] ?? null) === 1 || !auth()->user()) 
+                                                <button class="btn btn-primary" onclick="openManufacturingWorkstationForm()">Create a new Workstation</button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

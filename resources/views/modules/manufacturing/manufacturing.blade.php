@@ -19,11 +19,15 @@
                 <div class="card-header">Production</div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Work Order</a></li>
+                        @if (($permissions['Work_Order']['view'] ?? null) === 1 || !auth()->user())
+                            <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Work Order</a></li>
+                        @endif
                         <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Production Plan</a></li>
                         <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Stock Entry</a></li>
                         <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Product Monitoring</a></li>
-                        <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Job Scheduling</a></li>
+                        @if (($permissions['Job_Scheduling']['view'] ?? null) === 1 || !auth()->user())
+                            <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Job Scheduling</a></li>
+                        @endif
                         <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Timesheet</a></li>
                         <li class="list-bom menu" data-parent="manufacturing"><a class="nav-link" href="#">Job Card</a></li>
                     </ul>

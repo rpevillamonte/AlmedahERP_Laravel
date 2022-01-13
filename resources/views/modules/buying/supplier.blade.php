@@ -22,10 +22,12 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadSupplier()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" {{--data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"--}} onclick="openSupplierForm()">New</button>
-                </li>
+                @if (($permissions['Supplier']['create'] ?? null) === 1 || !auth()->user())  
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" {{--data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop"--}} onclick="openSupplierForm()">New</button>
+                    </li>
+                @endif  
             </ul>
         </div>
     </div>
@@ -102,8 +104,11 @@
                                 </div>
                             </td>
                             <td>
-                                <a
-                                    href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
+                                @if (($permissions['Supplier']['edit'] ?? null) === 1 || !auth()->user())  
+                                    <a href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
+                                @else
+                                    {{ $supplier->company_name }}
+                                @endif  
                             </td>
                             <td class="text-black-50">{{ $supplier->contact_name }}</td>
                             <td class="text-black-50">{{ $supplier->phone_number }}</td>

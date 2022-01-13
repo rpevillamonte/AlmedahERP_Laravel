@@ -143,27 +143,14 @@
                 <center id="emptyMatRet">
                   There are no items to be returned 
                 </center>
-                {{-- <div class="container">
-                  <div class="row-12">
-                    <button class="btn btn-outline-light btn-sm text-muted shadow-sm float-left">
-                      Add Multiple
-                  </button>
-                  <button class="btn btn-outline-light btn-sm text-muted shadow-sm float-none">
-                      Add Row
-                  </button>
-                <button class="btn btn-outline-light btn-sm text-muted shadow-sm float-right">
-                    Delete selected rows
-                </button>
-                  </div>
-                </div> --}}
         </div>
         <hr>
-        <div class="card-body filter">
-          <h5>Logs</h5>
-          <div id="return_logs">
+          <div class="card-body filter">
+            <h5>Logs</h5>
+            <div id="return_logs">
 
+            </div>
           </div>
-        </div>
     </div>
     </div>
     <div class="modal fade" id="remarks" tabindex="-1" role="dialog">
@@ -275,6 +262,10 @@
 
   <script>
       $(document).ready(function() {
+
+      var url = "js/stockmoves.js";
+      $.getScript(url);
+      
       var tableControl= document.getElementById('itemsTrans');
       // var arrayOfValues = [];
       let itemsTable = $("#itemsRet");

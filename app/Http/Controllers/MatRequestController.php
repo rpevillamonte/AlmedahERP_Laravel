@@ -9,7 +9,8 @@ use App\Models\RequestedRawMat;
 use App\Models\Station;
 use App\Models\MaterialUOM;
 use App\Models\NotificationLog;
-
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -25,9 +26,18 @@ class MatRequestController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $mat_requests = MaterialRequest::get();
         return view('modules.buying.materialrequest', [
             'mat_requests' => $mat_requests,
+            'permissions' => $permissions
         ]);
     }
 

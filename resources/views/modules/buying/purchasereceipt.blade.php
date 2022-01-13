@@ -26,11 +26,13 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadPurchaseReceipt()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" onclick="openNewPurchaseReceipt();">
-                        New
-                    </button>
-                </li>
+                @if (($permissions['Purchase_Receipt']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" onclick="openNewPurchaseReceipt();">
+                            New
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -51,9 +53,13 @@
         @foreach ($receipts as $receipt)
             <tr>
                 <td class="text-bold">
-                    <a href="javascript:onclick=openPurchaseReceiptInfo({{ $receipt->id }})">
+                    @if (($permissions['Purchase_Receipt']['edit'] ?? null) === 1 || !auth()->user())
+                        <a href="javascript:onclick=openPurchaseReceiptInfo({{ $receipt->id }})">
+                            {{ $receipt->p_receipt_id }}
+                        </a>
+                    @else 
                         {{ $receipt->p_receipt_id }}
-                    </a>
+                    @endif
                 </td>
                 <td>{{ $receipt->date_created }}</td>
                 <td>{{ $receipt->purchase_id }}</td>

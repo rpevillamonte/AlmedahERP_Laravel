@@ -6,6 +6,8 @@ use App\Models\Operation;
 use App\Models\RoutingOperation;
 use App\Models\Routings;
 use App\Models\WorkCenter;
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
@@ -19,8 +21,16 @@ class RoutingsController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $routings = Routings::all();
-        return view('modules.BOM.routing', ['routings' => $routings]);
+        return view('modules.BOM.routing', ['routings' => $routings, 'permissions' => $permissions]);
     }
 
     public function view($id)

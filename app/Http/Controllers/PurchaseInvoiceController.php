@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\PaymentInvoiceLog;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
+use \App\Models\UserRole;
+use Auth;
 use Illuminate\Http\Request;
 use DB;
 use Exception;
@@ -18,9 +20,16 @@ class PurchaseInvoiceController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
         $purchase_invoice = PurchaseInvoice::all();
-        return view('modules.buying.purchaseinvoice', ['invoices' => $purchase_invoice]);
+        return view('modules.buying.purchaseinvoice', ['invoices' => $purchase_invoice, 'permissions' => $permissions]);
     }
 
     /**

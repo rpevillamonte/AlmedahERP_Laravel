@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Component;
 use App\Models\ManufacturingMaterials;
 use App\Models\ManufacturingProducts;
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,11 +20,20 @@ class ComponentController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $components = Component::get();
         $raw_materials = ManufacturingMaterials::get();
         return view('modules.manufacturing.component', [
             'components' => $components,
             'raw_materials' => $raw_materials,
+            'permissions' => $permissions
         ]);
     }
 

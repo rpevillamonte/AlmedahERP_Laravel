@@ -21,11 +21,13 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTracePrompt">
-                        New
-                    </button>
-                </li>
+                @if (($permissions['Stock_Traceability']['create'] ?? null) === 1 || !auth()->user()) 
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newTracePrompt">
+                            New
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

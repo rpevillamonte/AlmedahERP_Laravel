@@ -90,9 +90,9 @@ body {
                 <input type="email" id="inputEmail" class="form-control my-2" placeholder="Email address" required autofocus>
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                <div class="checkbox mb-3">
+                <!-- <div class="checkbox mb-3">
                      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">Don't have an Account? Sign Up</button>
-                </div>
+                </div> -->
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                 
               </form>

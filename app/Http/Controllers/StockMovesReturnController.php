@@ -6,16 +6,26 @@ use Illuminate\Http\Request;
 use App\Models\StockMovesReturn;
 use App\Models\StockTransfer;
 use App\Models\StockMoves;
+use \App\Models\UserRole;
+use Auth;
 use \stdClass;
 use Illuminate\Support\Carbon;
 class StockMovesReturnController extends Controller
 {
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $stock_transfer = StockTransfer::get();
         $stock_moves = StockMoves::get();
         // $stock_moves = StockMoves::where('tracking_id', $stock_transfer->tracking_id)->first();
-        return view('modules.stock.stockmovesreturn', ['stock_transfer' => $stock_transfer, 'stock_moves'=> $stock_moves]);
+        return view('modules.stock.stockmovesreturn', ['stock_transfer' => $stock_transfer, 'stock_moves'=> $stock_moves, 'permissions' => $permissions]);
     }
 
     public function store(Request $request){

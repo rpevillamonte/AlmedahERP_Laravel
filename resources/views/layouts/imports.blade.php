@@ -61,3 +61,4 @@
 
 <!-- SB Admin 2 Style-->
 <link href="{{ asset('css/sb-admin-2.css') }}" rel="stylesheet">
+<link href="{{ asset('css/profile.css') }}" rel="stylesheet">

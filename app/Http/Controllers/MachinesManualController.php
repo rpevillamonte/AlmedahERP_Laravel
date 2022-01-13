@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MachinesManual;
 use Illuminate\Http\Request;
-
+use \App\Models\UserRole;
+use Auth;
 class MachinesManualController extends Controller
 {
     /**
@@ -14,9 +15,16 @@ class MachinesManualController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
         $machines_manual = MachinesManual::all();
-        return view('modules.BOM.machinemanual', ['machines_manuals' => $machines_manual]);
+        return view('modules.BOM.machinemanual', ['machines_manuals' => $machines_manual,'permissions' => $permissions]);
     }
 
     /**
