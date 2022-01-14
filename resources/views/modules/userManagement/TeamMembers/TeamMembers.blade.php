@@ -31,7 +31,7 @@
     </div>
 </nav>
 <br>
-<table id="employeeTable" class="table table-striped table-bordered hover" style="width:100%">
+<table id="teamMemberTable" class="table table-striped table-bordered hover" style="width:100%">
     <thead>
         <tr>
             <th>Employee ID</th>
@@ -63,7 +63,7 @@
 
 <script>
     $(document).ready(function () {
-        x = $('#employeeTable').DataTable();
+        x = $('#teamMemberTable').DataTable();
         z = $('#itemListViewTableST').DataTable();
     });
 </script>

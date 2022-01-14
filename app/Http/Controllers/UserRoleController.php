@@ -16,18 +16,8 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::all()]);
+        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::get(['id', 'role_name'])]);
     
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -49,7 +39,6 @@ class UserRoleController extends Controller
             $role = new UserRole();
             $role->role_id = $role_id;
             $role->role_name = $form_data['roleName'];
-            $role->description = 'sample_desc';
             $role->permissions = $form_data['permissions'];
     
             $role->save();
@@ -69,18 +58,7 @@ class UserRoleController extends Controller
         //
         $role = UserRole::find($id);
         $role->permissions = $role->permissions(); 
-        return response()->json(['role' => $role]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return ['role' => $role];
     }
 
     /**

@@ -11,11 +11,10 @@ use App\Models\SuppliersQuotation;
 use \App\Models\UserRole;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class MaterialsPurchasedController extends Controller
 {
@@ -34,9 +33,10 @@ class MaterialsPurchasedController extends Controller
             $permissions = null;
         }
         //
-        $materials_purchased = MaterialPurchased::all();
-        $materials = ManufacturingMaterials::all();
-        $suppliers = Supplier::all();
+        $materials_purchased = MaterialPurchased::get(['id', 'purchase_id', 'purchase_date', 
+                                        'mp_status', 'total_cost']);
+        $materials = ManufacturingMaterials::get(['id', 'item_code', 'item_name']);
+        $suppliers = Supplier::get(['id', 'supplier_id', 'company_name']);
         return view('modules.buying.purchaseorder', 
                     ['materials_purchased' => $materials_purchased, 
                      'materials' => $materials,
@@ -71,10 +71,9 @@ class MaterialsPurchasedController extends Controller
             $items_string = $form_data['materials_purchased'];
 
             $lastPurchase = MaterialPurchased::orderby('id', 'desc')->first();
-            $nextId = ($lastPurchase) ? MaterialPurchased::orderby('id', 'desc')->first()->id + 1 : 1;
-            //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
+            $nextId = ($lastPurchase) ? $lastPurchase->id + 1 : 1;
 
-            $purchase_id = "PURCH" . Carbon::now()->year . str_pad($nextId, 5, '0', STR_PAD_LEFT);
+            $purchase_id = "PURCH" . str_pad($nextId, 5, '0', STR_PAD_LEFT);
 
             $data->purchase_id = $purchase_id;
 
@@ -87,7 +86,6 @@ class MaterialsPurchasedController extends Controller
 
             $item_list = json_decode($items_string);
             foreach ($item_list as $item) {
-                # code...
                 $mp_material = new MPRecord();
                 $mp_material->purchase_id = $purchase_id;
                 $mp_material->item_code = $item->item_code;
@@ -112,11 +110,11 @@ class MaterialsPurchasedController extends Controller
      */
     public function show($id)
     {
-        //
-        $purchase_order = MaterialPurchased::find($id);
+        $purchase_order = MaterialPurchased::with('supplier_quotation')->find($id);
         $r_quotation = $purchase_order->supplier_quotation->req_quotation;
         $items_purchased = $purchase_order->itemsPurchased();
-        $req_date = ($r_quotation != null) ? $r_quotation->material_request->required_date : $items_purchased[0]['req_date'];
+        $req_date = ($r_quotation != null) ? 
+                    $r_quotation->material_request->required_date : $items_purchased[0]['req_date'];
         return view(
             'modules.buying.purchaseorderinfo',
             [
@@ -129,34 +127,13 @@ class MaterialsPurchasedController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-    }
-
     public function updateOrder(Request $request)
     {
         try {
             $form_data = $request->input();
 
-            $data = MaterialPurchased::where('purchase_id', $form_data['purchase_id'])->first();
+            $data = MaterialPurchased::where('purchase_id', $form_data['purchase_id'])
+                    ->first();
 
             $data->items_list_purchased = $form_data['materials_purchased'];
             $data->purchase_date = $form_data['purchase_date'];
@@ -177,36 +154,16 @@ class MaterialsPurchasedController extends Controller
     public function destroy($id)
     {
         //
-        $mp_material = MaterialPurchased::where('purchase_id', $id)->first();
+        $mp_material = MaterialPurchased::where('purchase_id', $id)
+                                        ->with(['supplier_quotation', 'receipt'])->first();
+
         //delete all records with same purchase_id 
-        $material_records = $mp_material->materialRecords;
-        foreach ($material_records as $material) {
-            $material->delete();
-        }
+        DB::table('materials_list_purchased')->where('purchase_id', $mp_material->purchase_id)->delete();
+
         //get purchase receipt and delete pending orders record related to purchase receipt
         $p_receipt = $mp_material->receipt;
-        if ($p_receipt != null) {
-            if ($p_receipt->pr_status === 'Draft' || $p_receipt->noReceivedMaterials() == true) {
-                $order_record = $p_receipt->order_record;
-                if ($order_record != null) $order_record->delete();
-                $p_invoice = $p_receipt->invoice;
-                if ($p_invoice != null) {
-                    //get purchase invoice related to purchase receipt, and delete logs related to purchase invoice
-                    $invoice_logs = $p_invoice->invoice_logs;
-                    if ($invoice_logs != null) {
-                        foreach ($invoice_logs as $invoice_log) {
-                            $invoice_log->delete();
-                        }
-                    }
-                    //delete invoice record
-                    $p_invoice->delete();
-                }
-                //delete purchase receipt
-                $p_receipt->delete();
-            } else {
-                return ['error' => 'Cannot cancel this order. Some of the items listed have already been delivered.'];
-            }
-        }
+        $this->deleteReceipt($p_receipt);
+
         //cancel purchase order
         $mp_material->mp_status = 'Cancelled';
         $mp_material->save();
@@ -214,6 +171,33 @@ class MaterialsPurchasedController extends Controller
         $supplier = $mp_material->supplier_quotation->supplier;
         $mail = new MaterialsPurchasedMail($supplier, $mp_material, 0); 
         Mail::to($supplier->supplier_email)->send($mail);
+    }
+
+    /**
+     * Delete the purchase receipt connected to the purchase order.
+     * 
+     * @param PurchaseReceipt $receipt
+     * @return \Illuminate\Http\Response
+     */
+    private function deleteReceipt($receipt) {
+
+        if(is_null($receipt)) return;
+
+        if ($receipt->pr_status !== 'Draft' || !$receipt->noReceivedMaterials()) {
+            return ['error' => 'Cannot cancel this order. Some of the items listed have already been delivered.'];
+        }
+
+        DB::table('materials_ordered')->where('p_receipt_id', $receipt->p_receipt_id)->delete();  
+
+        $p_invoice = $receipt->invoice;
+        if (!is_null($p_invoice)) {
+            DB::table('purchase_invoice_logs')->where('p_invoice_id', $p_invoice->p_invoice_id)->delete();
+            // delete purchase invoice
+            $p_invoice->delete();
+        }
+        
+        //delete purchase receipt
+        $receipt->delete();
     }
 
     public function view_items($id)
@@ -225,28 +209,45 @@ class MaterialsPurchasedController extends Controller
     public function updateStatus($purchase_id)
     {
         try {
-            $data = MaterialPurchased::where('purchase_id', $purchase_id)->first();
+            $data = MaterialPurchased::where('purchase_id', $purchase_id)
+                                        ->with(['supplier_quotation'])                            
+                                        ->first();
             $data->mp_status = "To Receive and Bill";
             $supplier = $data->supplier_quotation->supplier;
             $mail = new MaterialsPurchasedMail($supplier, $data, 1); 
             Mail::to($supplier->supplier_email)->send($mail);
             $data->save();
         } catch (Exception $e) {
+            return $e;
         }
     }
 
-    public function filterBy($filter, $value) {
-        $order_data = null;
-        if($filter !== 'all') {
-            if($filter !== 'mp_status') {
-                $filter = 'items_list_purchased';
-                $value = '%'.$value.'%';
-                $order_data = MaterialPurchased::where($filter, 'LIKE', $value)->get();
+    public function filterBy(Request $request) {
+        $form_data = $request->input();
+        $filter_data = json_decode($form_data['po-filters']);
+        $filters = array();
+        foreach ($filter_data as $key => $value) {
+
+            if($value !== 'None') {
+
+                if ($key !== 'status-search') {
+                    array_push($filters, ['items_list_purchased', 'LIKE', $value]);
+                } else {
+                    array_push($filters, ['mp_status', '=', $value]);
+                }
             }
-            else
-                $order_data = MaterialPurchased::where($filter, $value)->get();
         }
-        else $order_data = MaterialPurchased::all();
+
+        if(count($filters) == 0) {
+            $order_data = MaterialPurchased::get(['id', 'purchase_id', 'purchase_date', 'mp_status', 'total_cost']);
+        }
+        else {
+            $order_data = MaterialPurchased::filter($filters)
+            ->get(['id', 'purchase_id', 'purchase_date', 'mp_status', 'total_cost']);
+        }
+        
         return response()->json(['items' => $order_data]);
     }
+
 }
+

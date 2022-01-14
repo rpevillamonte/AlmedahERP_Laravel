@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-        <h2 class="navbar-brand" style="font-size: 35px;">Bill of Materials</h2>
+        <h2 class="navbar-brand" style="font-size: 35px;">Work Center</h2>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -20,72 +20,44 @@
                 </li>
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
-                        onclick="loadBOMtable();">Refresh</button>
+                        onclick="loadworkcenterlist()">Refresh</button>
                 </li>
-                @if (($permissions['BOM']['create'] ?? null) === 1 || !auth()->user())
-                    <li class="nav-item li-bom">
-                        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadBOMForm();"
-                            style="float: left;">New</button>
-                    </li>
-                @endif
+                <li class="nav-item li-bom">
+                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="createnewworkcenter();"
+                        style="float: left;">New</button>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 <br>
 <div class="container">
-    <hr>
-    <br>
-    <table id="table_bom" class="display">
+    <table id="table_workcenter" class="display">
         <thead>
             <tr>
-                <th>BOM Name</th>
-                <th>Product/Component Code</th>
-                <th>Is Active</th>
-                <th>Is Default</th>
+                <th>Work Center Code</th>
+                <th>Label</th>
+                <th>Type</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($boms as $bom)
+  
                 <tr>
                     <td>
-                        @if (($permissions['BOM']['edit'] ?? null) === 1 || !auth()->user())
-                            <a href="javascript:onclick=loadBOM({{ $bom->bom_id }});">
-                                {{ $bom->bom_name }}
-                            </a>
-                        @endif
+                        <a href="javascript:onclick=editworkcenter();">00001</a>
                     </td>
-                    <td>
-                        {{ $bom->item_code }}
-                    </td>
-                    <td>
-                        @if ($bom->is_active == true)
-                            <span>✓</span>
-                        @endif
-                    </td>
-                    <td>
-                        @if ($bom->is_default == true)
-                            <span>✓</span>
-                        @endif
-                    </td>
+                    <td>Sample Label</td>
+                    <td>Sample Type</td>
+                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button></td>
                 </tr>
-            @endforeach
+      
         </tbody>
     </table>
 </div>
 
-</div>
-
-<style>
-    .conContent {
-        padding: 200px;
-    }
-
-</style>
-
-<script>
+<script type="text/javascript">
     $(document).ready(function() {
-        $('#table_bom').DataTable();
+        $('#table_workcenter').dataTable();
     });
-
 </script>

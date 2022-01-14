@@ -96,7 +96,7 @@
         $(".pi_price").each(function () {
             // element == this
             let price = parseFloat($(this).html());
-            let price_string = "₱ " + numberWithCommas(price.toFixed(2));
+            let price_string = price == 0 ? '--' : "₱ " + numberWithCommas(price.toFixed(2));
             $(this).html(price_string);
         });
     });

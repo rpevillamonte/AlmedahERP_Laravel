@@ -1,4 +1,3 @@
-<script src="{{ asset('js/address.js') }}"></script>
 <script src="{{ asset('js/newrouting.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
@@ -88,10 +87,12 @@
                     <td id="mr-code-input" class="mr-code-input"><input type="number" value="1" name="seq_id"
                             id="seq_id1" class="form-control" readonly></td>
                     <td class="mr-qty-input">
-                        <select name="operation" id="operation1" data-live-search="true" class="form-control operation_select selectpicker" onchange="operationSearch(1);">
+                        <select name="operation" id="operation1" data-live-search="true"
+                            class="form-control operation_select selectpicker" onchange="operationSearch(1);">
                             <option value="non">No Operation Selected.</option>
                             @foreach ($operations as $operation)
-                                <option data-subtext="{{ $operation->operation_id }}" value="{{ $operation->operation_id }}">
+                                <option data-subtext="{{ $operation->operation_id }}"
+                                    value="{{ $operation->operation_id }}">
                                     {{ $operation->operation_name }}
                                 </option>
                             @endforeach
@@ -110,7 +111,8 @@
                     <td class="mr-unit-input col-1"><input type="number" value="" name="operation_time"
                             id="operation_time1" class="form-control operation_field"></td>
                     <td>
-                        <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#" role="button">
+                        <a id="" class="btn" data-toggle="modal" data-target="#edit_routing" href="#"
+                            role="button">
                             <i class="fa fa-edit" aria-hidden="true"></i>
                         </a>
                         <a id="" class="btn delete-btn" href="#" role="button">
@@ -143,18 +145,18 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Edit Routing</h5>
-                    
+
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    
+
                 </div>
                 <div class="modal-body">
                     <div>
                         <div class="row">
 
                             <div class="col-12">
-                                
+
                                 <table class="table border-bottom table-hover table-bordered" id="operations">
                                     <thead class="border-top border-bottom bg-light">
                                         <tr class="text-muted">
@@ -172,7 +174,7 @@
                                             <td class="text-center">Hour Rate</td>
                                         </tr>
                                     </thead>
-                                    <tbody class="" id="newrouting-input-rows">
+                                    <tbody class="" id=" newrouting-input-rows">
                                         <tr data-id="1">
                                             <td class="text-center">
                                                 <div class="form-check">
@@ -195,28 +197,31 @@
                                                     id="hour_rate" class="form-control" disabled></td>
                                         </tr>
                                     </tbody>
-                                </table> 
-                   
-<div class="btn-group">
-  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    New Operation / Work Center
-  </button>
-  <ul class="dropdown-menu">
-    <li>
-    <a class="dropdown-item" type="button" data-toggle="modal" data-target="#operation_modal">
-    New Operation
-    </a>
-    </li>
-    <li>
-    <a class="dropdown-item" type="button" type="submit" data-dismiss="modal" onclick="loadnewworkcenter();">
-     New Work Center
-     </a>
-    </li>
-  </ul>
-</div>                         
+                                </table>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        New Operation / Work Center
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a class="dropdown-item" type="button" data-toggle="modal"
+                                                data-target="#operation_modal">
+                                                New Operation
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" type="button" type="submit" data-dismiss="modal"
+                                                onclick="loadnewworkcenter();">
+                                                New Work Center
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                        
+
 
                     </div>
                 </div>
@@ -235,10 +240,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">New Operation</h5>
-                <button type="button" class="close" data-dismiss="modal" id="operationCross" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" id="operationCross"
+                    aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                
+
             </div>
             <div class="modal-body">
                 <div>
@@ -278,3 +284,9 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.operation_select').selectpicker();
+    });
+</script>

@@ -145,7 +145,7 @@
             <h2 class="mb-0">
                 <button class="btn btn-link d-flex w-100 collapsed" type="button" data-toggle="collapse"
                     data-target="#supplierRMData" aria-expanded="false">
-                    RAW MATERIALS
+                    SUPPLIER GROUPS
                 </button>
             </h2>
         </div>
@@ -166,7 +166,7 @@
                                 @foreach ($material_data as $item)
                                     <td>{{ $item->item_code }}</td>
                                     <td>{{ $item->item->item_name }}</td>
-                                    <td>{{ $item->rate }}</td>
+                                    <td>{{ $item->rm_rate }}</td>
                                 @endforeach
                             </tbody>
                             <tfoot>

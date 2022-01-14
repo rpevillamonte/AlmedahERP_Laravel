@@ -45,10 +45,12 @@ class EmployeeController extends Controller
     public function addEmployee(){
         $departments = Department::get();
         $roles = UserRole::get();
+        $e_types = EmploymentType::get();
 
         return view('modules.hr.AddEmployee', [
             'departments' => $departments,
             'roles' => $roles,
+            'e_types' => $e_types
         ]);
     }
     public function store(Request $request)

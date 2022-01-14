@@ -44,4 +44,16 @@ class Employee extends Authenticatable
     public function getAuthPassword(){
         return $this->password;
     }
+
+    public function role() {
+        return $this->hasOne(UserRole::class, 'role_id', 'role_id');
+    }
+
+    public function department() {
+        return $this->hasOne(Department::class, 'department_id', 'department_id');
+    }
+
+    public function scopeEmployees($query) {
+        return $query->with('role', 'department');
+    }
 }

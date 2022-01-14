@@ -19,8 +19,6 @@ use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
-use App\Http\Controllers\RequestQuotationController;
-use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockMovesController;
@@ -96,8 +94,8 @@ Route::get('/address', function() {
 });
 
 /**BOM ROUTES*/
-Route::resource('/bom', BOMController::class);
 Route::get('/get-item/{item_type}/{value}', [BOMController::class, 'getItem']);
+Route::resource('/bom', BOMController::class);
 
 /**BUYING ROUTES */
 Route::get('/buying', function () {
@@ -235,9 +233,9 @@ Route::get('/openManufacturingItemPriceForm', function () {
 });
 
 /**MANUFACTURING ROUTING ROUTES */
-Route::resource('/routing', RoutingsController::class);
 Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
 Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
+Route::resource('/routing', RoutingsController::class);
 
 /**MATERIAL REQUEST ROUTES */
 Route::resource('/materialrequest', MatRequestController::class);
@@ -258,8 +256,8 @@ Route::get('/archived', function () {
 });
 
 /**OPERATIONS ROUTES */
-Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 Route::get('/get-operation/{operation_id}', [OperationsController::class, 'getOperation']);
+Route::resource('/operations', OperationsController::class)->parameters(['operations' => 'id']);
 
 /**PAYMENT ENTRY ROUTES*/
 Route::get('/paymententry', function () {
@@ -339,27 +337,27 @@ Route::get('/loadProjectTemplate', function () {
 });
 
 /**PURCHASE INVOICE ROUTES */
-Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 Route::get('/view-chq/{pi_log_id}', [PurchaseInvoiceController::class, 'viewCheck']);
 Route::post('/update-invoice-record/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoice']);
 Route::post('/update-invoice-status/{invoice_id}', [PurchaseInvoiceController::class, 'updateInvoiceStatus']);
 Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'payInvoice']);
+Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 
 /**PURCHASE ORDER ROUTES */
-Route::resource('/purchaseorder', MaterialsPurchasedController::class);
-Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
-Route::get('/po-filter/{filter}/{value}', [MaterialsPurchasedController::class, 'filterBy']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
+Route::post('/po-search', [MaterialsPurchasedController::class, 'filterBy']);
+Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
+Route::resource('/purchaseorder', MaterialsPurchasedController::class);
 
 /**PURCHASE RECEIPT ROUTES */
-Route::resource('/purchasereceipt', PurchaseReceiptController::class);
 Route::get('/get-ordered-mats/{order_id}', [PurchaseReceiptController::class, 'getOrderedMaterials']);
 Route::get('/get-materials-from-mp/{receipt_id}', [PurchaseReceiptController::class, 'getOrderedMaterialsFromInvoice']);
 Route::get('/get-received-mats/{receipt_id}', [PurchaseReceiptController::class, 'getReceivedMats']);
 Route::post('/update-receipt', [PurchaseReceiptController::class, 'updateReceipt']);
 Route::post('/submit-receipt/{receipt_id}', [PurchaseReceiptController::class, 'changeStatus']);
 Route::post('/receive-materials', [PurchaseReceiptController::class, 'addReceivedMats']);
+Route::resource('/purchasereceipt', PurchaseReceiptController::class);
 
 /*PURCHASE TAXES*/
 Route::get('/purchasetaxes', function() {
@@ -506,7 +504,6 @@ Route::get('/teammembers', [TeamMembersController::class, 'index']);
 
 // User Role Routes
 Route::resource('/roles', UserRoleController::class);
-Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
 
 // Employment Type Route
 Route::resource('/employmenttype', EmploymentTypeController::class);
@@ -515,18 +512,19 @@ Route::resource('/employmenttype', EmploymentTypeController::class);
 Route::resource('/departments', DepartmentController::class);
 
 /**SUPPLIER ROUTES */
-Route::resource('/supplier', SupplierController::class);
 Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
-Route::get('/supp-filter-name/{name}', [SupplierController::class, 'filterByName']);
+Route::get('/supp-filter/{name}', [SupplierController::class, 'filterByID']);
 Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
+Route::resource('/supplier', SupplierController::class);
+
 
 /*SUPPLIER GROUP*/
-Route::resource('/suppliergroup', SupplierGroupController::class);
 Route::get('/sg-get-item/{material_id}', [SupplierGroupController::class, 'getRawMat']);
 Route::get('/newsuppliergrouptable', function() {
     return view('modules.NewUI.NewSupplierGrpTable');
 });
+Route::resource('/suppliergroup', SupplierGroupController::class);
 
 /**SUPPLIER QUOTATION ROUTES */
 Route::resource('/supplierquotation', SupplierQuotationController::class);
@@ -582,11 +580,17 @@ Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
 
 /**WORK CENTER ROUTES **/
 Route::resource('/workcenter', WorkCenterController::class);
-Route::get('/newworkcenter', function () {
-    return view('modules.BOM.newWorkCenter');
+
+Route::get('/workcenterlisting', function () {
+    return view('modules.BOM.workcentertable');
+});
+Route::get('/addworkcenter', function () {
+    return view('modules.BOM.createworkcenter');
 });
 
-
+Route::get('/editworkcenter', function () {
+    return view('modules.BOM.editworkcenter');
+});
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
 Route::get('/openNewWorkorder', function () {

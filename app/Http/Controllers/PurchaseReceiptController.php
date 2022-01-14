@@ -3,14 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MaterialsOrdered;
-use App\Models\MaterialRequest;
 use App\Models\MaterialPurchased;
-use App\Models\MaterialQuotation;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
-use App\Models\Supplier;
-use App\Models\SuppliersQuotation;
-use App\Models\RequestQuotationSuppliers;
 use App\Models\WorkOrder;
 use \App\Models\UserRole;
 use Carbon\Carbon;
@@ -35,9 +30,9 @@ class PurchaseReceiptController extends Controller
         }else{
             $permissions = null;
         }
-
-        $purchase_receipts = PurchaseReceipt::all();
-        return view('modules.buying.purchasereceipt', ['receipts' => $purchase_receipts, 'permissions' => $permissions]);
+        $purchase_receipts = PurchaseReceipt::get(
+            ['p_receipt_id', 'date_created', 'purchase_id', 'grand_total', 'pr_status']);
+        return view('modules.buying.purchasereceipt', ['receipts' => $purchase_receipts, 'permissions'=> $permissions]);
     }
 
 
@@ -49,7 +44,9 @@ class PurchaseReceiptController extends Controller
     public function create()
     {
         //
-        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
+        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get([
+            'id','purchase_id', 'purchase_date'
+        ]);
         return view('modules.buying.newPurchaseReceipt', ['orders' => $orders]);
     }
 
@@ -61,15 +58,13 @@ class PurchaseReceiptController extends Controller
      */
     public function store(Request $request)
     {
-        //
         try {
             $form_data = $request->input();
 
             $data = new PurchaseReceipt();
 
             $lastReceipt = PurchaseReceipt::orderby('id', 'desc')->first();
-            $nextId = ($lastReceipt) ? PurchaseReceipt::orderby('id', 'desc')->first()->id + 1 : 1;
-            //$nextId = MaterialPurchased::orderby('id', 'desc')->first()->id + $to_add;
+            $nextId = ($lastReceipt) ? $lastReceipt->id + 1 : 1;
 
             $receipt_id = "PR-" . str_pad($nextId, 3, '0', STR_PAD_LEFT);
 
@@ -113,36 +108,14 @@ class PurchaseReceiptController extends Controller
     {
         //
         $receipt = PurchaseReceipt::find($id);
-        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')->get();
+        $orders = MaterialPurchased::where('mp_status', 'To Receive and Bill')
+                                    ->with('supplier_quotation')
+                                    ->get();
         $materials = $receipt->receivedMats();
         $mat_purchased = $receipt->order;
         $supplier = $mat_purchased->supplier_quotation->supplier;
         return view('modules.buying.purchasereceiptinfo', 
         ['receipt' => $receipt, 'materials' => $materials, 'orders' => $orders, 'supplier' => $supplier]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-        
     }
 
     public function updateReceipt(Request $request)
@@ -163,25 +136,15 @@ class PurchaseReceiptController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function getOrderedMaterials($id)
     {
         try {
-            $mat_purchased = MaterialPurchased::find($id);
+            $mat_purchased = MaterialPurchased::with('supplier_quotation')->find($id);
             $supplier = $mat_purchased->supplier_quotation->supplier;
             $ordered_mats = $mat_purchased->itemsPurchased();
-            $purchase_id = $mat_purchased->purchase_id;
-            return ['ordered_mats' => $ordered_mats, 'purchase_id' => $purchase_id, 'supplier' => $supplier];
+            return ['ordered_mats' => $ordered_mats, 
+                    'purchase_id' => $mat_purchased->purchase_id, 
+                    'supplier' => $supplier];
         } catch (Exception $e) {
             return $e;
         }
@@ -190,11 +153,13 @@ class PurchaseReceiptController extends Controller
     public function getReceivedMats($id)
     {
         try {
-            $receipt = PurchaseReceipt::find($id);
+            $receipt = PurchaseReceipt::with('order')->find($id);
             $receipt_id = $receipt->p_receipt_id;
             $supplier = $receipt->order->supplier_quotation->supplier;
             $received_mats = $receipt->receivedMats();
-            return ['p_receipt_id' => $receipt_id, 'received_mats' => $received_mats, 'supplier' => $supplier];
+            return ['p_receipt_id' => $receipt_id, 
+                    'received_mats' => $received_mats, 
+                    'supplier' => $supplier];
         } catch (Exception $e) {
             return $e;
         }
@@ -203,11 +168,13 @@ class PurchaseReceiptController extends Controller
     public function getOrderedMaterialsFromInvoice($receipt_id)
     {
         try {
-            $receipt = PurchaseReceipt::find($receipt_id);
+            $receipt = PurchaseReceipt::with('order')->find($receipt_id);
             $mat_purchased = $receipt->order;
             $supplier = $mat_purchased->supplier_quotation->supplier;
             $ordered_mats = $mat_purchased->itemsPurchased();
-            return ['ordered_mats' => $ordered_mats, 'p_receipt_id' => $receipt->p_receipt_id, 'supplier' => $supplier];
+            return ['ordered_mats' => $ordered_mats, 
+                    'p_receipt_id' => $receipt->p_receipt_id, 
+                    'supplier' => $supplier];
         } catch (Exception $e) {
             return $e;
         }
@@ -222,12 +189,11 @@ class PurchaseReceiptController extends Controller
             $receipt->save();
 
             $lastMatOrder = MaterialsOrdered::orderby('id', 'desc')->first();
-            $nextOrderId = ($lastMatOrder) ? MaterialsOrdered::orderby('id', 'desc')->first()->id + 1 : 1;
+            $nextOrderId = ($lastMatOrder) ? $lastMatOrder->id + 1 : 1;
             $mo_id = "MAT-ORD-" . str_pad($nextOrderId, 3, '0', STR_PAD_LEFT);
 
             $pending_item_list = array();
             $items = $receipt->receivedMats();
-            $i = 0;
             foreach ($items as $item) {
                 array_push(
                     $pending_item_list,
@@ -250,18 +216,6 @@ class PurchaseReceiptController extends Controller
             in order to assign a materials_ordered_id to the Work Order table. The materials_ordered_id
             is used for getting the raw material quantity for the Work Order table.
             */
-            
-            //$mat_purchased = MaterialPurchased::where('purchase_id', $receipt->purchase_id)->first();
-            //$supp_quotation_id = $mat_purchased->supp_quotation_id;
-//
-            //$supp_quotation = SuppliersQuotation::where('supp_quotation_id', $supp_quotation_id)->first();
-            //$req_quotation_id = $supp_quotation->req_quotation_id;
-//
-            //$req_quotation = MaterialQuotation::where('req_quotation_id', $req_quotation_id)->first();
-            //$request_id = $req_quotation->request_id;
-//
-            //$mat_request = MaterialRequest::where('request_id', $request_id)->first();
-            //$work_order_no = $mat_request->work_order_no;
 
             $work_order_no = $receipt->order->supplier_quotation->req_quotation->material_request->work_order_no;
 
@@ -282,15 +236,9 @@ class PurchaseReceiptController extends Controller
         try {
             $form_data = $request->input();
 
-            $receipt_id = $form_data['receipt_id'];
-            $received_mats = $form_data['mat_received'];
-
-            $received_mats = json_decode($received_mats, true);
-
-            $receipt = PurchaseReceipt::where('p_receipt_id', $receipt_id)->first();
-            $receipt_mats = $receipt->item_list_received;
-
-            $receipt_mats = json_decode($receipt_mats, true);
+            $receipt = PurchaseReceipt::where('p_receipt_id', $form_data['receipt_id'])->with(['order', 'invoice', 'order_record'])->first();
+            $received_mats = json_decode($form_data['mat_received'], true);
+            $receipt_mats = json_decode($receipt->item_list_received, true);
 
             $i = 1;
 
@@ -310,10 +258,10 @@ class PurchaseReceiptController extends Controller
             $order_items = $pending_order->items_list_received;
             
             foreach ($order_items as $index => $order_item) {
-                $order_items[$index]['qty_received'] = strval(intval($order_items[$index]['qty_received']) + intval($received_mats[$i]['qty_received']));
+                $new_qty = intval($order_items[$index]['qty_received']) + intval($received_mats[$i]['qty_received']);
+                $order_items[$index]['qty_received'] = strval($new_qty);
                 $i++;
             }
-            //dd($order_items);
             $pending_order->items_list_received = json_encode($order_items);
             $pending_order->save();
 
@@ -323,7 +271,7 @@ class PurchaseReceiptController extends Controller
 
             foreach($pending_order_items as $item) {
                 if($item['curr_progress'] != '100') {
-                    $is_complete = false;
+                    $is_complete = !$is_complete;
                     break;
                 }
             } 

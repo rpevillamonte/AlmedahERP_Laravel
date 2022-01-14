@@ -18,7 +18,7 @@ $(".supplier-search").change(function (e) {
         let id = $(this).attr('id');
         switch (id) {
             case 'supplierName':
-                url = /supp-filter-name/
+                url = '/supp-filter/'
                 break;
             case 'sgroupSelect':
                 url = '/supp-filter-sg/'
@@ -51,7 +51,7 @@ $(".supplier-search").change(function (e) {
                         supplier.contact_name,
                         supplier.phone_number,
                         supplier.supplier_address,
-                        supplier.rm_count.toString()
+                        supplier.sg_materials_count.toString()
                     ]);
                 }
             }
