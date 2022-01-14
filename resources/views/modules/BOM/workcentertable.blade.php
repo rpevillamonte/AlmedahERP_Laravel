@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+<script src="{{ asset('js/workcenter_native.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
         <h2 class="navbar-brand" style="font-size: 35px;">Work Center</h2>
@@ -19,7 +19,7 @@
                     </ul>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
+                    <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
                         onclick="loadworkcenterlist()">Refresh</button>
                 </li>
                 <li class="nav-item li-bom">
@@ -30,7 +30,13 @@
         </div>
     </div>
 </nav>
+
+<div id="nwc_success_msg" class="alert alert-success" style="display: none;">
+</div>
+<div id="nwc_alert_msg" class="alert alert-danger" style="display: none;">
+</div>
 <br>
+
 <div class="container">
     <table id="table_workcenter" class="display">
         <thead>
@@ -42,16 +48,20 @@
             </tr>
         </thead>
         <tbody>
-  
-                <tr>
+            @foreach ($work_centers as $wc)
+                <tr id="wc{{ $wc->id }}">
                     <td>
-                        <a href="javascript:onclick=editworkcenter();">00001</a>
+                        <a href="javascript:onclick=editworkcenter({{ $wc->id }});">{{ $wc->wc_code }}</a>
                     </td>
-                    <td>Sample Label</td>
-                    <td>Sample Type</td>
-                    <td><button><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+                    <td>{{ $wc->wc_label }}</td>
+                    <td>{{ $wc->wc_type }}</td>
+                    <td>
+                        <button name="deleteWC" type="button" value="{{ $wc->id }}" role="button">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>
                 </tr>
-      
+            @endforeach
         </tbody>
     </table>
 </div>

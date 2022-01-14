@@ -580,17 +580,8 @@ Route::get('/openUOMEdit', function () {
 
 /**WORK CENTER ROUTES **/
 Route::resource('/workcenter', WorkCenterController::class);
+Route::get('/newworkcenter', [WorkCenterController::class, 'routingCreateForm']);
 
-Route::get('/workcenterlisting', function () {
-    return view('modules.BOM.workcentertable');
-});
-Route::get('/addworkcenter', function () {
-    return view('modules.BOM.createworkcenter');
-});
-
-Route::get('/editworkcenter', function () {
-    return view('modules.BOM.editworkcenter');
-});
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
 Route::get('/openNewWorkorder', function () {

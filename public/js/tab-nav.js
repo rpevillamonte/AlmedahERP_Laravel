@@ -1493,21 +1493,25 @@ function loadnewworkcenter() {
         $("#contentRouting").load("/workcenter");
     });
 }
+
 function createnewworkcenter() {
     $(document).ready(function () {
-        $("#contentWorkCenterListing").load("/addworkcenter");
+        $("#contentWorkCenter").load("/workcenter/create");
     });
 }
+
 function loadworkcenterlist() {
     $(document).ready(function () {
-        $("#contentWorkCenterListing").load("/workcenterlisting");
+        $("#contentWorkCenter").load("/workcenter");
     });
 }
-function editworkcenter() {
+
+function editworkcenter(id) {
     $(document).ready(function () {
-        $("#contentWorkCenterListing").load("/editworkcenter");
+        $("#contentWorkCenter").load(`/workcenter/${id}`);
     });
 }
+
 function loadnewRouting() {
     $(document).ready(function () {
         $("#contentRouting").load("/routing/create");

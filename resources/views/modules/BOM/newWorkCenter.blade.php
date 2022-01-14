@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label for="Type">Type</label>
                     <select class="form-control" id="wc_select" onchange="showForm()">
-                        <option value="N/A" selected></option>
+                        <option value="N/A" selected>--No Selected Option--</option>
                         <option value="Human">Human</option>
                         <option value="Machine">Machine</option>
                         <option value="Human and Machine">Human & Machine</option>

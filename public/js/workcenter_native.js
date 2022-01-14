@@ -29,25 +29,6 @@ function checkWC() {
 
 }
 
-$("form[name='deleteWC']").submit(function () { 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': CSRF_TOKEN,
-        }
-    }); 
-    $.ajax({
-        type: "DELETE",
-        url: $(this).attr('action'),
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-            console.log("success");
-        }
-    });
-    return false;
-});
-
 $("#save_wc").click(function () {
     //$.ajaxSetup({
     //    headers: {
@@ -103,7 +84,7 @@ $("#save_wc").click(function () {
         processData: false,
         success: function (response) {
             console.log("success");
-            loadnewRouting();
+            loadworkcenterlist();
         }
     });
 });
@@ -164,3 +145,31 @@ function addRownewEmployee(){
     `);
 }
 
+$("button[name='deleteWC']").click(function (e) { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    });
+    
+    var id = $(this).attr('value');
+    
+    $.ajax({
+        type: "DELETE",
+        url: `/workcenter/${id}`,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if(response.error) {
+                slideAlert(`Error: ${response.error}`, '#nwc_alert_msg')
+            }
+            else {
+                slideAlert(`Record deleted.`, '#nwc_success_msg')
+                $(`#wc${id}`).remove();
+            }
+        }
+    });
+    
+    e.preventDefault();
+    
+});

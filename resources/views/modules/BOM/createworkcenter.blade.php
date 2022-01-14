@@ -1,5 +1,5 @@
 <script src="{{ asset('js/address.js') }}"></script>
-<script src="{{ asset('js/workcenter.js') }}"></script>
+<script src="{{ asset('js/workcenter_native.js') }}"></script>
 <script src="{{ asset('js/newWorkcenter.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     <label for="Type">Type</label>
                     <select class="form-control" id="wc_select" onchange="showForm()">
-                        <option value="N/A" selected></option>
+                        <option value="N/A" selected>--No Option Selected--</option>
                         <option value="Human">Human</option>
                         <option value="Machine">Machine</option>
                         <option value="Human and Machine">Human & Machine</option>
