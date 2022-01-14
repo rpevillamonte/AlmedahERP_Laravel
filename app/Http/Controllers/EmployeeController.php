@@ -5,29 +5,40 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Models\Employee;
 use \App\Models\Department;
-use App\Models\EmploymentType;
+use \App\Models\EmploymentType;
 use \App\Models\UserRole;
 use DB;
+use Auth;
 use Illuminate\Support\Facades\Hash;
 class EmployeeController extends Controller
 {
     public function index(){
         // $position = Employee::whereNotNull('position')->distinct();
-        $employees = Employee::employees()->get(['employee_id', 'last_name', 'first_name', 'email']);
-        // $departments = Department::get();
+        $employees = Employee::get();
+        $departments = Department::get();
 
-        // $roles = Employee::get()->pluck('role_id');
-        // $role_names = array();
-        // foreach($roles as $role){
-        //     $user_role = UserRole::where('role_id', $role)->first();
-        //     $role_name = $user_role->role_name ?? null;
-        //     array_push($role_names, $role_name);
-        // }
+        $roles = Employee::get()->pluck('role_id');
+        $role_names = array();
+
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
+        foreach($roles as $role){
+            $user_role = UserRole::where('role_id', $role)->first();
+            $role_name = $user_role->role_name ?? null;
+            array_push($role_names, $role_name);
+        }
         // $spec_rolesModel::all(['id'])->toArray()
         return view('modules.hr.employee', [
-            'employees' => $employees
-            // 'departments' => $departments,
-            // 'role_names' => $role_names,
+            'employees' => $employees,
+            'departments' => $departments,
+            'role_names' => $role_names,
+            'permissions' => $permissions
         ]);
     }
 
@@ -81,7 +92,7 @@ class EmployeeController extends Controller
             $data->password = Hash::make($form_data['password']);
             
 
-            $data->is_admin = $form_data['is_admin'];
+            $data->is_admin = $form_data['is_admin'] ?? 0;
             $data->address = $form_data['address'];
             $data->status = $form_data['status'];
             $data->department_id = $form_data['department_id'];
@@ -145,11 +156,7 @@ class EmployeeController extends Controller
 
         try {
             $employee = Employee::where('id', $id)->first();
-            // $imagePath = request('profile_picture');
-            // if(request('profile_picture')){
-            //     $imagePath = request('profile_picture')->store('uploads', 'public');
-            //     $employee->profile_picture = $imagePath;
-            // }
+         
             $employee->last_name = $request->input('last_name');
             $employee->first_name = $request->input('first_name');
             $employee->position = $request->input('position');
@@ -181,20 +188,6 @@ class EmployeeController extends Controller
             return response('There was an error upon updating!');
         }
     }
-    // this updates the active status in the employees dataTable
-    // public function toggle(Request $request, $id, $stat)
-    // {
-    //     try {
-    //         $employee = Employee::where('id', $id)->first();
-    //         $employee->active_status = $stat;
-    //         $employee->save();
-    //         return response('Account has been activated!');
-    //     } catch (Exception $e) {
-    //         return response()->json([
-    //             'status' => 'failed'
-    //         ]);
-    //     }
-    // }
 
     public function getEmployeeDetails($employee_id){
         try {
@@ -205,6 +198,26 @@ class EmployeeController extends Controller
                 'status' => 'failed'
             ]);
         }
+    }
+
+    public function getAuthEmployeeDetails(){
+        $employee_id = Auth::user()->employee_id;
+        $employee = Employee::where('employee_id', $employee_id)->first();
+        $role_id = $employee->role_id;
+        $department_id = $employee->department_id;
+        $employment_id = $employee->employment_id;
+        $role = UserRole::where('role_id', $role_id)->first();
+        $role_name = $role->role_name;
+        $department = Department::where('department_id', $department_id)->first();
+        $department_name = $department->department_name;
+        $employment_type = EmploymentType::where('employment_id', $employment_id)->first();
+        $employment_name = $employment_type->employment_type;
+
+        return view('profile', [
+            'role_name' => $role_name,
+            'department_name'=>$department_name,
+            'employment_name' => $employment_name,
+        ]);
     }
 
 }

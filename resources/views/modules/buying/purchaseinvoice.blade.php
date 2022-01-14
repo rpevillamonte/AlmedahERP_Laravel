@@ -26,11 +26,13 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadPurchaseInvoice()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" onclick="openNewPurchaseInvoice();">
-                        New
-                    </button>
-                </li>
+                @if (($permissions['Purchase_Invoice']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" onclick="openNewPurchaseInvoice();">
+                            New
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -52,9 +54,13 @@
         @foreach ($invoices as $invoice)
         <tr>
             <td class="text-bold">
-                <a href="javascript:onclick=openPurchaseInvoiceInfo({{ $invoice->id }})">
+                @if (($permissions['Purchase_Invoice']['edit'] ?? null) === 1 || !auth()->user())
+                    <a href="javascript:onclick=openPurchaseInvoiceInfo({{ $invoice->id }})">
+                        {{ $invoice->p_invoice_id }}
+                    </a>
+                @else 
                     {{ $invoice->p_invoice_id }}
-                </a>
+                @endif
             </td>
             <td>{{ $invoice->p_receipt_id }}</td>
             <td>{{ $invoice->date_created }}</td>

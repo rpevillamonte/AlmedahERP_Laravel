@@ -8,9 +8,12 @@ use App\Models\MaterialPurchased;
 use App\Models\MPRecord;
 use App\Models\Supplier;
 use App\Models\SuppliersQuotation;
+use \App\Models\UserRole;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Auth;
 use Illuminate\Support\Facades\Mail;
 
 class MaterialsPurchasedController extends Controller
@@ -22,6 +25,13 @@ class MaterialsPurchasedController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
         $materials_purchased = MaterialPurchased::get(['id', 'purchase_id', 'purchase_date', 
                                         'mp_status', 'total_cost']);
@@ -30,7 +40,8 @@ class MaterialsPurchasedController extends Controller
         return view('modules.buying.purchaseorder', 
                     ['materials_purchased' => $materials_purchased, 
                      'materials' => $materials,
-                     'suppliers' => $suppliers]);
+                     'suppliers' => $suppliers,
+                     'permissions' => $permissions]);
     }
 
     /**

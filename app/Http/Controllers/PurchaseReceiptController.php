@@ -7,8 +7,12 @@ use App\Models\MaterialPurchased;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseReceipt;
 use App\Models\WorkOrder;
+use \App\Models\UserRole;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
+use DB;
+use Auth;
 
 class PurchaseReceiptController extends Controller
 {
@@ -19,9 +23,16 @@ class PurchaseReceiptController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         $purchase_receipts = PurchaseReceipt::get(
             ['p_receipt_id', 'date_created', 'purchase_id', 'grand_total', 'pr_status']);
-        return view('modules.buying.purchasereceipt', ['receipts' => $purchase_receipts]);
+        return view('modules.buying.purchasereceipt', ['receipts' => $purchase_receipts, 'permissions'=> $permissions]);
     }
 
 

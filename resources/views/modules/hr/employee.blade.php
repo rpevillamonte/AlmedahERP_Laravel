@@ -22,10 +22,18 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;"
                         onclick="Employee()">Refresh</button>
                 </li>
+<<<<<<< HEAD
+                @if (($permissions['Employee']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-info btn" style="background-color: #007bff;" onclick="addEmployee()">New</button>
+                    </li>
+                @endif
+=======
                 <li class="nav-item li-bom">
                     <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
                         onclick="addEmployee()">New</button>
                 </li>
+>>>>>>> 903cc081e1cc4bde7aae53e52c1f9a6bcb64c3d1
             </ul>
         </div>
     </div>
@@ -46,6 +54,46 @@
             </thead>
             <tbody>
 
+<<<<<<< HEAD
+            @if(count($employees) >= 0)
+            <div class="employeedata">
+                <table id="employeeTable" class="table table-striped table-bordered hover" style="width:100%">
+                    <thead>
+                        <tr>
+                        <th>Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Position</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    @foreach ($employees as $key=>$row)
+                    <tr id="<?=$row["id"]?>">
+                        <td class="text-black-50">
+                            @if (($permissions['Employee']['edit'] ?? null) === 1 || !auth()->user())
+                                <a href="javascript:onclick=EditEmployee('<?=$row["employee_id"]?>');">
+                                    <?=$row["employee_id"]?>
+                                </a> 
+                            @else
+                                    <?=$row["employee_id"]?>
+                            @endif
+                        </td>
+                        <td class="text-black-50"><?=$row["first_name"]?> <?=$row["last_name"]?></td>
+                        <td class="text-black-50"><?=$row["position"]?></td>
+                        <td class="text-black-50"><?=$row["email"]?></td>
+                        <td class="text-black-50">{{ $role_names[$key ]}}</td>
+                    </tr>
+                    @endforeach
+
+    
+                    </tbody>
+                </table>  
+            </div>
+            @endif      
+          
+=======
                 @foreach ($employees as $e)
                     <tr id="">
                         <td class="text-black-50">
@@ -82,6 +130,7 @@
             </tbody>
         </table>
     </div>
+>>>>>>> 903cc081e1cc4bde7aae53e52c1f9a6bcb64c3d1
 
 </div>
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Operation;
 use App\Models\WorkCenter;
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +19,13 @@ class OperationsController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
 
         $operations = DB::table('operations')
@@ -24,7 +33,7 @@ class OperationsController extends Controller
         ->join('work_center','operations.wc_code','=','work_center.wc_code')
         ->get();
 
-        return view('modules.BOM.operation', ['operations' => $operations]);
+        return view('modules.BOM.operation', ['operations' => $operations, 'permissions' => $permissions]);
     }
 
     /**

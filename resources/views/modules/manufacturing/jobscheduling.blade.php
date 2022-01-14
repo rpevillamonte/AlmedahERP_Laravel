@@ -11,11 +11,13 @@
                     <a href="javascript:void(0)" onclick="loadJobschedhome()" class="btn btn-primary text-white m-1"
                         type="button">Refresh</a>
                 </li>
-                <li class="nav-item li-bom m-auto">
-                    <button style="background-color: #007bff;" class="btn btn-info btn m-1"
-                        onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');"
-                        style="float: left;">New</button>
-                </li>
+                @if (($permissions['Job_Scheduling']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom m-auto">
+                        <button style="background-color: #007bff;" class="btn btn-info btn m-1"
+                            onclick="loadIntoPage(this, '{{ route('jobscheduling.create') }}');"
+                            style="float: left;">New</button>
+                    </li>
+                @endif
                 <!-- <li class="nav-item dropdown li-bom">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         More
@@ -54,7 +56,13 @@
                                 <input type="checkbox" class="form-check-input">
                             </div>
                         </td>
-                        <td><a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>$jobsched->id]) }}');">{{ $jobsched->jobs_sched_id }}</a></td>
+                        <td>
+                            @if (($permissions['Job_Scheduling']['edit'] ?? null) === 1 || !auth()->user())
+                                <a href='#' onclick="loadIntoPage(this, '{{ route('jobscheduling.edit', ['jobscheduling'=>$jobsched->id]) }}');">{{ $jobsched->jobs_sched_id }}</a>
+                            @else 
+                                {{ $jobsched->jobs_sched_id }}
+                            @endif
+                        </td>
                         <td class="text-black-50">
                             {{ $jobsched->work_order->item->product_name ?? $jobsched->work_order->component_name }} ({{ $jobsched->work_order->item->product_code ?? $jobsched->work_order->item->component_code }})
                         </td>
@@ -63,13 +71,15 @@
                         <td class="text-black-50">{{ $jobsched->js_status }}</td>
                         <td class="text-black-50">
                             @if ($jobsched->js_status == "Draft")
-                                <form class="delete-js-form" action="{{ route('jobscheduling.destroy', ['jobscheduling'=>$jobsched->id]) }}" data-js="{{ $jobsched->jobs_sched_id }}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                    </button>
-                                </form>
+                                @if (($permissions['Job_Scheduling']['delete'] ?? null) === 1 || !auth()->user())
+                                    <form class="delete-js-form" action="{{ route('jobscheduling.destroy', ['jobscheduling'=>$jobsched->id]) }}" data-js="{{ $jobsched->jobs_sched_id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </form>
+                                @endif 
                             @endif
                         </td>
                     </tr>

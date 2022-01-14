@@ -11,9 +11,11 @@ use App\Models\ordered_products;
 use App\Models\MaterialPurchased;
 use App\Models\MaterialRequest;
 use App\Models\MaterialsOrdered;
+use \App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use Auth;
 use Exception;
 use \stdClass;
 
@@ -21,6 +23,14 @@ class WorkOrderController extends Controller
 {
     //
     function index() {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $work_orders = WorkOrder::get();
         $sales_ids = array_unique($work_orders->pluck('sales_id')->toArray());
         $sales_ids = array_values($sales_ids);
@@ -74,7 +84,7 @@ class WorkOrderController extends Controller
                 array_push($components, array('component_code'=>$product->product_code, 'status'=>$status, 'type'=>'item'));
             }
         }
-        return view('modules.manufacturing.workorder', ['work_orders' => $work_orders, 'components' => $components, 'items' => $items, 'quantity' => $quantity]);
+        return view('modules.manufacturing.workorder', ['work_orders' => $work_orders, 'components' => $components, 'items' => $items, 'quantity' => $quantity, 'permissions' => $permissions]);
     }
 
     function getQtyFromMatOrdered($work_order_no){

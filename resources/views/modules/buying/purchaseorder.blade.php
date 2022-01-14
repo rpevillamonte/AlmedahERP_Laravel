@@ -28,10 +28,12 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="button"
                         onClick="loadPurchaseOrder();">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
-                        onclick="openNewPurchaseOrder();">New</button>
-                </li>
+                @if (($permissions['Purchase_Order']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
+                            onclick="openNewPurchaseOrder();">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -134,8 +136,11 @@
                         @foreach ($materials_purchased as $material)
                             <tr>
                                 <td scope="col">
-                                    <a
-                                        href="javascript:onclick=viewPurchaseOrder({{ $material->id }})">{{ $material->purchase_id }}</a>
+                                    @if (($permissions['Purchase_Order']['edit'] ?? null) === 1 || !auth()->user())
+                                        <a href="javascript:onclick=viewPurchaseOrder({{ $material->id }})">{{ $material->purchase_id }}</a>
+                                    @else 
+                                        {{ $material->purchase_id }}
+                                    @endif
                                 </td>
                                 <td scope="col">{{ $material->mp_status }}</td>
                                 <td scope="col">{{ $material->purchase_date }}</td>

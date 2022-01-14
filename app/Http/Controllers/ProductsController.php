@@ -11,8 +11,10 @@ use \App\Models\ManufacturingProducts;
 use \App\Models\ProductAttribute;
 use \App\Models\ProductVariantWithValue;
 use App\Models\MaterialCategory;
+use \App\Models\UserRole;
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 use \stdClass;
 use PhpOption\None;
 use Exception;
@@ -23,6 +25,14 @@ class ProductsController extends Controller
 {
     function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $man_products = ManufacturingProducts::get();
         $item_groups = ItemGroup::all();
         $raw_mats = ManufacturingMaterials::where('rm_status', 'Available')->get();
@@ -36,6 +46,7 @@ class ProductsController extends Controller
             "components"=>$components,
             "product_units"=>$product_units,
             "product_variants"=>$product_variants,
+            "permissions" => $permissions
         ]);
     }
 

@@ -286,7 +286,9 @@
          <div id="alert-message"></div>
          <p class="text-right p-3">
             <button type="button" id="" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#toReproduceModal" onclick="getLowOnStocks()">To Reproduce</button>
-            <button type="button" id="addNew" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus" aria-hidden="true"></i> Add New</button>
+            @if (($permissions['Product']['create'] ?? null) === 1 || !auth()->user())
+                <button type="button" id="addNew" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus" aria-hidden="true"></i> Add New</button>
+            @endif  
          </p>
          <script>
             $('#addNew').click(function(){
@@ -343,8 +345,12 @@
                         Actions
                         </button>
                         <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                           <li><button onclick="editProduct({{ json_encode($product) }})" style="width:100%" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</button></li>
-                           <li><button onclick="deleteProduct({{ $product->id }})" style="width:100%" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button></li>
+                            @if (($permissions['Product']['edit'] ?? null) === 1 || !auth()->user())
+                                <li><button onclick="editProduct({{ json_encode($product) }})" style="width:100%" class="btn btn-warning"><i class="fas fa-edit"></i> Edit</button></li>
+                            @endif
+                            @if (($permissions['Product']['delete'] ?? null) === 1 || !auth()->user())
+                                <li><button onclick="deleteProduct({{ $product->id }})" style="width:100%" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</button></li>
+                            @endif
                            @if ($product->product_status == "Template")
                            <li><button onclick="editProduct({{ json_encode($product) }}, creatingVariant = true)" type="button" class="btn btn-secondary" style="width: 100%;"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Variant</button></li>
                            @endif

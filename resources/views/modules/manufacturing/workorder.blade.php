@@ -18,9 +18,11 @@
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadWorkOrder();">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit" onclick="openNewWorkorder();">New</button>
-                </li>
+                @if (($permissions['Work_Order']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button class="btn btn-primary" type="submit" onclick="openNewWorkorder();">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -45,7 +47,13 @@
                 <tr>
                     <td class="text-black-50" style="padding-left: 40px;">{{ $work_order->work_order_no }}</td>
                     
-                    <td><a href="#" onclick='@if($work_order->sales_id) loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`) @else loadWorkOrderInfoWithoutSales({{ $work_order }}) @endif'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a></td>
+                    <td>
+                        @if (($permissions['Work_Order']['create'] ?? null) === 1 || !auth()->user())
+                            <a href="#" onclick='@if($work_order->sales_id) loadWorkOrderInfo({{ $work_order }}, `{{ $work_order->transferred_qty }}`,  `{{ $work_order->item["component_code"] ?? $work_order->item["product_code"] }}`, `{{ $work_order->sales_id ?? null }}`, `{{ $items[$index] ?? null }}`, `{{ json_encode($quantity[$index] ?? null) }}`) @else loadWorkOrderInfoWithoutSales({{ $work_order }}) @endif'> {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }} </a>
+                        @else 
+                            {{ $work_order->item['component_code'] ?? $work_order->item['product_code'] }}
+                        @endif
+                    </td>
                     <td class="text-black-50">{{ $items[$index] }}</td>
                     <td>{{ $work_order->work_order_status }}</td>
                     <td>{{ $work_order->sales_id ?? null }}</td>
@@ -70,4 +78,7 @@
             ]
         });
     });
+
+    var url = "js/workorder.js";
+    $.getScript(url);
 </script>

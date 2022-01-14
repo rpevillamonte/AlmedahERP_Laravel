@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\SupplierGroup;
 use App\Models\SuppliersQuotation;
+use \App\Models\UserRole;
 use Exception;
+use Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -24,13 +26,20 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
         $suppliers = Supplier::withCount('sg_materials')->get(
             ['company_name', 'contact_name', 'phone_number', 'supplier_address']
         );
         $materials = ManufacturingMaterials::get(['item_code', 'item_name']);
         return view('modules.buying.supplier', 
-                    ['suppliers' => $suppliers, 'materials' => $materials]
+                    ['suppliers' => $suppliers, 'materials' => $materials, 'permissions' => $permissions]
                 );
     }
 
