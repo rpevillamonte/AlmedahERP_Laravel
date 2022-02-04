@@ -22,18 +22,11 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;"
                         onclick="Employee()">Refresh</button>
                 </li>
-<<<<<<< HEAD
                 @if (($permissions['Employee']['create'] ?? null) === 1 || !auth()->user())
                     <li class="nav-item li-bom">
                         <button type="button" class="btn btn-info btn" style="background-color: #007bff;" onclick="addEmployee()">New</button>
                     </li>
                 @endif
-=======
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
-                        onclick="addEmployee()">New</button>
-                </li>
->>>>>>> 903cc081e1cc4bde7aae53e52c1f9a6bcb64c3d1
             </ul>
         </div>
     </div>
@@ -54,21 +47,8 @@
             </thead>
             <tbody>
 
-<<<<<<< HEAD
             @if(count($employees) >= 0)
-            <div class="employeedata">
-                <table id="employeeTable" class="table table-striped table-bordered hover" style="width:100%">
-                    <thead>
-                        <tr>
-                        <th>Employee ID</th>
-                        <th>Employee Name</th>
-                        <th>Position</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
+            <div class="employeedata">        
                     @foreach ($employees as $key=>$row)
                     <tr id="<?=$row["id"]?>">
                         <td class="text-black-50">
@@ -89,48 +69,10 @@
 
     
                     </tbody>
-                </table>  
             </div>
+        </table>
             @endif      
           
-=======
-                @foreach ($employees as $e)
-                    <tr id="">
-                        <td class="text-black-50">
-                            <a href="javascript:onclick=EditEmployee({{ $e->employee_id }});">{{ $e->employee_id }}</a>
-                        </td>
-                        <td class="text-black-50">{{ $e->first_name }} {{ $e->last_name }}</td>
-                        <td class="text-black-50">{{ $e->department_department_name }}</td>
-                        <td class="text-black-50">{{ $e->email }}</td>
-                        <td class="text-black-50">{{ $e->role_role_name }}</td>
-                        {{-- <td class="text-black-50"><?= $row['address'] ?></td>
-                        <td><img src="images/img.png" class="customer-modal-image" height="37" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
-                        <td class="text-black-50"><?= $row['email_address'] ?></td>
-                        <td class="text-black-50"><?= $row['company_name'] ?></td>
-                        <td class="">
-                            <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
-                        </td> --}}
-                    </tr>
-                @endforeach
-                {{-- <tr>
-                       <td class="text-bold"><a href="javascript:onclick=EditEmployee();">EMP001</a></td>
-                       <td>Juan Dela Cruz</td>
-                       <td class="text-bold">Supervisor</td>
-                       <td>juandelacruz@gmail.com</td>
-                       <td>Role1</td>
-                    </tr>
-                    <tr>
-                       <td class="text-bold">MNGR001</td>
-                       <td>John Doe</td>
-                       <td class="text-bold">Manager</td>
-                       <td>johndoe@gmail.com</td>
-                       <td>Role2</td>
-                    </tr> --}}
-
-            </tbody>
-        </table>
-    </div>
->>>>>>> 903cc081e1cc4bde7aae53e52c1f9a6bcb64c3d1
 
 </div>
 
