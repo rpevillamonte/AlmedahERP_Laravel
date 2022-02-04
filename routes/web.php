@@ -210,11 +210,19 @@ Route::resource('/machinemanual', MachinesManualController::class);
 Route::get('/find-machine/{machine_code}', [MachinesManualController::class, 'getMachine']);
 
 /**MANUFACTURING ROUTES */
-Route::get('/manufacturing', [ManufacturingController::class, 'index']);
+
+// Route::get('/manufacturing', [ManufacturingController::class, 'index']);
+
+// bandaid solution, if logged in comment the code below and uncomment code above.
+Route::get('/manufacturing', function () {
+    return view('modules.manufacturing.manufacturing');
+});
 
 Route::get('/customer', [CustomerController::class, 'index']);
 Route::post('/create-customer', [CustomerController::class, 'store'])->name('customer');
 Route::put('/update-customer/{id}', [CustomerController::class, 'update']);
+
+
 
 /**MANUFACTURING ITEM ATTRIBUTE ROUTES */
 Route::get('/itemattribute', function () {
