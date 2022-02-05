@@ -89,7 +89,6 @@ class DepartmentController extends Controller
         $dept->department_name = $dept_name;
         $dept->reports_to = $form_data['deptEditHead'];
         $dept->save();
-        // $dept_head = $form_data['deptEditHead'];
         return response($dept_name);
     }
 
@@ -103,11 +102,9 @@ class DepartmentController extends Controller
     {
         //
         try {
-            //code...
             $dept = Department::find($id);
             $dept->delete();
         } catch (Exception $e) {
-            //throw $th;
             return $e;
         }
     }

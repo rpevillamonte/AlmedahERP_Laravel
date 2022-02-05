@@ -43,7 +43,7 @@ class UserRoleController extends Controller
     
             $role->save();
         } catch (Exception $e) {
-            return ['error' => $e];
+            return ['error' => $e->getMessage()];
         } 
     }
 
@@ -77,7 +77,7 @@ class UserRoleController extends Controller
 
             $role = UserRole::find($id);
             $role->role_name = $form_data['roleEditName'];
-            $role->description = 'sample_desc';
+            $role->description = '-';
             $role->permissions = $form_data['permissions'];
     
             $role->save();
