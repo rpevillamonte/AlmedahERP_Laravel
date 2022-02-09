@@ -20,4 +20,8 @@ class WorkCenter extends Model
         'set-up_time',
         'duration'
     ];
+
+    public function machine_manual() {
+        return $this->hasOne(MachinesManual::class, 'machine_code', 'machine_code');
+    }
 }

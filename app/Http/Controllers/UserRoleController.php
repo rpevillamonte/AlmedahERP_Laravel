@@ -16,18 +16,8 @@ class UserRoleController extends Controller
     public function index()
     {
         //
-        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::get(['role_name'])]);
+        return view('modules.userManagement.RoleManagement.UserRole', ['roles' => UserRole::get(['id', 'role_name'])]);
     
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -49,12 +39,11 @@ class UserRoleController extends Controller
             $role = new UserRole();
             $role->role_id = $role_id;
             $role->role_name = $form_data['roleName'];
-            $role->description = 'sample_desc'; // Filler data, idk sa silbi ng description di naman siya visible sa frontend.
             $role->permissions = $form_data['permissions'];
     
             $role->save();
         } catch (Exception $e) {
-            return ['error' => $e];
+            return ['error' => $e->getMessage()];
         } 
     }
 
@@ -69,18 +58,7 @@ class UserRoleController extends Controller
         //
         $role = UserRole::find($id);
         $role->permissions = $role->permissions(); 
-        return response()->json(['role' => $role]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return ['role' => $role];
     }
 
     /**
@@ -99,7 +77,7 @@ class UserRoleController extends Controller
 
             $role = UserRole::find($id);
             $role->role_name = $form_data['roleEditName'];
-            $role->description = 'sample_desc';
+            $role->description = '-';
             $role->permissions = $form_data['permissions'];
     
             $role->save();

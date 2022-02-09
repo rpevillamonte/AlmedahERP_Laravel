@@ -8,11 +8,13 @@
             <div class="alert alert-danger alert-dismissible" id="customer-danger" style="display:none;">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
             </div>
-            <div class="row pb-2">
-                <div class="col-12 text-right">
-                    <p><button type="button" class="btn btn-outline-primary btn-sm" onclick='$("#create-customer-modal").modal("toggle");'><i class="fas fa-plus" aria-hidden="true"></i> Add New</button></p>
+            @if (($permissions['Customer']['create'] ?? null) === 1 || !auth()->user())
+                <div class="row pb-2">
+                    <div class="col-12 text-right">
+                        <p><button type="button" class="btn btn-outline-primary btn-sm" onclick='$("#create-customer-modal").modal("toggle");'><i class="fas fa-plus" aria-hidden="true"></i> Add New</button></p>
+                    </div>
                 </div>
-            </div>
+            @endif
             <div class="customerdata">
                 <table id="customerTable" class="table table-striped table-bordered hover" style="width:100%">
                     <thead>
@@ -41,9 +43,11 @@
                                 <td><img src="images/img.png" class="customer-modal-image" height="37" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
                                 <td class="text-black-50"><?=$row["email_address"]?></td>
                                 <td class="text-black-50"><?=$row["company_name"]?></td>
-                                <td class="">
-                                    <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
-                                </td>
+                                @if (($permissions['Customer']['edit'] ?? null) === 1 || !auth()->user()))
+                                    <td class="">
+                                        <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

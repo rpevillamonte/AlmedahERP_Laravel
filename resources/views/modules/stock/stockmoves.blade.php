@@ -10,9 +10,11 @@
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadStockMoves()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button class="btn btn-primary" type="submit" onclick="loadNewStockMoves(null)">New</button>
-                </li>
+                @if (($permissions['Stock_Moves']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button class="btn btn-primary" type="submit" onclick="loadNewStockMoves(null)">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -75,13 +77,15 @@
                                 <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
                                     Actions
                                 </button>
-                                <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                                    @if($row["status"] == 'Successfully Transferred' || $row["status"] == 'Pending (Return)' || $row["status"] == 'Successfully Returned')
-                                        <li id="returnItemsList">
-                                            <button class="btn-sm btn-primary" type="submit" onclick="getStockData(this)">Return Items</button>
-                                        </li>
-                                    @endif
-                                </ul>
+                                @if (($permissions['Stock_Moves']['edit'] ?? null) === 1 || !auth()->user())
+                                    <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
+                                        @if($row["status"] == 'Successfully Transferred' || $row["status"] == 'Pending (Return)' || $row["status"] == 'Successfully Returned')
+                                            <li id="returnItemsList">
+                                                <button class="btn-sm btn-primary" type="submit" onclick="getStockData(this)">Return Items</button>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                @endif
                             </div>
                         </td>
                     </tr>
@@ -106,6 +110,9 @@
     $(document).ready(function() {
         $('#stockMovesTable').DataTable();
     });
+
+    var url = "js/stockmoves.js";
+    $.getScript(url);
 
     function getStockData(button){
         let currentRow = $(button).closest("tr");

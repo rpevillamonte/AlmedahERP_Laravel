@@ -16,16 +16,27 @@ use App\Models\MaterialRequest;
 use App\Models\ordered_products;
 use App\Models\warranty;
 use App\Models\serial_numbers;
+use \App\Models\UserRole;
+use Illuminate\Support\Carbon;
 use DB;
+use Auth;
 use \stdClass;
 use Exception;
-use Carbon\Carbon;
+
 
 class SalesOrderController extends Controller
 {
     //
     function index(){
          
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $customers = Customer::get();
         $products = ManufacturingProducts::get();
 
@@ -34,7 +45,7 @@ class SalesOrderController extends Controller
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 
-        return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products]);
+        return view('modules.selling.salesorder', ['sales' =>$salesorders , 'customers'=> $customers, 'products'=> $products, 'permissions' => $permissions]);
     }
 
     function loadProducts(){

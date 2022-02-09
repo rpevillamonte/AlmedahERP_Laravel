@@ -22,10 +22,11 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;"
                         onclick="Employee()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-info btn" style="background-color: #007bff;"
-                        onclick="addEmployee()">New</button>
-                </li>
+                @if (($permissions['Employee']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-info btn" style="background-color: #007bff;" onclick="addEmployee()">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -46,42 +47,32 @@
             </thead>
             <tbody>
 
-                @foreach ($employees as $e)
-                    <tr id="">
+            @if(count($employees) >= 0)
+            <div class="employeedata">        
+                    @foreach ($employees as $key=>$row)
+                    <tr id="<?=$row["id"]?>">
                         <td class="text-black-50">
-                            <a href="javascript:onclick=EditEmployee({{ $e->employee_id }});">{{ $e->employee_id }}</a>
+                            @if (($permissions['Employee']['edit'] ?? null) === 1 || !auth()->user())
+                                <a href="javascript:onclick=EditEmployee('<?=$row["employee_id"]?>');">
+                                    <?=$row["employee_id"]?>
+                                </a> 
+                            @else
+                                    <?=$row["employee_id"]?>
+                            @endif
                         </td>
-                        <td class="text-black-50">{{ $e->first_name }} {{ $e->last_name }}</td>
-                        <td class="text-black-50">{{ $e->department_department_name }}</td>
-                        <td class="text-black-50">{{ $e->email }}</td>
-                        <td class="text-black-50">{{ $e->role_role_name }}</td>
-                        {{-- <td class="text-black-50"><?= $row['address'] ?></td>
-                        <td><img src="images/img.png" class="customer-modal-image" height="37" onError="this.onerror=null;this.src='images/defaultuser.png';"></td>
-                        <td class="text-black-50"><?= $row['email_address'] ?></td>
-                        <td class="text-black-50"><?= $row['company_name'] ?></td>
-                        <td class="">
-                            <a href="#" class="btn btn-success btn-sm rounded-0 editBtn" type="button"><i class="fa fa-edit"></i></a>
-                        </td> --}}
+                        <td class="text-black-50"><?=$row["first_name"]?> <?=$row["last_name"]?></td>
+                        <td class="text-black-50"><?=$row["position"]?></td>
+                        <td class="text-black-50"><?=$row["email"]?></td>
+                        <td class="text-black-50">{{ $role_names[$key ]}}</td>
                     </tr>
-                @endforeach
-                {{-- <tr>
-                       <td class="text-bold"><a href="javascript:onclick=EditEmployee();">EMP001</a></td>
-                       <td>Juan Dela Cruz</td>
-                       <td class="text-bold">Supervisor</td>
-                       <td>juandelacruz@gmail.com</td>
-                       <td>Role1</td>
-                    </tr>
-                    <tr>
-                       <td class="text-bold">MNGR001</td>
-                       <td>John Doe</td>
-                       <td class="text-bold">Manager</td>
-                       <td>johndoe@gmail.com</td>
-                       <td>Role2</td>
-                    </tr> --}}
+                    @endforeach
 
-            </tbody>
+    
+                    </tbody>
+            </div>
         </table>
-    </div>
+            @endif      
+          
 
 </div>
 

@@ -139,12 +139,12 @@
                   
           </div>
           <hr>
-          <div class="card-body filter">
-            <h5>Logs</h5>
-            <div id="transfer_logs">
+            <div class="card-body filter">
+              <h5>Logs</h5>
+              <div id="transfer_logs">
 
+              </div>
             </div>
-          </div>
       </div>
     </div>
   </div>

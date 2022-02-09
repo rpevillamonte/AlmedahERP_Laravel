@@ -19,8 +19,6 @@ use App\Http\Controllers\PendingOrdersController;
 use App\Http\Controllers\ProductMonitoringController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseReceiptController;
-use App\Http\Controllers\RequestQuotationController;
-use App\Http\Controllers\RoutingOperationController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\StockMovesController;
@@ -30,6 +28,7 @@ use App\Http\Controllers\SupplierQuotationController;
 use App\Http\Controllers\WorkOrderController;
 use App\Http\Controllers\NewStockMovesController;
 use App\Http\Controllers\StockMovesReturnController;
+use App\Http\Controllers\StockTracingController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmploymentTypeController;
@@ -40,6 +39,9 @@ use App\Http\Controllers\NotificationLogsController;
 use App\Http\Controllers\repairController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\TeamMembersController;
+use App\Http\Controllers\ManufacturingController;
+use App\Http\Controllers\DeliveryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,6 +69,11 @@ Route::get('/accounting', function() {
 Route::get('/login', function() {
     return view('modules.login.login');
 });
+
+Route::get('/logout',  [App\Http\Controllers\Auth\LoginController::class, 'logout']);
+
+Route::get('/profile', [EmployeeController::class, 'getAuthEmployeeDetails']);
+
 
 /*NOTIFICATION ROUTES */
 Route::get('/notification', [NotificationLogsController::class, 'get_notifications'])->name('get_notifications');
@@ -135,9 +142,7 @@ Route::get('/opportunities', function () {
 });
 
 /**DELIVERY ROUTES */
-Route::get('/delivery', function () {
-    return view('modules.productreleasing.delivery');
-});
+Route::get('/delivery', [DeliveryController::class, 'index']);
 Route::get('/view-delivery-info', function () {
     return view('modules.productreleasing.deliveryinfo');
 });
@@ -146,20 +151,6 @@ Route::get('/view-delivery-info', function () {
 Route::get('/hr', function () {
     return view('modules.hr.hr');
 });
-
-/**EMPLOYEE ROUTES */
-// Pakitanggal na po yung mga routes na di ginagamit dito. Ang gulo basahin ng mga routes dito.
-Route::get('/addemployee', [EmployeeController::class, 'addEmployee']);
-Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
-Route::get('/editemployee', function () {
-    return view('modules.hr.editEmployee');
-});
-Route::get('/employee', [EmployeeController::class, 'index']);
-Route::get('/get-employee/{id}', [EmployeeController::class, 'getEmployee']);
-Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
-Route::post('/update-employee-image/{id}', [EmployeeController::class, 'updateimage']);
-Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
-Route::put('/update-employee-status/{id}/{stat}', [EmployeeController::class, 'toggle']);
 
 /**INVENTORY ROUTES */
 Route::get('/openInventoryInfo', function () {
@@ -219,12 +210,19 @@ Route::resource('/machinemanual', MachinesManualController::class);
 Route::get('/find-machine/{machine_code}', [MachinesManualController::class, 'getMachine']);
 
 /**MANUFACTURING ROUTES */
+
+// Route::get('/manufacturing', [ManufacturingController::class, 'index']);
+
+// bandaid solution, if logged in comment the code below and uncomment code above.
 Route::get('/manufacturing', function () {
     return view('modules.manufacturing.manufacturing');
 });
+
 Route::get('/customer', [CustomerController::class, 'index']);
 Route::post('/create-customer', [CustomerController::class, 'store'])->name('customer');
 Route::put('/update-customer/{id}', [CustomerController::class, 'update']);
+
+
 
 /**MANUFACTURING ITEM ATTRIBUTE ROUTES */
 Route::get('/itemattribute', function () {
@@ -354,8 +352,8 @@ Route::post('/pay-invoice/{invoice_id}', [PurchaseInvoiceController::class, 'pay
 Route::resource('/purchaseinvoice', PurchaseInvoiceController::class);
 
 /**PURCHASE ORDER ROUTES */
-Route::get('/po-filter/{filter}/{value}', [MaterialsPurchasedController::class, 'filterBy']);
 Route::get('/view-po-items/{id}', [MaterialsPurchasedController::class, 'view_items']);
+Route::post('/po-search', [MaterialsPurchasedController::class, 'filterBy']);
 Route::post('/update-order', [MaterialsPurchasedController::class, 'updateOrder']);
 Route::post('/update-status/{purchase_id}', [MaterialsPurchasedController::class, 'updateStatus']);
 Route::resource('/purchaseorder', MaterialsPurchasedController::class);
@@ -468,6 +466,7 @@ Route::get('/shippingrule', function() {
 });
 
 Route::get('/stockmoves', [StockMovesController::class, 'index']);
+Route::get('/stocktracing', [StockTracingController::class, 'index']);
 Route::get('/newstockmoves', [NewStockMovesController::class, 'index']);
 Route::post('/create-newstockmoves', [NewStockMovesController::class, 'store']);
 Route::post('/create-newstockmovesreturn', [StockMovesReturnController::class, 'store']);
@@ -505,9 +504,6 @@ Route::get('/loadStockEntry', function () {
     return view('modules.manufacturing.stockentry');
 });
 
-Route::get('/stocktracing', function () {
-    return view('modules.stock.StockTracing');
-});
 
 
 // Team Members Route
@@ -516,7 +512,6 @@ Route::get('/teammembers', [TeamMembersController::class, 'index']);
 
 // User Role Routes
 Route::resource('/roles', UserRoleController::class);
-Route::get('/get-role/{id}', [UserRoleController::class, 'getRole']);
 
 // Employment Type Route
 Route::resource('/employmenttype', EmploymentTypeController::class);
@@ -581,12 +576,19 @@ Route::get('/openUOMEdit', function () {
     return view('modules.stock.UOMEDIT');
 });
 
+/**ADD EMPLOYEE */
+Route::get('/employee', [EmployeeController::class, 'index']);
+Route::get('/addemployee', [EmployeeController::class, 'addEmployee']);
+Route::get('/getEmployeeDetails/{id}', [EmployeeController::class, 'getEmployeeDetails']);
+Route::get('/editemployee', function () { return view('modules.hr.editEmployee'); });
+Route::post('/create-employee', [EmployeeController::class, 'store'])->name('employee');
+Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
+
+
+
 /**WORK CENTER ROUTES **/
 Route::resource('/workcenter', WorkCenterController::class);
-Route::get('/newworkcenter', function () {
-    return view('modules.BOM.newWorkCenter');
-});
-
+Route::get('/newworkcenter', [WorkCenterController::class, 'routingCreateForm']);
 
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
@@ -655,3 +657,6 @@ Route::post('/generate_reports_fast_move',                      [ChartController
 Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
 Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
 Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Station;
+use \App\Models\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Auth;
 use DB;
 use Exception;
 
@@ -13,8 +15,16 @@ class StationController extends Controller
     //
     function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $stations = Station::all();
-        return view('modules.manufacturing.workstation', ['stations' => $stations]);
+        return view('modules.manufacturing.workstation', ['stations' => $stations, 'permissions' => $permissions]);
     }
 
     function store(Request $request)

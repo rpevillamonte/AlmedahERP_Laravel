@@ -16,9 +16,11 @@
                 <li class="nav-item li-bom">
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onclick="loadIntoPage(this, '{{ route('materialrequest.index') }}');">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('materialrequest.create') }}');" style="float: left;">New</button>
-                </li>
+                @if (($permissions['Material_Request']['create'] ?? null) === 1 || !auth()->user()) 
+                    <li class="nav-item li-bom">
+                        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadIntoPage(this, '{{ route('materialrequest.create') }}');" style="float: left;">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -50,7 +52,11 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td class="mr-request-id"><a name="{{ $mat_request->request_id }}" href='#' onclick="loadIntoPage(this, '{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id'], 'full_page' => true]) }}')">{{ $mat_request->request_id }}</a></td>
+                    @if (($permissions['Material_Request']['edit'] ?? null) === 1 || !auth()->user()) 
+                        <td class="mr-request-id"><a name="{{ $mat_request->request_id }}" href='#' onclick="loadIntoPage(this, '{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id'], 'full_page' => true]) }}')">{{ $mat_request->request_id }}</a></td>
+                    @else
+                        <td class="mr-request-id">{{ $mat_request->request_id }}</td>
+                    @endif
                     <?php
                         if($mat_request->mr_status == "Draft"){
                             $color = "orange";
@@ -71,11 +77,13 @@
                     <td>
                     @if ($mat_request->mr_status == 'Draft')
                         {{-- <button id="edit-mr-button" class="btn btn-outline-warning" onclick="$('#editModal').modal('show'); loadEdit('{{ route('materialrequest.edit', ['materialrequest' => $mat_request['id']]) }}')"><i class="fa fa-edit"></i></button> --}}
-                        <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></button>
-                        </form>
+                        @if (($permissions['Material_Request']['delete'] ?? null) === 1 || !auth()->user()) 
+                            <form action="{{ route('materialrequest.destroy', ['materialrequest' => $mat_request->id]) }}" method="POST" class="mr-delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="mr-delete-btn btn btn-outline-danger" onclick="return confirm('Are you sure? you want to delete this request?')"><i class="fa fa-trash"></i></button>
+                            </form>
+                        @endif
                     @endif
                     
                     

@@ -316,6 +316,10 @@
 </div> --}}
 
 <script>
+
+	var url = "js/workorder.js";
+    $.getScript(url);
+
 	function startWorkOrder(workOrderId){
 		$.ajax({
             url: "/startWorkOrder/"+workOrderId,

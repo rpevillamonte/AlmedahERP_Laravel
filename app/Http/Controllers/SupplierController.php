@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\SupplierGroup;
 use App\Models\SuppliersQuotation;
+use \App\Models\UserRole;
 use Exception;
+use Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -24,10 +26,21 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
-        $suppliers = Supplier::withCount('sg_materials')->get(['company_name', 'contact_name', 'phone_number', 'supplier_address']);
-        $materials = ManufacturingMaterials::all(['item_code', 'item_name']);
-        return view('modules.buying.supplier', ['suppliers' => $suppliers, 'materials' => $materials]);
+        $suppliers = Supplier::withCount('sg_materials')->get(
+            ['company_name', 'contact_name', 'phone_number', 'supplier_address']
+        );
+        $materials = ManufacturingMaterials::get(['item_code', 'item_name']);
+        return view('modules.buying.supplier', 
+                    ['suppliers' => $suppliers, 'materials' => $materials, 'permissions' => $permissions]
+                );
     }
 
     /**
@@ -57,13 +70,12 @@ class SupplierController extends Controller
 
             $lastSupplier = Supplier::orderby('created_at', 'desc')->first();
             $nextId = ($lastSupplier)
-                ? Supplier::orderby('created_at', 'desc')->first()->id + 1 :
+                ? $lastSupplier->id + 1 :
                 1;
 
             $data->supplier_id = "SUP" . $nextId;
 
             $data->company_name = $form_data['supplier_name'];
-            //$data->supplier_group = $form_data['supplier_group'];
             if (isset($form_data['supplier_contact'])) {
                 $data->contact_name = $form_data['supplier_contact'];
             }
@@ -106,12 +118,13 @@ class SupplierController extends Controller
             ->join('supplier_group', 'supplier_group.supplier_id', '=', 'suppliers.supplier_id')
             ->where('supplier_group.item_code', '=', $item_code)
             ->get();
+        $result_data = array();
         foreach ($suppliers as $supplier) {
-            # code...
-            $rms = Supplier::find($supplier->id)->first()->sg_materials;
-            $supplier->rm_count = $rms->count();
+            $s_data = Supplier::withCount('sg_materials')
+                                ->where('supplier_id', $supplier->supplier_id)->first();
+            array_push($result_data, $s_data);
         }
-        return response()->json(['suppliers' => $suppliers]);
+        return response()->json(['suppliers' => $result_data]);
     }
 
     /**
@@ -122,8 +135,6 @@ class SupplierController extends Controller
      */
     public function show($id)
     {
-        //
-        //DB::connection()->enableQueryLog();
         $supplier = Supplier::find($id);
         $counts = array();
         $counts['sq_count'] = SuppliersQuotation::where('supplier_id', $supplier->supplier_id)->count();
@@ -136,10 +147,10 @@ class SupplierController extends Controller
         $pr_count = 0;
         $pi_count = 0;
         foreach ($mp as $record) {
-            if ($record->receipt_count > 0) {
-                $pr_count++;
+            $pr_count = $record->receipt_count;
+            if ($pr_count > 0) {
                 $pr = $record->receipt->invoice;
-                if ($pr->invoice !== null) $pi_count++;
+                if (!is_null($pr->invoice)) $pi_count++;
             }
         }
         $counts['pr_count'] = $pr_count;
@@ -147,7 +158,6 @@ class SupplierController extends Controller
 
         $supplier_mats = $supplier->sg_materials;
         foreach ($supplier_mats as $rm) {
-            # code...
             $mp_record = MPRecord::where('item_code', $rm->item_code)
                         ->where('supplier_id', $rm->supplier_id)
                         ->with('material')
@@ -158,20 +168,7 @@ class SupplierController extends Controller
                         $mp_record->material;
         }
 
-        //echo dd(DB::getQueryLog());
-
         return view('modules.buying.supplierInfo', ['supplier' => $supplier, 'counts' => $counts, 'material_data' => $supplier_mats]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -215,6 +212,9 @@ class SupplierController extends Controller
     {
         //
         $supplier = Supplier::find($id);
+        $s_id = $supplier->supplier_id;
+        DB::table('supplier_group')->where('supplier_id', $s_id)->delete();
+        DB::table('rq_suppliers')->where('supplier_id', $s_id)->delete();
         $supplier->delete();
     }
 }

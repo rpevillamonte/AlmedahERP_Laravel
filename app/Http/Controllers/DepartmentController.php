@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\Employee;
 use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +19,7 @@ class DepartmentController extends Controller
     public function index()
     {
         //
-        $employees = Employee::all(['employee_id', 'first_name', 'last_name']);
+        $employees = Employee::get(['employee_id', 'first_name', 'last_name']);
         $departments = DB::table('departments')
                         ->select('departments.*', 'env_employees.last_name', 'env_employees.first_name')
                         ->join('env_employees', 'departments.reports_to', '=', 'env_employees.employee_id')
@@ -27,16 +28,6 @@ class DepartmentController extends Controller
                     ['employees' => $employees,
                      'departments' => $departments]
                     );
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -84,17 +75,6 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -109,7 +89,6 @@ class DepartmentController extends Controller
         $dept->department_name = $dept_name;
         $dept->reports_to = $form_data['deptEditHead'];
         $dept->save();
-        // $dept_head = $form_data['deptEditHead'];
         return response($dept_name);
     }
 
@@ -123,11 +102,9 @@ class DepartmentController extends Controller
     {
         //
         try {
-            //code...
             $dept = Department::find($id);
             $dept->delete();
         } catch (Exception $e) {
-            //throw $th;
             return $e;
         }
     }

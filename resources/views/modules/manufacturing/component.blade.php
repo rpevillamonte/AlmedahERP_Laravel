@@ -10,9 +10,13 @@
             </div>
             <div class="row pb-2">
                 <div class="col-12 text-right d-flex justify-content-end">
-                    {{-- <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit" onClick="loadComponent()">Refresh</button> --}}
-                    <p><button type="button" class="btn btn-outline-primary btn-sm" onclick="$('#newComponentModal').modal('toggle')"><i class="fas fa-plus" aria-hidden="true"></i> Add
-                            New</button></p>
+                    @if (($permissions['Component']['create'] ?? null) === 1 || !auth()->user())
+                        <p>
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="$('#newComponentModal').modal('toggle')"><i class="fas fa-plus" aria-hidden="true"></i> 
+                                Add New
+                            </button>
+                        </p>
+                    @endif
                 </div>
             </div>
             <table id="componentTable" class="table table-striped table-bordered hover" style="width:100%">
@@ -40,14 +44,18 @@
                                         Actions
                                     </button>
                                     <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-                                        <li><button data-id="{{ $row->id }}" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
-                                            <i class="fa fa-edit"></i> Edit</button>
-                                        </li>
-                                        <li>
-                                            <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
-                                                <i class="fa fa-trash"></i> Delete
-                                            </button>
-                                        </li>
+                                        @if (($permissions['Component']['edit'] ?? null) === 1 || !auth()->user())
+                                            <li><button data-id="{{ $row->id }}" class="edit-btn btn btn-warning btn-sm rounded-0" type="button">
+                                                <i class="fa fa-edit"></i> Edit</button>
+                                            </li>
+                                        @endif
+                                        @if (($permissions['Component']['delete'] ?? null) === 1 || !auth()->user())
+                                            <li>
+                                                <button data-id="{{ $row->id }}" class="delete-btn btn btn-danger btn-sm rounded-0" type="button">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </td>

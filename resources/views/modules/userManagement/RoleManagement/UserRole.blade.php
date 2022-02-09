@@ -41,7 +41,7 @@
         @foreach ($roles as $role)
         <tr>
             <td class="text-bold">
-                <a href="#editRoleModal" data-toggle="modal" value="{{ $role->id }}" class="role-entity" data-target="#editRoleModal">
+                <a href="#editRoleModal" data-toggle="modal" class="role-entity" data-target="#editRoleModal" value="{{ $role->id }}">
                     {{ $role->role_name }}
                 </a>
             </td>

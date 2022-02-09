@@ -73,7 +73,12 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openDeliveryInfo();'>Sales ID 1</a>
+                    <td>
+                        @if (($permissions['Delivery']['edit'] ?? null) === 1 || !auth()->user())
+                            <a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openDeliveryInfo();'>Sales ID 1</a>
+                        @else 
+                            Sales ID 1
+                        @endif
                     </td>
                     <td class="text-danger">To Ship</td>
                     <td></td>
@@ -84,7 +89,12 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openDeliveryInfo();'>Sales ID 2</a>
+                    <td>
+                        @if (($permissions['Delivery']['edit'] ?? null) === 1 || !auth()->user())
+                            <a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openDeliveryInfo();'>Sales ID 2</a>
+                        @else 
+                            Sales ID 2
+                        @endif
                     </td>
                     <td class="text-secondary">Shipped</td>
                     <td></td>
@@ -95,7 +105,12 @@
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </td>
-                    <td><a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openDeliveryInfo();'>Sales ID 3</a>
+                    <td>
+                        @if (($permissions['Delivery']['edit'] ?? null) === 1 || !auth()->user())
+                            <a name="BOM-PR-EM-ADJ CAP-002" href='javascript:onclick=openDeliveryInfo();'>Sales ID 3</a>
+                        @else 
+                            Sales ID 3
+                        @endif
                     </td>
                     <td class="text-success">Delivered</td>
                     <td></td>

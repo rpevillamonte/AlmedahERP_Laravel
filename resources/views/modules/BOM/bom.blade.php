@@ -22,10 +22,12 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadBOMtable();">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadBOMForm();"
-                        style="float: left;">New</button>
-                </li>
+                @if (($permissions['BOM']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadBOMForm();"
+                            style="float: left;">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -47,9 +49,11 @@
             @foreach ($boms as $bom)
                 <tr>
                     <td>
-                        <a href="javascript:onclick=loadBOM({{ $bom->bom_id }});">
-                            {{ $bom->bom_name }}
-                        </a>
+                        @if (($permissions['BOM']['edit'] ?? null) === 1 || !auth()->user())
+                            <a href="javascript:onclick=loadBOM({{ $bom->bom_id }});">
+                                {{ $bom->bom_name }}
+                            </a>
+                        @endif
                     </td>
                     <td>
                         {{ $bom->item_code }}

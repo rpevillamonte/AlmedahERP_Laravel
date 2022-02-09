@@ -373,7 +373,6 @@ function saveOrder() {
     form_data.set('materials_purchased', materials_list);
 
     let url = !$("#mp_status").length ? '/purchaseorder' : '/update-order';
-    let purchase_id = '';
 
     $.ajax({
         url: url,
@@ -389,27 +388,6 @@ function saveOrder() {
             loadPurchaseOrder();
         }
     });
-
-
-    //Only store these materials when creating purchase order
-    /**
-     * if (!$("#purch_id").val()) {
-        let materialData = new FormData();
-        materialData.append('materials_list', materials_list);
-
-        $.ajax({
-            type: "POST",
-            url: `/store-mp-materials/${purchase_id}`,
-            data: materialData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                loadPurchaseOrder();
-            }
-        });
-    }
-     */
 
 }
 

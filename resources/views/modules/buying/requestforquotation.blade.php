@@ -20,7 +20,9 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary ml-1" onclick="loadIntoPage(this, '{{ route('rfquotation.index') }}')">Refresh</button>
-                <button type="button" class="btn btn-info ml-1" onclick="loadIntoPage(this, '{{ route('rfquotation.create') }}')">New</button>
+                @if (($permissions['Request_Quotation']['create'] ?? null) === 1 || !auth()->user())
+                    <button type="button" class="btn btn-info ml-1" onclick="loadIntoPage(this, '{{ route('rfquotation.create') }}')">New</button>
+                @endif
             </div>
         </div>
     </div>
@@ -59,7 +61,11 @@
                     </div>
                 </td>
                 <td>
-                    <button type="button" class="text-primary" onclick="loadIntoPage(this, '{{ route('rfquotation.edit', ['rfquotation'=>$rfquotation->id]) }}')">{{ $rfquotation->req_quotation_id }}</button>
+                    @if (($permissions['Request_Quotation']['edit'] ?? null) === 1 || !auth()->user())
+                        <button type="button" class="text-primary" onclick="loadIntoPage(this, '{{ route('rfquotation.edit', ['rfquotation'=>$rfquotation->id]) }}')">{{ $rfquotation->req_quotation_id }}</button>
+                    @else
+                        {{ $rfquotation->req_quotation_id }}
+                    @endif
                 </td>
                 <td>
                     <?php

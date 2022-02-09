@@ -23,10 +23,12 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="operationtable();">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="newoperation();"
-                        style="float: left;">New</button>
-                </li>
+                @if (($permissions['Operations']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="newoperation();"
+                            style="float: left;">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -52,16 +54,21 @@
                 <td>{{ $operation->operation_name }}</td>
                 <td>{{ $operation->wc_label }}</td>
                 <td>
-                    <a id="" class="btn" href="javascript:onclick=editoperation({{ $operation->id }});" role="button">
-                        <i class="fa fa-edit" aria-hidden="true"></i>
-                    </a>
-                    <form action="{{ route('operations.destroy', ['id' => $operation->id]) }}" name="deleteOperation" id="deleteOp{{ $operation->id }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn delete-btn mr-delete-form" id="deleteOp" onclick="$('#deleteOp{{ $operation->id }}').submit(); $('#op{{ $operation->id }}').remove();" type="button" role="button">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                    </form>
+                    @if (($permissions['Operations']['edit'] ?? null) === 1 || !auth()->user())
+                        <a id="" class="btn" href="javascript:onclick=editoperation({{ $operation->id }});" role="button">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </a>
+                    @endif
+
+                    @if (($permissions['Operations']['delete'] ?? null) === 1 || !auth()->user())
+                        <form action="{{ route('operations.destroy', ['id' => $operation->id]) }}" name="deleteOperation" id="deleteOp{{ $operation->id }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn delete-btn mr-delete-form" id="deleteOp" onclick="$('#deleteOp{{ $operation->id }}').submit(); $('#op{{ $operation->id }}').remove();" type="button" role="button">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    @endif
                 </td>
             </tr>
             @endforeach

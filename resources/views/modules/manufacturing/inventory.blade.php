@@ -42,13 +42,15 @@
             <h4 class="font-weight-bold text-black">Inventory List</h4>
             <div id="alert-message">
             </div>
-            <div class="row pb-2">
-                <div class="col-12 text-right">
-                    <p><button type="button" class="btn btn-outline-primary btn-sm"
-                            onclick="$('#create-material-form').modal('show'); resetForm();"><i class="fas fa-plus"
-                                aria-hidden="true"></i> Add New</button></p>
+            @if (($permissions['Inventory']['create'] ?? null) === 1 || !auth()->user())
+                <div class="row pb-2">
+                    <div class="col-12 text-right">
+                        <p><button type="button" class="btn btn-outline-primary btn-sm"
+                                onclick="$('#create-material-form').modal('show'); resetForm();"><i class="fas fa-plus"
+                                    aria-hidden="true"></i> Add New</button></p>
+                    </div>
                 </div>
-            </div>
+            @endif
 
 
             <table id="inventoryTable" class="table table-striped table-bordered hover" style="width:100%">
@@ -89,40 +91,26 @@
                             <td class="text-black-50 text-center"><a href='#' onclick="clickView(JSON.stringify({{ $row->item_image }}))" class="row-img-view-btn" id="clickViewTagInv{{ $row->id }}">View</a></td>
 
                             <td class="">
-                                <!--<ul class="list-inline m-0">
-                                    <li class="list-inline-item">
-                                        <button data-id="{{ $row->id }}" data-toggle="modal"
-                                            data-target="#update-item-form"
-                                            class="edit-btn btn btn-success btn-sm rounded-0" type="button"
-                                            data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Edit"><i class="fa fa-edit"></i></button>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <button data-id="{{ $row->id }}"
-                                            class="delete-btn btn btn-danger btn-sm rounded-0" type="button"
-                                            data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Delete"><i class="fa fa-trash"></i></button>
-                                    </li>
-                                </ul> -->
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-toggle="dropdown">
                                         Actions
                                     </button>
                                     <ul class="align-content-center dropdown-menu p-0" style="background: 0; min-width:125px;" role="menu">
-
-                                        <li><button data-id="{{ $row->id }}" data-toggle="modal"
-                                            data-target="#update-item-form"
-                                            class="edit-btn btn btn-warning btn-sm rounded-0" type="button"
-                                            data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Edit"><i class="fa fa-edit"></i> Edit</button>
-                                        </li>
-                                        
-                                        <li><button data-id="{{ $row->id }}"
-                                            class="delete-btn btn btn-danger btn-sm rounded-0" type="button"
-                                            data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Delete"><i class="fa fa-trash"></i> Delete</button>
-                                        </li>
-                                        
+                                        @if (($permissions['Inventory']['edit'] ?? null) === 1 || !auth()->user())
+                                            <li><button data-id="{{ $row->id }}" data-toggle="modal"
+                                                data-target="#update-item-form"
+                                                class="edit-btn btn btn-warning btn-sm rounded-0" type="button"
+                                                data-toggle="tooltip" data-placement="top" title=""
+                                                data-original-title="Edit"><i class="fa fa-edit"></i> Edit</button>
+                                            </li>
+                                        @endif
+                                        @if (($permissions['Inventory']['delete'] ?? null) === 1 || !auth()->user())
+                                            <li><button data-id="{{ $row->id }}"
+                                                class="delete-btn btn btn-danger btn-sm rounded-0" type="button"
+                                                data-toggle="tooltip" data-placement="top" title=""
+                                                data-original-title="Delete"><i class="fa fa-trash"></i> Delete</button>
+                                            </li>
+                                        @endif
                                         <li>
                                             <button id='add-stock-btn-{{ $row->id }}' data-id="{{ $row->id }}" type="button" class="add-stock-btn btn btn-success btn-sm rounded-0">
                                                 <i class="fa fa-plus" aria-hidden="true"></i> Add Stock

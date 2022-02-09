@@ -26,11 +26,13 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" id="refreshBtn"
                         onclick="loadRefresh()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt" onclick="loadProducts()">
-                        New
-                    </button>
-                </li>
+                @if (($permissions['Sales']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt" onclick="loadProducts()">
+                            New
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>

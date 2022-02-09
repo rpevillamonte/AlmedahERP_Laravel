@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\MachinesManual;
 use App\Models\WorkCenter;
+use Exception;
 use Illuminate\Http\Request;
 
 class WorkCenterController extends Controller
@@ -16,10 +17,11 @@ class WorkCenterController extends Controller
      */
     public function index()
     {
-        $machines_manual = MachinesManual::all();
-        $employee = Employee::all();
-        return view('modules.BOM.newWorkCenter', ['machines_manuals' => $machines_manual, 'employees' => $employee]);//
+        //
+        $wc = WorkCenter::get(['id', 'wc_code', 'wc_label', 'wc_type']);
+        return view('modules.BOM.workcentertable', ['work_centers' => $wc]);
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -28,6 +30,18 @@ class WorkCenterController extends Controller
     public function create()
     {
         //
+        return $this->returnCreateForm('native');
+    }
+
+    public function routingCreateForm() {
+        return $this->returnCreateForm('routing');
+    }
+
+    private function returnCreateForm($source_path) {
+        $destination = $source_path == 'native' ? 'createworkcenter' : 'newWorkCenter';
+        $machines_manual = MachinesManual::all();
+        $employees = Employee::all();
+        return view("modules.BOM.$destination", ['machines_manuals' => $machines_manual, 'employees' => $employees]); 
     }
 
     /**
@@ -74,20 +88,13 @@ class WorkCenterController extends Controller
      * @param  \App\Models\WorkCenter  $workCenter
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkCenter $workCenter)
+    public function show($id)
     {
         //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\WorkCenter  $workCenter
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(WorkCenter $workCenter)
-    {
-        //
+        $wc = WorkCenter::find($id);
+        $machine = $wc->machine_manual;
+        return view('modules.BOM.editworkcenter', 
+                    ['wc' => $wc, 'machine' => $machine]);
     }
 
     /**
@@ -97,7 +104,7 @@ class WorkCenterController extends Controller
      * @param  \App\Models\WorkCenter  $workCenter
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, WorkCenter $workCenter)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -108,8 +115,14 @@ class WorkCenterController extends Controller
      * @param  \App\Models\WorkCenter  $workCenter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(WorkCenter $workCenter)
+    public function destroy($id)
     {
         //
+        try{
+            $wc = WorkCenter::find($id);
+            $wc->delete();
+        } catch (Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
     }
 }
