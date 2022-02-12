@@ -192,6 +192,26 @@ $today = date('Y-m-d');
                                 <input type="number" reaodnly required class="form-input form-control" id="priceToPay">
                             </div>
                         </div>
+                        <div class="col-6 form-group" id="accountpaidfrom">
+                            <label class=" text-nowrap align-middle">
+                                Account Paid From
+                            </label>
+                            <select id="accountpaidfromttype" class="form-control">
+                                <option value="" selected></option>
+                                <option value="">Create New</option>
+                            </select>
+                            <br>
+                        </div>
+                        <div class="col-6 form-group" id="accountpaidto">
+                            <label class=" text-nowrap align-middle">
+                                Account Paid To
+                            </label>
+                            <select id="accountpaidtottype" class="form-control">
+                                <option value="" selected></option>
+                                <option value="">Create New</option>
+                            </select>
+                            <br>
+                        </div>
                         {{--
                         <div class="col-6 form-group" id="installmentGrp" hidden>
                             <label class=" text-nowrap align-middle">
