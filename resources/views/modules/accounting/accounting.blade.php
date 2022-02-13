@@ -29,6 +29,7 @@
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Payment Entry</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Accounts Payable</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Accounts Payable Summary</a></li>
+                        <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Accounts Receivable</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Purchase Register</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Item-wise Purchase Register</a></li>
                         <li class="list-bom"><a class="nav-link menu" href="#" data-parent="accounting">Purchase Order Items To Be Billed</a></li>
