@@ -24,8 +24,10 @@
                 </div>
                 <button type="button" onclick="loadIntoPage(this, '{{ route('supplierquotation.index') }}')"
                     class="btn btn-refresh" style="background-color: #d9dbdb;">Refresh</button>
-                <button type="button" onclick="loadIntoPage(this, '{{ route('supplierquotation.create') }}')"
-                    class="btn btn-primary ml-1" href="#">New</button>
+                @if (($permissions['Request_Quotation']['create'] ?? null) === 1 || !auth()->user())
+                    <button type="button" onclick="loadIntoPage(this, '{{ route('supplierquotation.create') }}')"
+                        class="btn btn-primary ml-1" href="#">New</button>
+                @endif
             </div>
         </div>
     </div>

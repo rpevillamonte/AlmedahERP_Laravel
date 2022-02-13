@@ -6,6 +6,8 @@ use App\Models\Operation;
 use App\Models\RoutingOperation;
 use App\Models\Routings;
 use App\Models\WorkCenter;
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\Foreach_;
@@ -19,14 +21,22 @@ class RoutingsController extends Controller
      */
     public function index()
     {
-        $routings = Routings::all();
-        return view('modules.BOM.routing', ['routings' => $routings]);
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
+        $routings = Routings::get(['id', 'routing_name', 'created_at']);
+        return view('modules.BOM.routing', ['routings' => $routings, 'permissions'=> $permissions]);
     }
 
     public function view($id)
     {
         $routing = Routings::find($id);
-        $operations = Operation::all();
+        $operations = Operation::get(['id', 'operation_id', 'operation_name']);
         $routing_operation = $routing->operations();
         $work_centers = WorkCenter::all();
         return view('modules.BOM.editrouting', ['route' => $routing,'routing_operations' => $routing_operation,
@@ -41,7 +51,7 @@ class RoutingsController extends Controller
     public function create()
     {
         //
-        $operations = Operation::all();
+        $operations = Operation::get(['id', 'operation_id', 'operation_name']);
         $work_centers = WorkCenter::all();
         return view('modules.BOM.newrouting', ['operations' => $operations, 'work_centers' => $work_centers]);
     }
@@ -65,7 +75,6 @@ class RoutingsController extends Controller
             $routing->routing_name = $form_data['Routing_Name'];
             $routing->save();
             $routing = Routings::where('routing_id', $routing_id)->first();
-            //return ['routing_id' => $routing->routing_id];
 
             $routing_ops = json_decode($form_data['routing_operations']);
             foreach ($routing_ops as $r_ops) {

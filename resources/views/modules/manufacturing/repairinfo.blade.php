@@ -268,9 +268,9 @@ function checkAvail(){
   var resDate = $("#warranty_expiry_date").val()
   var jsDate = new Date();
   if (resDate <= jsDate){
-     $("#warranty_expiry_date").removeClass().addClass('form-control bg-warning');
-  }else{
      $("#warranty_expiry_date").removeClass().addClass('form-control bg-success');
+  }else{
+     $("#warranty_expiry_date").removeClass().addClass('form-control bg-warning');
   }
 }
 

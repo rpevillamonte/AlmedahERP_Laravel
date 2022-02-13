@@ -26,7 +26,7 @@
 
 
         <nav class="navbar navbar-expand navbar-light topbar mb-2 static-top py-5" style="z-index:3; box-shadow: 0 0.15rem 1.75rem 0 rgb(58 59 69 / 15%) !important;">
-
+                    {{-- <input type="hidden" id="permissions" value="{{ $permissions }}"> --}}
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
@@ -165,14 +165,21 @@
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                                @if(auth()->user())
+                                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>    
+                                @else
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">No User</span> 
+                                @endif
                                 <img class="img-profile rounded-circle" src="images/male.png" style="height: 2rem;width: 2rem;vertical-align: middle; border-style: none;">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="menu dropdown-item">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
+                                </a>
+                                {{-- <a href="#" data-parent="hr" class="menu list-group-item list-group-item-action bg-secondary">
+                                    <span class="menu-collapsed align-middle">Employee</span> --}}
                                 </a>
                                 <a class="dropdown-item" href="#">
                                     <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -183,7 +190,7 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="{{ route('logout') }}">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -227,6 +234,38 @@
                         <span class="submenu-icon ml-auto"></span>
                     </div>
                 </a>
+
+                {{-- User management Menu --}}
+                <a href="#submenuUsermanageMent" data-toggle="collapse" aria-expanded="false"
+                    class="bg-dark  list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-start align-items-center">
+                        <span class="fas fa-users-cog fa-fw mr-3 menu"></span>
+                        <span class="menu-collapsed align-middle smaller">User Management</span>
+                        <span class="submenu-icon ml-auto"></span>
+                    </div>
+                </a>
+
+                <!-- End of Menu Item Manufacturing -->
+                <!-- Submenu Manufacturing content -->
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Roles</span>
+                    </a>
+                </div>
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Departments</span>
+                    </a>
+                </div>
+                <div id='submenuUsermanageMent' class="collapse sidebar-submenu">
+                    <a href="#" id="inbox-toggle" data-parent="teamsAndRoles"
+                        class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Employment Type</span>
+                    </a>
+                </div>
+                {{-- End of User Management --}}
                 <!-- End of dashboard -->
                 <!-- Menu Item Messages -->
                 <a href="#submenuMessages" data-toggle="collapse" aria-expanded="false"
@@ -281,78 +320,123 @@
                 <!-- End of Menu Item Manufacturing -->
                 <!-- Submenu Manufacturing content -->
            
+                @if (($permissions['BOM']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="BOM"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Bom</span>
+                        </a>
+                    </div>
+                @endif 
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="BOM"
                         class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Bom</span>
+                        <span class="menu-collapsed align-middle">Work Center</span>
                     </a>
-                </div>
+                </div>   
+
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="BOM"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Repair</span>
                     </a>
                 </div>     
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="BOM"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Operations</span>
-                    </a>
-                </div>
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="BOM"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Machine Manual</span>
-                    </a>
-                </div>
+
+                @if (($permissions['Operations']['view'] ?? null) === 1 || !auth()->user())
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="BOM"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Operations</span>
+                        </a>
+                    </div>
+                @endif
+
+                @if (($permissions['Machine_Manual']['view'] ?? null) === 1 || !auth()->user())
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="BOM"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Machine Manual</span>
+                        </a>
+                    </div>
+                @endif
+
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Production</span>
                     </a>
                 </div>
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Customer</span>
-                    </a>
-                </div>
+
+                @if (($permissions['Customer']['view'] ?? null) === 1 || !auth()->user())      
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Customer</span>
+                        </a>
+                    </div>
+                @endif
+
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Production Plan</span>
                     </a>
                 </div>
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Workstation</span>
-                    </a>
-                </div>
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Routing</span>
-                    </a>
-                </div>
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Inventory</span>
-                    </a>
-                </div>
+
+                @if (($permissions['Station']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Workstation</span>
+                        </a>
+                    </div>
+                @endif
+
+                @if (($permissions['Routings']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Routing</span>
+                        </a>
+                    </div>
+                @endif 
+
+                @if (($permissions['Inventory']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Inventory</span>
+                        </a>
+                    </div>
+                @endif
+
+                @if (($permissions['Product']['view'] ?? null) === 1 || !auth()->user()) 
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Item</span>
                     </a>
                 </div>
-                <div id='submenuManufacturing' class="collapse sidebar-submenu">
-                    <a href="#" id="inbox-toggle" data-parent="manufacturing"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Component</span>
-                    </a>
-                </div>
+                @endif
+
+                @if (($permissions['Component']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Component</span>
+                        </a>
+                    </div>
+                @endif
+
+                @if (($permissions['Job_Scheduling']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuManufacturing' class="collapse sidebar-submenu">
+                        <a href="#" id="inbox-toggle" data-parent="manufacturing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Job Scheduling</span>
+                        </a>
+                    </div>
+                @endif
+
                 <div id='submenuManufacturing' class="collapse sidebar-submenu">
                     <a href="#" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
@@ -378,34 +462,53 @@
                 <!-- End of Menu Item Buying -->
                 <!-- Submenu Buying content -->
                 <div id='submenuBuying' class="collapse sidebar-submenu">
-                    <a href="#" data-parent="buying" id="inbox-toggle"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Material Request</span>
-                    </a>
-                    <a href="#" data-parent="buying" id="inbox-toggle"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Purchase Order</span>
-                    </a>
-                    <a href="#" data-parent="buying" id="inbox-toggle"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Pending Orders</span>
-                    </a>
-                    <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Purchase Invoice</span>
-                    </a>
-                    <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Purchase Receipt</span>
-                    </a>
-                    <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Request for Quotation</span>
-                    </a>
+                    @if (($permissions['Material_Request']['view'] ?? null) === 1 || !auth()->user()) 
+                        <a href="#" data-parent="buying" id="inbox-toggle"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Material Request</span>
+                        </a>
+                    @endif
+
+                    @if (($permissions['Purchase_Order']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" data-parent="buying" id="inbox-toggle"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Purchase Order</span>
+                        </a>
+                    @endif
+
+                    @if (($permissions['Pending_Orders']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" data-parent="buying" id="inbox-toggle"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Pending Orders</span>
+                        </a>
+                    @endif
+
+                    @if (($permissions['Purchase_Invoice']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Purchase Invoice</span>
+                        </a>
+                    @endif 
+
+                    @if (($permissions['Purchase_Receipt']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Purchase Receipt</span>
+                        </a>
+                    @endif
+
+                    @if (($permissions['Request_Quotation']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Request for Quotation</span>
+                        </a>
+                    @endif
                     <!-- <a href="#" data-parent="buying" id="inbox-toggle" data-parent="manufacturing"
                         class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Item</span>
                     </a> -->
-                    <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Supplier Quotation</span>
-                    </a>
+                    @if (($permissions['Supplier_Quotation']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" data-parent="buying" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Supplier Quotation</span>
+                        </a>
+                    @endif
                 </div>
                 <!-- End of Submenu Buying content -->
                 <!-- Menu Item Accounting -->
@@ -429,9 +532,11 @@
                     <a href="#" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Purchase Invoice</span>
                     </a>
-                    <a href="#" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Supplier</span>
-                    </a>
+                    @if (($permissions['Supplier']['view'] ?? null) === 1 || !auth()->user()) 
+                        <a href="#" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Supplier</span>
+                        </a>
+                    @endif
                     <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Company</span>
                     </a>
@@ -455,9 +560,11 @@
                     <a href="#" data-parent="selling" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Quotation</span>
                     </a>
-                    <a href="#" data-parent="selling" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Sales Order</span>
-                    </a>
+                    @if (($permissions['Sales']['view'] ?? null) === 1 || !auth()->user()) 
+                        <a href="#" data-parent="selling" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Sales Order</span>
+                        </a>
+                    @endif
                     <a href="#" data-parent="selling" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Sales Invoice</span>
                     </a>
@@ -477,12 +584,14 @@
                 </a>
                 <!-- End of Menu Item Product Releasing -->
                 <!-- Submenu Item Product Releasing -->
-                <div id='submenuProductReleasing' class="collapse sidebar-submenu">
-                    <a href="#" data-parent="productreleasing"
-                        class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Delivery</span>
-                    </a>
-                </div>
+                @if (($permissions['Delivery']['view'] ?? null) === 1 || !auth()->user()) 
+                    <div id='submenuProductReleasing' class="collapse sidebar-submenu">
+                        <a href="#" data-parent="productreleasing"
+                            class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Delivery</span>
+                        </a>
+                    </div>
+                @endif
                 <!-- End of Submenu Item Product Releasing -->
                 <!-- Menu Item Stock -->
                 <a href="#submenuStock" data-toggle="collapse" aria-expanded="false"
@@ -511,9 +620,18 @@
                     <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Pick List</span>
                     </a>
-                    <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Stock Moves</span>
-                    </a>
+
+                    @if (($permissions['Stock_Moves']['view'] ?? null) === 1 || !auth()->user()) 
+                        <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Stock Moves</span>
+                        </a>
+                    @endif
+
+                    @if (($permissions['Stock_Traceability']['view'] ?? null) === 1 || !auth()->user()) 
+                        <a href="#" data-parent="stock" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Stock Tracing</span>
+                        </a>
+                    @endif
                     
 
                 </div>
@@ -551,14 +669,16 @@
                 </div>
                 <!-- End of Submenu Item CRM -->
                 <!-- Menu Item REPORTS -->
-                <a href="#submenuREPORTS" data-toggle="collapse" aria-expanded="false"
-                    class="bg-dark  list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-start align-items-center">
-                        <span class="fa fa-users fa-fw mr-3 menu"></span>
-                        <span class="menu-collapsed align-middle smaller menu">Reports</span>
-                        <span class="submenu-icon ml-auto"></span>
-                    </div>
-                </a>
+                @if (($permissions['Reports']['view'] ?? null) === 1 || !auth()->user()) 
+                    <a href="#submenuREPORTS" data-toggle="collapse" aria-expanded="false"
+                        class="bg-dark  list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-start align-items-center">
+                            <span class="fa fa-users fa-fw mr-3 menu"></span>
+                            <span class="menu-collapsed align-middle smaller menu">Reports</span>
+                            <span class="submenu-icon ml-auto"></span>
+                        </div>
+                    </a>
+                @endif
                 <!-- End of Menu Item REPORTS -->
                 <!-- Submenu Item REPORTS -->
                 <div id='submenuREPORTS' class="collapse sidebar-submenu">
@@ -605,9 +725,11 @@
                 <!-- End of Menu Item HR -->
                 <!-- Submenu Item HR -->
                 <div id='submenuHR' class="collapse sidebar-submenu">
-                    <a href="#" data-parent="hr" class="menu list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Employee</span>
-                    </a>
+                    @if (($permissions['Employee']['view'] ?? null) === 1 || !auth()->user())  
+                        <a href="#" data-parent="hr" class="menu list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Employee</span>
+                        </a>
+                    @endif
                     <a href="#" data-parent="hr" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Employee Attendance Tool</span>
                     </a>
@@ -799,9 +921,11 @@
                     <a href="#" class="list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Purchase Quotations</span>
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action bg-secondary">
-                        <span class="menu-collapsed align-middle">Purchase Orders</span>
-                    </a>
+                    @if (($permissions['Purchase_Order']['view'] ?? null) === 1 || !auth()->user())
+                        <a href="#" class="list-group-item list-group-item-action bg-secondary">
+                            <span class="menu-collapsed align-middle">Purchase Orders</span>
+                        </a>
+                    @endif
                     <a href="#" class="list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Mass Suppl. Stock Move Invoicing</span>
                     </a>
@@ -829,9 +953,11 @@
                         <a href="#" class="list-group-item list-group-item-action bg-secondary text-light">
                             <span class="menu-collapsed align-middle mx-3">Purchase Manager</span>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action bg-secondary text-light">
-                            <span class="menu-collapsed align-middle mx-3">Purchase Order</span>
-                        </a>
+                        @if (($permissions['Purchase_Order']['view'] ?? null) === 1 || !auth()->user())
+                            <a href="#" class="list-group-item list-group-item-action bg-secondary text-light">
+                                <span class="menu-collapsed align-middle mx-3">Purchase Order</span>
+                            </a>
+                        @endif
                         <a href="#" class="list-group-item list-group-item-action bg-secondary text-light">
                             <span class="menu-collapsed align-middle mx-3">Suppliers Maps</span>
                             <span class="submenu-icon ml-auto"></span>
@@ -941,6 +1067,10 @@
                 <div id='submenunewUI' class="collapse sidebar-submenu">
                     <a href="#" id="address-toggle" data-parent="NewUI"
                         class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Operators</span>
+                    </a>
+                    <a href="#" id="address-toggle" data-parent="NewUI"
+                        class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Address</span>
                     </a>
                     <a href="#" id="Coupon-toggle" data-parent="newUI"
@@ -1037,38 +1167,38 @@
     } );
 
 /*Jerone's Code*/
-function auto_load(){
-   $( document ).ready(function() {
-        $.ajax({
-            url: "{{route('get_notifications')}}",
-            method:"GET",
-            cache: false,
-            success: function(data){
-                $('#notif_count').html(data.results.length);
-                console.log(data.results.length);
-                var content = '';
-                data.results.forEach(function(item) {
-                    content+=`
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div class="small text-gray-500">${new Date(item.created_at).toDateString()}</div>
-                                            <span class="font-weight-bold">${item.description}</span>
-                                        </div>
-                                    </a>                    
-                    `;
-                });
-                $('#alert_list_div').html(content);
-            }
-        });
-   });
-}
-auto_load();
-setInterval(auto_load,5000);
+// function auto_load(){
+//    $( document ).ready(function() {
+//         $.ajax({
+//             url: "{{route('get_notifications')}}",
+//             method:"GET",
+//             cache: false,
+//             success: function(data){
+//                 $('#notif_count').html(data.results.length);
+//                 console.log(data.results.length);
+//                 var content = '';
+//                 data.results.forEach(function(item) {
+//                     content+=`
+//                                     <a class="dropdown-item d-flex align-items-center" href="#">
+//                                         <div class="mr-3">
+//                                             <div class="icon-circle bg-primary">
+//                                                 <i class="fas fa-file-alt text-white"></i>
+//                                             </div>
+//                                         </div>
+//                                         <div>
+//                                             <div class="small text-gray-500">${new Date(item.created_at).toDateString()}</div>
+//                                             <span class="font-weight-bold">${item.description}</span>
+//                                         </div>
+//                                     </a>                    
+//                     `;
+//                 });
+//                 $('#alert_list_div').html(content);
+//             }
+//         });
+//    });
+// }
+// auto_load();
+// setInterval(auto_load,5000);
 
-</script>
+// </script>
 @endsection

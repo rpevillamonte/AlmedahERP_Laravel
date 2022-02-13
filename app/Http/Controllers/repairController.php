@@ -88,6 +88,23 @@ class repairController extends Controller
 
     function store(Request $request){
         //Needs Validation
+        $request->validate([
+            'sales_id' => 'required|alpha_dash',
+            'employee_id' => 'required|alpha_dash',
+            'issue_date' => 'required|date',
+            'issue_desc' => 'required|date',
+            'repair_status' => 'required|alpha_dash',
+            'resolution_date' => 'required|date',
+            'resolution_details' => 'nullable',
+       
+            
+            'customer_name' => 'required|alpha_dash',
+            'product_code' => 'required|alpha',
+            'serial_number' => 'required',
+            'warranty_status' => 'required|alpha_dash',
+            'Description' => 'nullable',
+        ]);
+
         $form_data = $request->input();
         
         $warranty_claims = new WarrantyClaims();
@@ -131,5 +148,13 @@ class repairController extends Controller
         $warranty_claims->save();
 
         return response($form_data);
+    }
+
+    function delete(Request $request){
+        $form_data = $request->input();
+        
+        $wc = WarrantyClaims::find($form_data['id']);
+        $wc->delete();
+        return response("Del OK");
     }
 }

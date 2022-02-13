@@ -339,6 +339,8 @@ $i = 1; ?>
                                                 <button type="button" class="btn-sm btn-primary" data-toggle="modal"
                                                     data-target="#npi_chequeInfo"
                                                     onclick="viewChequeDetails({{ $log->id }})">View</button>
+                                            @else
+                                                N/A
                                             @endif
                                         </td>
                                     </tr>

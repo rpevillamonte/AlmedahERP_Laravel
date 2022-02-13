@@ -26,11 +26,13 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" id="refreshBtn"
                         onclick="loadRefresh()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt" onclick="loadProducts()">
-                        New
-                    </button>
-                </li>
+                @if (($permissions['Sales']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newSalePrompt" onclick="loadProducts()">
+                            New
+                        </button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -475,14 +477,15 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 form-group">
-                                    <table class="table border-bottom table-hover table-bordered table-sm">
-                                    <thead class="border-top border-bottom bg-light">
+                                    <table class="display" id ="dtOrders" style="width:100%">
+                                    <thead>
                                         <tr class="text-muted">
-                                        <td class="font-weight-bold text-center">Product Code</td>
-                                        <td class="font-weight-bold text-center">Quantity</td>
+                                            <td class="font-weight-bold text-center">Product Code</td>
+                                            <td class="font-weight-bold text-center">Serial No.</td>
                                         </tr>
                                     </thead>
-                                    <tbody id= "viewProductsTable">
+                                    <tbody>
+
                                     </tbody>
                                     </table>
                                 </div>
@@ -726,6 +729,7 @@
     // From back-end: to show that data can be shown in table
     $(document).ready(function() {
         x = $('#salestable').DataTable();
+        dtOrders = $('#dtOrders').DataTable();
         // Gets Current date today
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -834,6 +838,8 @@
             success: function(data) {
                 console.log(data);
                 $('#saveSaleOrder1').click(function() {
+                    $("#ajaxStart").attr("disabled", true);
+                    $("#toWorkOrder").attr("disabled", true);
                     $('#newSalePrompt').modal('hide');
                 });
                 document.getElementById('closeSaleOrderModal').click();
@@ -964,7 +970,8 @@
                                                             ` + row['product_code'] + ` (` + row['sale_supply_method'] + `)` +`</option>`
                     );
                 })
-                
+                $("#ajaxStart").attr("disabled", false);
+                $("#toWorkOrder").attr("disabled", false);
             },
             error: function (response, error) {
                 // alert("Request: " + JSON.stringify(request));

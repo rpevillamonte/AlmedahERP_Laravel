@@ -6,14 +6,24 @@ use \App\Models\ManufacturingMaterials;
 use App\Models\ManufacturingProducts;
 use App\Models\MaterialCategory;
 use App\Models\MaterialUOM;
+use \App\Models\UserRole;
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class MaterialsController extends Controller
 {
     function index(){
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $raw_materials = ManufacturingMaterials::with(['category', 'uom'])->get();
         $man_mats_categories = MaterialCategory::get();
         $units = MaterialUOM::get();
@@ -21,6 +31,7 @@ class MaterialsController extends Controller
             'raw_materials' => $raw_materials,
             'categories' => $man_mats_categories,
             'units' => $units,
+            'permissions' => $permissions
         ]);
     }
 
@@ -263,4 +274,6 @@ class MaterialsController extends Controller
             return $e;
         }
     }
+
+    
 }

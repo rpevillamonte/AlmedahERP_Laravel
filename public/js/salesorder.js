@@ -674,15 +674,13 @@ function viewOrderedProducts(id) {
         url: "view/" + id,
         type: "get",
         success: function (response) {
-            $("#viewProductsTable tr").remove();
+            console.log(response);
+            dtOrders.clear().draw();
             response.forEach((row) => {
-                $("#viewProductsTable").append(
-                    '<tr> <td class="text-center">  ' +
-                        row["product_code"] +
-                        '</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control w-25 text-center " value=' +
-                        row["quantity_purchased"] +
-                        " disabled></td></tr>"
-                );
+                dtOrders.row.add( [
+                    row['product_code'],
+                    row['serial_no']
+                ]).draw( false );
             });
         },
     });

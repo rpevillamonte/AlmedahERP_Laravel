@@ -22,10 +22,12 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadManufacturingRouting();">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadnewRouting();"
-                        style="float: left;">New</button>
-                </li>
+                @if (($permissions['Routings']['create'] ?? null) === 1 || !auth()->user()) 
+                    <li class="nav-item li-bom">
+                        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadnewRouting();"
+                            style="float: left;">New</button>
+                    </li>
+                @endif
             </ul>
         </div>
     </div>
@@ -43,7 +45,11 @@
             @foreach ($routings as $routing)
                 <tr>
                     <td>
-                        <a href="javascript:onclick=EditRouting({{ $routing->id }});">{{ $routing->routing_name }}</a>
+                        @if (($permissions['Routings']['edit'] ?? null) === 1 || !auth()->user()) 
+                            <a href="javascript:onclick=EditRouting({{ $routing->id }});">{{ $routing->routing_name }}</a>
+                        @else 
+                            {{ $routing->routing_name }}
+                        @endif
                     </td>
                     <td>{{ $routing->created_at->toDateString() }}</td>
                 </tr>

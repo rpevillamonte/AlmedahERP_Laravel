@@ -10,6 +10,8 @@ use App\Models\MaterialUOM;
 use App\Models\RequestQuotationSuppliers;
 use App\Models\Station;
 use App\Models\Supplier;
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -42,9 +44,17 @@ class MaterialQuotationController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         $rfquotations = MaterialQuotation::with(['material_request', 'suppliers'])->get();
         return view('modules.buying.requestforquotation', [
             'rfquotations' => $rfquotations,
+            'permissions' => $permissions
         ]);
     }
 

@@ -6,6 +6,8 @@ use App\Models\Employee;
 use App\Models\JobSched;
 use App\Models\Operation;
 use App\Models\WorkOrder;
+use \App\Models\UserRole;
+use Auth;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -31,11 +33,20 @@ class JobSchedController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
+
         $jobscheds = JobSched::with('work_order')->get();
         $finished_jobscheds = JobSched::with('work_order')->where('js_status', "Finished")->orWhere('js_status', "In Progress")->get();
         return view('modules.manufacturing.jobscheduling', [
             'jobscheds' => $jobscheds,
             'finished_jobscheds' => $finished_jobscheds,
+            'permissions' => $permissions
         ]);
     }
 

@@ -22,10 +22,12 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadSupplier()">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button type="button" class="btn btn-primary" {{--data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"--}} onclick="openSupplierForm()">New</button>
-                </li>
+                @if (($permissions['Supplier']['create'] ?? null) === 1 || !auth()->user())  
+                    <li class="nav-item li-bom">
+                        <button type="button" class="btn btn-primary" {{--data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop"--}} onclick="openSupplierForm()">New</button>
+                    </li>
+                @endif  
             </ul>
         </div>
     </div>
@@ -38,8 +40,8 @@
                     <div class="form-group">
                         <select name="supplierName" id="supplierName" class="form-control supplier-search" data-live-search="true">
                             <option value="None">All Suppliers</option>
-                            @foreach ($names as $name)
-                                <option value="{{ $name['company_name'] }}">{{ $name['company_name'] }}</option>
+                            @foreach ($suppliers as $s)
+                                <option value="{{ $s['supplier_id'] }}">{{ $s['company_name'] }}</option>
                             @endforeach
                         </select>
                         {{--<input type="text" class="form-control" placeholder="Name">--}}
@@ -52,7 +54,7 @@
                 </div>
                 <div class="col-4">
                     <div class="form-group">
-                        <select name="sgroupSelect" id="sgroupSelect" class="form-control supplier-search">
+                        <select name="sgroupSelect" id="sgroupSelect" class="form-control supplier-search" data-live-search="true">
                             <option value="None" selected data-subtext="All Suppliers">Search by Raw Material</option>
                             @foreach ($materials as $rm)
                                 <option value="{{ $rm->item_code }}" data-subtext="{{ $rm->item_code }}">{{ $rm->item_name }}</option>
@@ -90,7 +92,7 @@
                         <td>Contact Name</td>
                         <td>Phone Number</td>
                         <td>Supplier Address</td>
-                        <td># of Raw Materials</td>
+                        <td># of Supplier Groups</td>
                     </tr>
                 </thead>
                 <tbody class="">
@@ -102,13 +104,16 @@
                                 </div>
                             </td>
                             <td>
-                                <a
-                                    href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
+                                @if (($permissions['Supplier']['edit'] ?? null) === 1 || !auth()->user())  
+                                    <a href='javascript:onclick=openSupplierInfo({{ $supplier->id }});'>{{ $supplier->company_name }}</a>
+                                @else
+                                    {{ $supplier->company_name }}
+                                @endif  
                             </td>
                             <td class="text-black-50">{{ $supplier->contact_name }}</td>
                             <td class="text-black-50">{{ $supplier->phone_number }}</td>
                             <td class="text-black-50">{{ $supplier->supplier_address }}</td>
-                            <td class="text-black-50">{{ $supplier->rm_count }}</td>
+                            <td class="text-black-50">{{ $supplier->sg_materials_count }}</td>
                         </tr>
                     @endforeach
                 </tbody>

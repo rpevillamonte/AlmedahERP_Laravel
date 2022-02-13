@@ -22,10 +22,13 @@
                     <button class="btn btn-refresh" style="background-color: #d9dbdb;" type="submit"
                         onclick="loadmachine();">Refresh</button>
                 </li>
-                <li class="nav-item li-bom">
-                    <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadNewMachineManual();"
-                        style="float: left;">New</button>
-                </li>
+                @if (($permissions['Machine_Manual']['create'] ?? null) === 1 || !auth()->user())
+                    <li class="nav-item li-bom">
+                        <button style="background-color: #007bff;" class="btn btn-info btn" onclick="loadNewMachineManual();"
+                            style="float: left;">New</button>
+                    </li>
+                @endif
+
             </ul>
         </div>
     </div>
@@ -48,7 +51,13 @@
         <tbody>
             @foreach ($machines_manuals as $machines_manual) 
             <tr>
-                <td><a href="javascript:onclick=loadmachineinfo({{ $machines_manual->id }});">{{ $machines_manual->machine_code }}</a></td>
+                <td>
+                    @if (($permissions['Machine_Manual']['edit'] ?? null) === 1 || !auth()->user())
+                        <a href="javascript:onclick=loadmachineinfo({{ $machines_manual->id }});">{{ $machines_manual->machine_code }}</a>
+                    @else
+                        {{ $machines_manual->machine_code }}
+                    @endif
+                </td>
                 <td>{{ $machines_manual->machine_name }}</td>
                 <td>{{ $machines_manual->setup_time }}</td>
                 <td>{{ $machines_manual->running_time }}</td>

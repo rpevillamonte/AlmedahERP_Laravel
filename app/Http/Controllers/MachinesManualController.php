@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\MachinesManual;
 use Illuminate\Http\Request;
-
+use \App\Models\UserRole;
+use Auth;
 class MachinesManualController extends Controller
 {
     /**
@@ -14,9 +15,16 @@ class MachinesManualController extends Controller
      */
     public function index()
     {
+        if(Auth::user()){
+            $role_id = Auth::user()->role_id;
+            $user_role = UserRole::where('role_id', $role_id)->first();
+            $permissions = json_decode($user_role->permissions, true);
+        }else{
+            $permissions = null;
+        }
         //
         $machines_manual = MachinesManual::all();
-        return view('modules.BOM.machinemanual', ['machines_manuals' => $machines_manual]);
+        return view('modules.BOM.machinemanual', ['machines_manuals' => $machines_manual,'permissions' => $permissions]);
     }
 
     /**
@@ -41,7 +49,6 @@ class MachinesManualController extends Controller
         //
         $machine_manual = new MachinesManual();
         $form_data = $request->input();
-        /**code here */
         $machine_name = $form_data['Machine_name'];
         $words = explode(' ', $machine_name);
         $machine_code = "MM_";
@@ -66,19 +73,7 @@ class MachinesManualController extends Controller
     public function show($id)
     {
         //
-        $machine_manual = MachinesManual::find($id);
-        return view('modules.BOM.machineinfo', ['manual' => $machine_manual]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return view('modules.BOM.machineinfo', ['manual' => MachinesManual::find($id)]);
     }
 
     /**
@@ -123,7 +118,6 @@ class MachinesManualController extends Controller
 
     public function getMachine($machine_code) 
     {
-        $machine = MachinesManual::where('machine_code', $machine_code)->first();
-        return ["machine" => $machine];
+        return ["machine" => MachinesManual::where('machine_code', $machine_code)->first()];
     }
 }

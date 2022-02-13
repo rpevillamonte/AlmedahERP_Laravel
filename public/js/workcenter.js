@@ -1,4 +1,3 @@
-var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 var WC_SUCCESS = "#wc_success_msg";
 var WC_FAIL = "#wc_alert_msg";
 
@@ -29,6 +28,25 @@ function checkWC() {
     return (alert === WC_SUCCESS) ? true : false;
 
 }
+
+$("form[name='deleteWC']").submit(function () { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN,
+        }
+    }); 
+    $.ajax({
+        type: "DELETE",
+        url: $(this).attr('action'),
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log("success");
+        }
+    });
+    return false;
+});
 
 $("#save_wc").click(function () {
     //$.ajaxSetup({

@@ -21,10 +21,10 @@ function onChangeFunction() {
 // Function for adding rows in the currency and price list
 $("#rowBtn").on('click', function () {
     let tbl = $("#itemTable-content");
-    let nextRow = ($("#emptyRow").html()) ? 1 :("#itemTable tbody tr").length + 1;
+    let nextRow = ($("#emptyRow").html()) ? 1 : $("#itemTable tbody tr").length + 1;
     let chk_status = $("#masterChk").is(":checked") ? "checked" : "";
     if($("#emptyRow").html()) {
-        $("#emptyRow").remove();
+        $("#emptyRow").parent('tr').remove();
     }
     tbl.append(`
     <tr id="item-${nextRow}">
@@ -60,12 +60,12 @@ $("#rowBtn").on('click', function () {
 
 // Function for deleting rows in currency and price list
 $("#deleteRow").click(function () {
-    if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable tbody tr").length) {
+    if ($("#masterChk").is(":checked") || $('input[name="item-chk"]:checked').length == $("#itemTable-content tr").length) {
         //When all table rows are removed, leave one new field 
         $("#itemTable tbody tr").remove();
         $("#itemTable tbody").append(
             `
-            <tr id="item-1">
+            <tr>
                 <td id="emptyRow" valign="top" colspan="7" class="dataTables_empty">No data available in table</td>
             </tr> 
             `
@@ -373,7 +373,6 @@ function saveOrder() {
     form_data.set('materials_purchased', materials_list);
 
     let url = !$("#mp_status").length ? '/purchaseorder' : '/update-order';
-    let purchase_id = '';
 
     $.ajax({
         url: url,
@@ -386,29 +385,9 @@ function saveOrder() {
         success: function (data) {
             slideAlert("Purchase Order successfully created!", PO_SUCCESS);
             purchase_id = data.purchase_id;
+            loadPurchaseOrder();
         }
     });
-
-
-    //Only store these materials when creating purchase order
-    /**
-     * if (!$("#purch_id").val()) {
-        let materialData = new FormData();
-        materialData.append('materials_list', materials_list);
-
-        $.ajax({
-            type: "POST",
-            url: `/store-mp-materials/${purchase_id}`,
-            data: materialData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                loadPurchaseOrder();
-            }
-        });
-    }
-     */
 
 }
 
