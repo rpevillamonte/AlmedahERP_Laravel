@@ -66,6 +66,10 @@ Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
 });
 
+Route::get('/accountspayable', function() {
+    return view('modules.accounting.accountpayable');
+});
+
 Route::get('/login', function() {
     return view('modules.login.login');
 });
