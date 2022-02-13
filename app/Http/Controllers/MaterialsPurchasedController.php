@@ -230,7 +230,7 @@ class MaterialsPurchasedController extends Controller
             if($value !== 'None') {
 
                 if ($key !== 'status-search') {
-                    array_push($filters, ['items_list_purchased', 'LIKE', $value]);
+                    array_push($filters, ['items_list_purchased', 'LIKE', "%".$value."%"]);
                 } else {
                     array_push($filters, ['mp_status', '=', $value]);
                 }

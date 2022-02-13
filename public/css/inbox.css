@@ -78,6 +78,10 @@
     background-color: #343a40;
 }
 
+.main-item.msg-active .sep{
+    background-color: #343a40;
+}
+
 .fa-star {
     display: none;
 }
@@ -165,6 +169,7 @@ select.form-control {
 
 .msg-active {
     background-color: #e6e6e6;
+    border-right: black;
 }
 
 .sm-text {

@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12 d-flex align-items-center">
-        <div>
-            <div class="dropdown w-100">
+        <div id="msg-filter">
+            <div class="dropdown inbox-dropdown w-100">
                 <button class="btn border border-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span id="msg-group" val="0" class="sm-text">All Messages</span>
@@ -56,11 +56,10 @@
                     <li><a class="dropdown-item" href="#">Replay all</a></li>
                     <li><a class="dropdown-item" href="#">Forward</a></li>
                     <li><a class="dropdown-item" href="#">Archive</a></li>
-                    <li><a class="dropdown-item" href="#">Star</a></li>
+                    <li><a class="dropdown-item" href="#">Mark as Important</a></li>
                     <li><a class="dropdown-item" href="#">Delete</a></li>
                 </ul>
             </div>
-
             <div class="input-group input-group-sm my-3">
                 <input type="text" class="form-control">
                 <div class="input-group-prepend">
@@ -102,7 +101,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -145,7 +145,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -188,7 +189,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -231,7 +233,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -274,7 +277,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -317,7 +321,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -360,7 +365,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -403,7 +409,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -446,7 +453,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -489,7 +497,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -532,7 +541,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -575,7 +585,8 @@
                                 {{-- Sample lengthy subject --}}
                                 <div class="limit-text">Long Subject Headline from the messaging module</div>
                                 <div class="d-flex w-90">
-                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+                                    <div class="limit-text">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                        elit.
                                         Aenean commodo ligula eget dolor. Aenean
                                         massa.</div>
                                     <div class="ml-auto mr-4 star-icon">
@@ -613,7 +624,7 @@
                         <li><a class="dropdown-item" href="#">Replay all</a></li>
                         <li><a class="dropdown-item" href="#">Forward</a></li>
                         <li><a class="dropdown-item" href="#">Archive</a></li>
-                        <li><a class="dropdown-item" href="#">Star</a></li>
+                        <li><a class="dropdown-item" href="#">Mark as Important</a></li>
                         <li><a class="dropdown-item" href="#">Delete</a></li>
                     </ul>
                 </div>
@@ -621,21 +632,23 @@
             <hr>
             <div class="msg-thread-item">
                 <div class="row my-2">
-                    <div class="col-2 mx-0 px-1 d-flex justify-content-end">
+                    <div class="col-lg-3 col-md-6 col-sm-3 col-4 justify-content-center mx-0 d-flex">
                         <img src="https://via.placeholder.com/80" class="rounded-circle mr-1 img-fluid p-0" alt="">
                     </div>
-                    <div class="col-6 pl-0 ml-0 d-flex flex-column mt-3 align-content-center">
+                    <div class="col-lg-6 col-md-6 col-6 pl-0 ml-0 d-flex flex-column mt-3 align-content-center">
                         <div>
                             <p><strong id="msg-body-sender" class="limit-text">RONDIN, HANZ RENDON,</strong> <span
-                                    id="msg-body-receiver " class="limit-text">RAPANOT, JOHN MICKO, RONDIN, HANZ</span>
+                                    id="msg-body-receiver " class="limit-text">RAPANOT, JOHN MICKO, RONDIN,
+                                    HANZ</span>
                             </p>
                         </div>
                         <div>
                             Long Subject Headline from a message
                         </div>
                     </div>
-                    <div class="col-4 align-content-end d-flex flex-column align-content-center mt-3">
-                        <span class="msg-body-sent">August 4, 2020 at 9:30pm</span>
+                    <div
+                        class="col-lg-3 col-md-12 col-sm-12 col-4 align-content-end d-flex flex-column align-content-center mt-3 justify-content-end">
+                        <span class="msg-body-sent text-right">August 4, 2020 at 9:30pm</span>
                         <div class="ml-auto d-flex align-items-center py-0">
                             <a href="#" style="color:black" class="mx-1 rounded " title="Reply">
                                 <div class="p-2">
@@ -681,21 +694,23 @@
             <hr>
             <div class="msg-thread-item">
                 <div class="row my-2">
-                    <div class="col-2 mx-0 px-1 d-flex justify-content-end">
+                    <div class="col-lg-3 col-md-6 col-sm-3 col-4 justify-content-center mx-0 d-flex">
                         <img src="https://via.placeholder.com/80" class="rounded-circle mr-1 img-fluid p-0" alt="">
                     </div>
-                    <div class="col-6 pl-0 ml-0 d-flex flex-column mt-3 align-content-center">
+                    <div class="col-lg-6 col-md-6 col-6 pl-0 ml-0 d-flex flex-column mt-3 align-content-center">
                         <div>
-                            <p><strong id="msg-body-sender" class="limit-text">RONDIN, HANZ RENDON</strong> <span
-                                    id="msg-body-receiver " class="limit-text">RAPANOT, JOHN MICKO, RONDIN, HANZ</span>
+                            <p><strong id="msg-body-sender" class="limit-text">RONDIN, HANZ RENDON,</strong> <span
+                                    id="msg-body-receiver " class="limit-text">RAPANOT, JOHN MICKO, RONDIN,
+                                    HANZ</span>
                             </p>
                         </div>
                         <div>
-                            Long subject message from the message
+                            Long Subject Headline from a message
                         </div>
                     </div>
-                    <div class="col-4 align-content-end d-flex flex-column align-content-center mt-3">
-                        <span class="msg-body-sent">August 4, 2020 at 9:30pm</span>
+                    <div
+                        class="col-lg-3 col-md-12 col-sm-12 col-4 align-content-end d-flex flex-column align-content-center mt-3 justify-content-end">
+                        <span class="msg-body-sent text-right">August 4, 2020 at 9:30pm</span>
                         <div class="ml-auto d-flex align-items-center py-0">
                             <a href="#" style="color:black" class="mx-1 rounded " title="Reply">
                                 <div class="p-2">
@@ -726,7 +741,16 @@
                     Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
                     parturient
                     montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis,
-                    sem.
+                    sem.Lorem
+                    ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.
+                    Cum
+                    sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,
+                    ultricies nec, pellentesque eu, pretium quis, sem. Lorem ipsum dolor sit amet, consectetuer
+                    adipiscing
+                    elit.
+                    Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis
+                    parturient
+                    montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
                 </div>
             </div>
             <hr>
@@ -758,16 +782,21 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="msg-department">Group</label>
                             </div>
-                            <div class="dropdown">
+                            <div class="dropdown inbox-dropdown">
                                 <button class="btn border border-secondary dropdown-toggle" type="button"
                                     id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                     aria-expanded="false">
-                                    <span id="msg-group" val="0" class="sm-text">Select Department or Role group</span>
+                                    <span id="msg-compose-group" val="0" class="sm-text">
+                                        Select Department or Role
+                                        group
+                                    </span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a class="dropdown-item sm-text" href="#" id="empty-val">Select Department or
-                                            Role
-                                            group</a></li>
+                                    <li>
+                                        <a class="dropdown-item sm-text" href="#" id="empty-compose-val">
+                                            Select Department or Role group
+                                        </a>
+                                    </li>
                                     <li class="dropdown-submenu">
                                         <a class="dropdown-item dropdown-toggle sm-text" href="#">Departments</a>
                                         <ul class="dropdown-menu">
@@ -808,16 +837,14 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input">
-                            <label for="">Send an individual message to each recipient</label>
+                            <input type="checkbox" class="form-check-input" id="isForIndividual">
+                            <label for="isForIndividual">Send an individual message to each recipient</label>
                         </div>
                     </div>
                 </div>
-
                 <div id="msg-body">
                     <p>Hello world</p>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
