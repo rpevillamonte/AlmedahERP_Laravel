@@ -1052,7 +1052,6 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" id="reorderAll" data-ids="" class="btn btn-primary" onclick="deleteRow(this, true)">Reorder All</button>
         </div>
         </div>
     </div>
@@ -1443,7 +1442,6 @@
                     ).draw(false);
                     idss.push( row['id']);
                 });
-                document.getElementById('reorderAll').setAttribute('data-ids', idss);
             }
         })
     }
