@@ -62,8 +62,12 @@ Route::get('/dashboard', function () {
     return view('modules.dashboard');
 });
 
+/*ACCOUNTING*/
 Route::get('/accounting', function() {
     return view('modules.accounting.accounting');
+});
+Route::get('/chartofaccounts', function () {
+    return view('modules.accounting.chartofaccounts');
 });
 
 Route::get('/login', function() {

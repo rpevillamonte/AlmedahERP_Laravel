@@ -540,6 +540,9 @@
                     <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Company</span>
                     </a>
+                    <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Chart of Accounts</span>
+                    </a>
                 </div>
                 <!-- End of Submenu Accounting content -->
                 <!-- Menu Item Selling -->
