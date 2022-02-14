@@ -276,6 +276,10 @@ Route::get('/paymententry', function () {
     return view('modules.accounting.paymententry');
 });
 
+Route::get('/accountsreceivable', function () {
+    return view('modules.accounting.accountsReceivable');
+});
+
 /**PENDING ORDERS ROUTES */
 Route::get('/pendingorders', [PendingOrdersController::class, 'index']);
 Route::get('/view-progress/{id}', [PendingOrdersController::class, 'view_progress']);
@@ -449,6 +453,8 @@ Route::get('/salesinvoice', function () {
 Route::get('/sales-invoice-item', function () {
     return view('modules.selling.salesinvoiceitem');
 });
+
+
 
 /*SALES TAXES*/
 Route::get('/salestaxes', function() {
