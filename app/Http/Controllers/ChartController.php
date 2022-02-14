@@ -290,7 +290,7 @@ class ChartController extends Controller
         ->whereYear('purchase_date', '=',  $yearly)->pluck('mp_status');
         $purchase_order_ToReceive = MaterialPurchased::where('mp_status','=','To Receive')
         ->whereYear('purchase_date', '=', $yearly)->pluck('mp_status'); 
-        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and bill')
+        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and Bill')
         ->whereYear('purchase_date', '=',  $yearly)->pluck('mp_status');
         $purchase_order_ToBill = MaterialPurchased::where('mp_status','=','To Bill')
         ->whereYear('purchase_date', '=',  $yearly)->pluck('mp_status');  
@@ -312,7 +312,7 @@ class ChartController extends Controller
             ->whereYear('purchase_date', '=', $yearly)
             ->whereMonth('purchase_date', '=',  $month)
             ->pluck('mp_status'); 
-            $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and bill')
+            $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and Bill')
             ->whereYear('purchase_date', '=',  $yearly)
             ->whereMonth('purchase_date', '=',  $month)
             ->pluck('mp_status');
@@ -389,7 +389,7 @@ class ChartController extends Controller
          
         $purchase_order_Completed = MaterialPurchased::where('mp_status','=','Completed')->pluck('mp_status');
         $purchase_order_ToReceive = MaterialPurchased::where('mp_status','=','To Receive')->pluck('mp_status'); 
-        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and bill')->pluck('mp_status');
+        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and Bill')->pluck('mp_status');
         $purchase_order_ToBill = MaterialPurchased::where('mp_status','=','To Bill')->pluck('mp_status'); 
 
         //PURCHASE ORDER TO RECEIVE
