@@ -74,6 +74,10 @@ Route::get('/accountspayable', function() {
     return view('modules.accounting.accountpayable');
 });
 
+Route::get('/generalledger', function() {
+    return view('modules.accounting.generalledger');
+});
+
 Route::get('/login', function() {
     return view('modules.login.login');
 });
