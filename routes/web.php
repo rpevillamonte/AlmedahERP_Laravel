@@ -674,6 +674,7 @@ Route::post('/generate_reports_fast_move',                      [ChartController
 
 Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
 Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
+Route::post('/generate_reports_purchase_invoice',               [ChartController::class, 'generate_reports_purchase_invoice']);
 Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
 Auth::routes();
 
