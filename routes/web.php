@@ -509,10 +509,10 @@ Route::get('/newsuppliergrouptable', function() {
 });
 
 /**STOCK ROUTES */
-// Route::get('/stock', function () {
-//     return view('modules.stock.stock');
-// });
-//Route::get('/stock', [StockMovesController::class, 'index']);
+Route::get('/stock', function () {
+    return view('modules.stock.stock');
+});
+// Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
 Route::get('/openNewStockEntry', function () {
