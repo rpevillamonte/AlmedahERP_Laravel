@@ -1,5 +1,5 @@
 <script src="{{ asset('js/address.js') }}"></script>
-<script src="{{ asset('js/workcenter_native.js') }}"></script>
+<script src="{{ asset('js/workcenter.js') }}"></script>
 <script src="{{ asset('js/newWorkcenter.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
     <div class="container-fluid">
@@ -37,11 +37,12 @@
 
 <div id="wc_alert_msg" class="alert alert-danger" style="display: none;">
 </div>
-<form action="" method="post" id="createworkcenter" class="create">
+<form action="{{ route('workcenter.store') }}" method="post" id="newworkcenter" class="create">
+    @csrf
     <br>
     <div class="container">
-         <form id="createworkcenter" name="createworkcenter" role="form">
-           
+        {{-- <form id="newworkcenter" name="newworkcenter" role="form">
+            @csrf --}}
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
@@ -63,7 +64,7 @@
                 <div class="form-group">
                     <label for="Type">Type</label>
                     <select class="form-control" id="wc_select" onchange="showForm()">
-                        <option value="N/A" selected>--No Option Selected--</option>
+                        <option value="N/A" selected>--No Selected Option--</option>
                         <option value="Human">Human</option>
                         <option value="Machine">Machine</option>
                         <option value="Human and Machine">Human & Machine</option>
@@ -89,11 +90,11 @@
                                         name="Employee_name" list="employees" id="Employee_name" class="form-control">
                                 </td>
                                 <datalist id="employees">
-                               
-                                        <option value="">
-                                           
+                                    @foreach ($employees as $employee)
+                                        <option value="{{ $employee->employee_id }}">
+                                            {{ $employee->first_name }} {{ $employee->last_name }}
                                         </option>
-                                
+                                    @endforeach
                                 </datalist>
                                 <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
                                         name="Employee_hours" id="Employee_hours" class="form-control"></td>
@@ -125,11 +126,11 @@
                                     <option value="n/a">
                                         <li>No Option</li>
                                     </option>
-                                
-                                        <option value="">
-                                    
+                                    @foreach ($machines_manuals as $machine)
+                                        <option value="{{ $machine->machine_code }}">
+                                            {{ $machine->machine_name }}
                                         </option>
-                              
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -165,7 +166,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Production_Capacity">Production Capacity</label>
-                    <input type="number" min="1" name="Production_Capacity" id="Production_Capacity" value=""
+                    <input type="number" min="1" name="Production_Capacity" id="Production_Capacity" value="0"
                         class="form-control">
                 </div>
             </div>
