@@ -13,6 +13,7 @@ use App\Models\Supplier;
 use App\Models\supplierReports;
 use App\Models\SalesOrder;
 use App\Models\ManufacturingMaterials;
+use App\Models\PurchaseInvoice;
 use Carbon\Carbon;
 use DB;
 use DataTables;
@@ -290,7 +291,7 @@ class ChartController extends Controller
         ->whereYear('purchase_date', '=',  $yearly)->pluck('mp_status');
         $purchase_order_ToReceive = MaterialPurchased::where('mp_status','=','To Receive')
         ->whereYear('purchase_date', '=', $yearly)->pluck('mp_status'); 
-        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and bill')
+        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and Bill')
         ->whereYear('purchase_date', '=',  $yearly)->pluck('mp_status');
         $purchase_order_ToBill = MaterialPurchased::where('mp_status','=','To Bill')
         ->whereYear('purchase_date', '=',  $yearly)->pluck('mp_status');  
@@ -312,7 +313,7 @@ class ChartController extends Controller
             ->whereYear('purchase_date', '=', $yearly)
             ->whereMonth('purchase_date', '=',  $month)
             ->pluck('mp_status'); 
-            $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and bill')
+            $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and Bill')
             ->whereYear('purchase_date', '=',  $yearly)
             ->whereMonth('purchase_date', '=',  $month)
             ->pluck('mp_status');
@@ -389,7 +390,7 @@ class ChartController extends Controller
          
         $purchase_order_Completed = MaterialPurchased::where('mp_status','=','Completed')->pluck('mp_status');
         $purchase_order_ToReceive = MaterialPurchased::where('mp_status','=','To Receive')->pluck('mp_status'); 
-        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and bill')->pluck('mp_status');
+        $purchase_order_ToReceiveBill = MaterialPurchased::where('mp_status','=','To Receive and Bill')->pluck('mp_status');
         $purchase_order_ToBill = MaterialPurchased::where('mp_status','=','To Bill')->pluck('mp_status'); 
 
         //PURCHASE ORDER TO RECEIVE
@@ -788,6 +789,9 @@ public function generate_reports_stock_monitoring(Request $request){
         else if ($report_type == 8){
             $report_name = "Fast_Moving_Report";
         }
+        else if ($report_type == 9){
+            $report_name = "Purchase_Invoice_Report";
+        }
 
 
 
@@ -929,6 +933,19 @@ public function generate_reports_stock_monitoring(Request $request){
             $table_data         = ChartModel::get_fast_moving_table($date_from,$date_filter_type);
             $pdf = PDF::loadView('modules.reports.ExcelExportBlade.fast_move',['table_data' => $table_data, 'has_width' => true]);
         }
+        else if (!empty($data['report_type']) && $data['report_type'] == 9) {
+
+            if ($date_filter_type == 'yearly'){
+                $table_data1 = PurchaseInvoice::whereYear('date_created', '=', $date_from)->get();
+                $pdf = PDF::loadView('modules.reports.ExcelExportBlade.purchase_invoice',['purchaseInvoiceDataTable' => $table_data1, 'has_width' => true]);
+                }
+                else{
+                    $table_data1 = PurchaseInvoice::whereYear('date_created', '=',  $date_from)
+                    ->whereMonth('date_created', '=', $month)
+                    ->get();
+                $pdf = PDF::loadView('modules.reports.ExcelExportBlade.purchase_invoice',['purchaseInvoiceDataTable' => $table_data1, 'has_width' => true]);
+                } 
+        }
 
         $pdf->setPaper($paper_size);
 
@@ -992,6 +1009,202 @@ public function generate_reports_stock_monitoring(Request $request){
 
 
         return View('modules.reports.reports_fastMove',['table_data' => $table_data,'is_excel' => false]);
+    }
+
+    public function generate_reports_purchase_invoice (Request $request){
+        $date_from = date('Y-m-d', strtotime($request->date_from));
+        $date_to   = date('Y-m-d', strtotime($request->date_to));
+        $filter_type = $request->filter_type;
+
+        $yearly = date('Y', strtotime($date_from ));
+        $month =  date('m', strtotime($date_from ));       
+
+        if ( $filter_type == 'yearly'){
+        $purchase_invoicePie     = \Lava::DataTable();
+        $purchaseInvoiceDataTable = PurchaseInvoice::whereYear('date_created', '=', $yearly)->get();
+        $pi_status =  $purchaseInvoiceDataTable->pluck('pi_status')->unique();
+
+        //SCOREBOARDS DATA
+        //total amount paid
+        $total_amount_paid = PurchaseInvoice::select(
+            PurchaseInvoice::raw('SUM(grand_total) as sums'), 
+            PurchaseInvoice::raw("DATE_FORMAT(date_created,'%y') as year"))
+            ->whereYear('date_created','=', $yearly)
+            ->groupBy('year')
+            ->orderBy('date_created','asc')
+            ->get();
+
+        $total_amount_with_balance = PurchaseInvoice::select(
+                PurchaseInvoice::raw('SUM(payment_balance) as bal'), 
+                PurchaseInvoice::raw("DATE_FORMAT(date_created,'%y') as year"))
+                ->whereYear('date_created','=', $yearly)
+                ->groupBy('year')
+                ->orderBy('date_created','asc')
+                ->get();
+
+            if(count($total_amount_paid)){
+                $total_amount = $total_amount_paid->pluck('sums')[0];
+               }
+               else
+               {
+                   $total_amount =  0;
+
+               }
+               if(count($total_amount_with_balance)){
+                $total_balance = $total_amount_with_balance->pluck('bal')[0];
+               }
+               else
+               {
+                   $total_balance = 0;
+
+               }
+
+
+        $purchaseInvoice_grandTotal = PurchaseInvoice::select(
+            PurchaseInvoice::raw('SUM(total_amount_paid) as sums'), 
+            PurchaseInvoice::raw("DATE_FORMAT(date_created,'%m') as months"))
+                ->whereYear('date_created','=', $yearly)
+                // ->where('mp_status','=','Completed')
+                ->groupBy('months')
+                ->orderBy('date_created','asc')
+                ->get();
+                   $data = [0,0,0,0,0,0,0,0,0,0,0,0];
+                    foreach($purchaseInvoice_grandTotal as $order){
+                    $data[$order->months-1] = $order->sums;
+                    }
+
+        $purchaseInvoice_Balance = PurchaseInvoice::select(
+            PurchaseInvoice::raw('SUM(payment_balance) as sums'), 
+            PurchaseInvoice::raw("DATE_FORMAT(date_created,'%m') as months"))
+                ->whereYear('date_created','=', $yearly)
+                ->groupBy('months')
+                ->orderBy('date_created','asc')
+                ->get();
+                    $data2 = [0,0,0,0,0,0,0,0,0,0,0,0];
+                    foreach($purchaseInvoice_Balance as $order2){
+                        $data2[$order2->months-1] = $order2->sums;
+                    }
+         
+        }
+
+        
+
+        else if( $filter_type== 'monthly'){
+            $purchase_invoicePie     = \Lava::DataTable();
+            $purchaseInvoiceDataTable = PurchaseInvoice::whereYear('date_created', '=',  $yearly)
+            ->whereMonth('date_created', '=', $month)
+            ->get();
+            $pi_status =  $purchaseInvoiceDataTable->pluck('pi_status')->unique();
+
+            //SCOREBOARDS DATA
+            //total amount paid
+            $total_amount_paid = PurchaseInvoice::select(
+                PurchaseInvoice::raw('SUM(grand_total) as sums'), 
+                PurchaseInvoice::raw("DATE_FORMAT(date_created,'%y') as year"))
+                ->whereYear('date_created','=', $yearly)
+                ->groupBy('year')
+                ->orderBy('date_created','asc')
+                ->get();
+
+            $total_amount_with_balance = PurchaseInvoice::select(
+                    PurchaseInvoice::raw('SUM(payment_balance) as bal'), 
+                    PurchaseInvoice::raw("DATE_FORMAT(date_created,'%y') as year"))
+                    ->whereYear('date_created','=', $yearly)
+                    ->groupBy('year')
+                    ->orderBy('date_created','asc')
+                    ->get();
+
+                if(count($total_amount_paid)){
+                    $total_amount = $total_amount_paid->pluck('sums')[0];
+                }
+                else
+                {
+                    $total_amount =  0;
+
+                }
+                if(count($total_amount_with_balance)){
+                    $total_balance = $total_amount_with_balance->pluck('bal')[0];
+                }
+                else
+                {
+                    $total_balance = 0;
+
+                }
+
+                //column chart
+
+               $purchaseInvoice_grandTotal = PurchaseInvoice::select(
+                PurchaseInvoice::raw('SUM(total_amount_paid) as sums'), 
+                PurchaseInvoice::raw("DATE_FORMAT(date_created,'%m') as months"))
+                    ->whereYear('date_created','=', $yearly)
+                    ->groupBy('months')
+                    ->orderBy('date_created','asc')
+                    ->get();
+                       $data = [0,0,0,0,0,0,0,0,0,0,0,0];
+                        foreach($purchaseInvoice_grandTotal as $order){
+                        $data[$order->months-1] = $order->sums;
+                        }
+    
+                $purchaseInvoice_Balance = PurchaseInvoice::select(
+                    PurchaseInvoice::raw('SUM(payment_balance) as sums'), 
+                    PurchaseInvoice::raw("DATE_FORMAT(date_created,'%m') as months"))
+                        ->whereYear('date_created','=', $yearly)
+                        // ->where('sales_status','=','Fully Paid')
+                        ->groupBy('months')
+                        ->orderBy('date_created','asc')
+                        ->get();
+                            $data2 = [0,0,0,0,0,0,0,0,0,0,0,0];
+                            foreach($purchaseInvoice_Balance as $order2){
+                                $data2[$order2->months-1] = $order2->sums;
+                            }
+        
+        }
+
+        $months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept', 'Oct', 'Nov', 'Dec'];
+
+        $purchase_invoicePie->addStringColumn('Status')
+                ->addNumberColumn('Total amount to pay')
+                ->addNumberColumn('Total amount paid');
+                
+                for($i=0; $i<=11; $i++){
+                    $purchase_invoicePie->addRow([$months[$i],  $data2[$i], $data[$i]]);
+                }
+                
+
+                \Lava::ColumnChart('column-chart', $purchase_invoicePie, [
+                    'title' => 'Total Amount Paid  vs. Total Amount to Pay',
+                    'width' => 1200,
+                    'height' => 600,
+                    'isStacked' => true,
+                    'legend' => [
+                        'position' => 'bottom',
+                        'textStyle' => [
+                            'fontSize' => 12,
+                        ]
+                    ],
+                    'chartArea' => [
+                        'width' => 1100,
+                        'height' => 400,
+                    ],
+                    'groupWidth' => '33%',
+                    'colors' => ['#ffa600','#003f5c'],
+                    'vAxis' => [
+                        'format' => '₱#,###,###.##',
+                        'textStyle' => [
+                            'fontSize' => 10,
+                        ],
+                        'colors' => '#fff',
+                    ],   
+                    'backgroundColor' => 'transparent',
+                    
+                ]);
+
+
+        return view('modules.reports.reports_purchase_invoice',
+            ['pi_status' => $pi_status],
+            compact('total_amount', 'purchaseInvoiceDataTable', 'purchase_invoicePie','total_balance')
+            
+        );
     }
 
 }//end

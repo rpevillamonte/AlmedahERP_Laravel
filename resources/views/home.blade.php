@@ -532,6 +532,12 @@
                     <a href="#" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Purchase Invoice</span>
                     </a>
+                    <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Accounts Payable</span>
+                    </a>
+                    <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">Accounts Receivable</span>
+                    </a>
                     @if (($permissions['Supplier']['view'] ?? null) === 1 || !auth()->user()) 
                         <a href="#" class="menu list-group-item list-group-item-action bg-secondary">
                             <span class="menu-collapsed align-middle">Supplier</span>
@@ -542,6 +548,9 @@
                     </a>
                     <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
                         <span class="menu-collapsed align-middle">Chart of Accounts</span>
+                    </a>
+                    <a href="#" id="inbox-toggle" class="menu list-group-item list-group-item-action bg-secondary">
+                        <span class="menu-collapsed align-middle">General Ledger</span>
                     </a>
                 </div>
                 <!-- End of Submenu Accounting content -->

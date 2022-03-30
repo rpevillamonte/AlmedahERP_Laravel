@@ -61,6 +61,7 @@
                                         <option value="6"> Stock & Suppliers Report</option>
                                         <option value="7"> Delivery Reports</option>
                                         <option value="8"> Fast Moving Products</option>
+                                        <option value="9"> Purchase Invoice Report</option>
                                     </select>
                                 </div>
                                 

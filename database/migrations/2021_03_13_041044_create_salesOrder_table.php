@@ -29,8 +29,6 @@ class CreateSalesOrderTable extends Migration
             $table->string('installment_type')->nullable();
 
             $table->string('sales_status');
-
-            
         });
     }
 

@@ -133,7 +133,6 @@ class SalesOrderController extends Controller
 
 
             //Calculate total cost of material then minus initial payment or full payment
-            // @TODO Balanced out to zero if full payment
             if($form_data['salePaymentMethod'] == "Cash"){
                 
                 $data->sales_status = "Fully Paid";
@@ -212,7 +211,7 @@ class SalesOrderController extends Controller
             }else{
                 $data->customer_id = $form_data['customer_id'] ;
             }
-            //Concat method lmao
+            
             $payment_logs->customer_rep = $form_data['lName'] . " ". $form_data['fName'];
             
             $data->save();
@@ -241,13 +240,6 @@ class SalesOrderController extends Controller
             }
  
             foreach ($cart as $row){        
-                // $material_purchased = new MaterialPurchased();
-                // $material_purchased->supp_quotation_id = generateRandomString();
-                // $material_purchased->purchase_id = generateRandomString();
-                // $material_purchased->purchase_date = date_create()->format('Y-m-d H:i:s');;   
-                // $material_purchased->mp_status = "ExStatus";   
-                // $material_purchased->items_list_purchased = json_encode($new_component);   
-                // $material_purchased->save();
 
                 $order = new ordered_products();
                 $order->sales_id = $data->id;
@@ -265,7 +257,6 @@ class SalesOrderController extends Controller
                 $prod->save();
 
                 // Makes a serial number for each product purchased
-                // @TODO Make warranty individually
                 for ($i=0; $i < $order->quantity_purchased; $i++) {
 
                     $warranty = new warranty();
@@ -556,7 +547,6 @@ class SalesOrderController extends Controller
 
     function addPayment(Request $request){
 
-
         $request->validate([
             'view_totalamount' => 'nullable|numeric|gt:0',
             'view_paymentType' => 'nullable|alpha_dash',
@@ -618,7 +608,8 @@ class SalesOrderController extends Controller
 
     function refresh(){
         $salesorders = DB::table('salesorder')
-        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status' , 'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
+        ->select('salesorder.id', 'salesorder.payment_mode', 'salesorder.sales_status' , 
+        'salesorder.payment_balance', 'salesorder.transaction_date', 'man_customers.customer_lname', 'man_customers.customer_fname')
         ->join('man_customers','salesorder.customer_id','=','man_customers.id')
         ->get();
 

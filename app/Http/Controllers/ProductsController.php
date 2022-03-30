@@ -621,6 +621,10 @@ class ProductsController extends Controller
         $componentMaterialsArray = array();
         $productMaterials = array();
         $componentMaterials = array();
+
+        //Add quantity to stock unit
+        $product->stock_unit += $quantity_to_reproduce;
+        $product->save();
     
         foreach ($raw_materials as $raw_mat) {
             $material = ManufacturingMaterials::where('id', $raw_mat['material_id'])->first();
@@ -707,7 +711,7 @@ class ProductsController extends Controller
         $productObj = new stdClass();
         $productObj->$productCode = $productMaterialsArray;
         
-        //@TODO Material Request and work order
+        
         $work_order_ids = array();
 
         $work_order = new WorkOrder();

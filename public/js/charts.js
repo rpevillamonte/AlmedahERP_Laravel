@@ -14,11 +14,11 @@ var chart = new function () {
     this.generate_sample_chart = function () {
 
         var filter_type = $('#date-filter-option option:selected').val();
-        var date_from       = '';
-        var date_to         = '';
-        var temp_date_from  = '';
-        var temp_date_to    = '';
-        var temp_date       = new Date();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date();
 
 
         if (filter_type == 'yearly') {
@@ -27,217 +27,223 @@ var chart = new function () {
                 date_from = temp_date.getFullYear();
             }
 
-            date_to     = '12/31/' + date_from;
-            date_from   = '01/01/' + date_from;
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
         }
-        else if (filter_type == 'monthly'){
-            date_from   = $('#date-from').val();
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
 
             if (date_from == '') {
                 date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
             }
 
-            temp_date_from  = date_from.split('/');
-            date_from       = temp_date_from[0] + '/01/' + temp_date_from[1];
-            temp_date       = new Date(date_from);
-            date_to         = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-            date_to         = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
         }
 
         $.ajax({
-            url     : '/generate_sample_chart',
-            type    : 'POST',
-            data    : {
-                date_from   : date_from,
-                date_to     : date_to,
-                filter_type : filter_type
+            url: '/generate_sample_chart',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                date_to: date_to,
+                filter_type: filter_type
             }
         })
-        .done(function(response){
-            $('#chart-sample').html(response);
+            .done(function (response) {
+                $('#chart-sample').html(response);
 
-            var table = $('#work_order_table').DataTable();
-            $('#work_status').on('change',function(){
-                table
-                .search(this.value)
-                .draw();
-            });
+                var table = $('#work_order_table').DataTable();
+                $('#work_status').on('change', function () {
+                    table
+                        .search(this.value)
+                        .draw();
+                });
             })
-            .fail(function(){
-                
-        });
+            .fail(function () {
 
-        
+            });
+
+
     }
 
-    this.report_builder_button_functions = function (){ 
-        $('#report_type').on('change',function(){
+    this.report_builder_button_functions = function () {
+        $('#report_type').on('change', function () {
             if ($(this).val() == 1) {
                 // $('#date-filter-div').prop('hidden',true);
                 chart.generate_sample_chart();
             }
-            else if ($(this).val() == 2){
+            else if ($(this).val() == 2) {
                 // $('#date-filter-div').prop('hidden',false);
                 chart.generate_reports_sales();
             }
-            else if ($(this).val() == 3){
+            else if ($(this).val() == 3) {
                 // $('#date-filter-div').prop('hidden',false);
                 chart.generate_report_trends();
             }
-            else if ($(this).val() == 4){
+            else if ($(this).val() == 4) {
                 chart.generate_reports_materials_purchased();
             }
-            else if ($(this).val() == 5){
+            else if ($(this).val() == 5) {
                 chart.generate_reports_purchase_and_sales();
             }
-            else if ($(this).val() == 6){
+            else if ($(this).val() == 6) {
                 chart.generate_reports_stock_monitoring();
             }
-            else if ($(this).val() == 7){
+            else if ($(this).val() == 7) {
                 chart.generate_reports_delivery();
             }
-            else if ($(this).val() == 8){
+            else if ($(this).val() == 8) {
                 chart.generate_reports_fast_move();
             }
-            
-        });  
-        
+            else if ($(this).val() == 9) {
+                chart.generate_reports_purchase_invoice();
+            }
+
+        });
+
 
         // initialize datepicker
         $('#date-from').datepicker('destroy');
         $('#date-from').datepicker({
-            format      : "yyyy",
-            viewMode    : "years", 
-            minViewMode : "years",
-            autoclose   : true
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose: true
         });
 
         // if filter type change
-        $('#date-filter-option').on('change',function(){
+        $('#date-filter-option').on('change', function () {
             $('#date-from').val('');
             $('#date-to').val('');
             if ($(this).val() == 'yearly') {
                 $('#date-from').datepicker('destroy');
                 $('#date-from').datepicker({
-                    format      : "yyyy",
-                    viewMode    : "years", 
-                    minViewMode : "years",
-                    autoclose   : true
+                    format: "yyyy",
+                    viewMode: "years",
+                    minViewMode: "years",
+                    autoclose: true
                 });
                 // $('#date-to').datepicker('destroy');
-                $('#date-to').prop('hidden',true);
+                $('#date-to').prop('hidden', true);
             }
             else if ($(this).val() == 'monthly') {
                 $('#date-from').datepicker('destroy');
                 $('#date-from').datepicker({
-                    format      : "mm/yyyy",
-                    viewMode    : "months", 
-                    minViewMode : "months",
-                    autoclose   : true
+                    format: "mm/yyyy",
+                    viewMode: "months",
+                    minViewMode: "months",
+                    autoclose: true
                 });
                 // $('#date-to').datepicker('destroy');
-                $('#date-to').prop('hidden',true);
+                $('#date-to').prop('hidden', true);
             }
             else if ($(this).val() == 'weekly') {
-                
+
                 // $('#date-to').datepicker('destroy');
                 $('#date-from').datepicker('destroy');
-                $('#date-to').prop('hidden',false);
-                $('#date-to').prop('disabled',true);
+                $('#date-to').prop('hidden', false);
+                $('#date-to').prop('disabled', true);
 
                 $('#date-from').datepicker({
-                    autoclose   : true,
-                    format      : "mm/dd/yyyy",
-                }).on('change',function(){
+                    autoclose: true,
+                    format: "mm/dd/yyyy",
+                }).on('change', function () {
                     var temp_date = new Date($('#date-from').val());
-                    temp_date.setDate(temp_date.getDate()+7);
-                    $('#date-to').datepicker('update',temp_date);
+                    temp_date.setDate(temp_date.getDate() + 7);
+                    $('#date-to').datepicker('update', temp_date);
                 });
             }
             else if ($(this).val() == 'daily') {
 
                 $('#date-from').datepicker('destroy');
-                $('#date-to').prop('hidden',false);
-                $('#date-to').prop('disabled',true);
+                $('#date-to').prop('hidden', false);
+                $('#date-to').prop('disabled', true);
 
                 $('#date-from').datepicker({
-                    autoclose   : true,
-                    format      : "mm/dd/yyyy",
-                }).on('change',function(){
+                    autoclose: true,
+                    format: "mm/dd/yyyy",
+                }).on('change', function () {
                     var temp_date = new Date($('#date-from').val());
                     // temp_date.setDate(temp_date.getDate()+7);
-                    $('#date-to').datepicker('update',temp_date);
+                    $('#date-to').datepicker('update', temp_date);
                 });
             }
             else if ($(this).val() == 'custom') {
-                
+
                 $('#date-to').datepicker('destroy');
-                $('#date-to').prop('hidden',false);
-                $('#date-to').prop('disabled',false);
+                $('#date-to').prop('hidden', false);
+                $('#date-to').prop('disabled', false);
 
                 $('#date-from').datepicker('destroy');
                 $('#date-from').datepicker({
-                    autoclose   : true,
-                    format      : "mm/dd/yyyy",
-                }).on('change',function(date){
+                    autoclose: true,
+                    format: "mm/dd/yyyy",
+                }).on('change', function (date) {
                     $('#date-to').datepicker('destroy');
                     $('#date-to').datepicker({
-                        autoclose   : true,
-                        startDate   : new Date($('#date-from').val())
+                        autoclose: true,
+                        startDate: new Date($('#date-from').val())
                     });
                 });
 
                 $('#date-to').datepicker({
-                    autoclose   : true,
-                    format      : "mm/dd/yyyy",
-                }).on('change',function(date){
+                    autoclose: true,
+                    format: "mm/dd/yyyy",
+                }).on('change', function (date) {
                     $('#date-from').datepicker('destroy');
                     $('#date-from').datepicker({
-                        autoclose   : true,
-                        endDate     : new Date($('#date-to').val())
+                        autoclose: true,
+                        endDate: new Date($('#date-to').val())
                     });
                 });
             }
         });
 
-        $('#btn-filter').on('click',function(event){
+        $('#btn-filter').on('click', function (event) {
             event.preventDefault();
-            var report_type =  $('#report_type option:selected').val();
+            var report_type = $('#report_type option:selected').val();
             if (report_type == 1) {
                 chart.generate_sample_chart();
             }
-            else if (report_type == 2){
+            else if (report_type == 2) {
                 chart.generate_reports_sales();
             }
-            else if (report_type == 3){
+            else if (report_type == 3) {
                 chart.generate_report_trends();
             }
-            else if (report_type == 4){
+            else if (report_type == 4) {
                 chart.generate_reports_materials_purchased();
             }
-            else if (report_type == 5){
+            else if (report_type == 5) {
                 chart.generate_reports_purchase_and_sales();
             }
-            else if (report_type == 6){
+            else if (report_type == 6) {
                 chart.generate_reports_stock_monitoring();
             }
-            else if (report_type == 7){
+            else if (report_type == 7) {
                 chart.generate_reports_delivery();
             }
-            else if (report_type == 8){
+            else if (report_type == 8) {
                 chart.generate_reports_fast_move();
+            }
+            else if (report_type == 9) {
+                chart.generate_reports_purchase_invoice();
             }
         });
     }
 
     this.generate_reports_sales = function () {
-        
+
         var filter_type = $('#date-filter-option option:selected').val();
-        var date_from       = '';
-        var date_to         = '';
-        var temp_date_from  = '';
-        var temp_date_to    = '';
-        var temp_date       = new Date();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date();
 
 
         if (filter_type == 'yearly') {
@@ -246,26 +252,26 @@ var chart = new function () {
                 date_from = temp_date.getFullYear();
             }
 
-            date_to     = '12/31/' + date_from;
-            date_from   = '01/01/' + date_from;
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
         }
-        else if (filter_type == 'monthly'){
-            date_from   = $('#date-from').val();
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
 
             if (date_from == '') {
                 date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
             }
 
-            temp_date_from  = date_from.split('/');
-            date_from       = temp_date_from[0] + '/01/' + temp_date_from[1];
-            temp_date       = new Date(date_from);
-            date_to         = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-            date_to         = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
         }
         // else{
         //     date_from   = $('#date-from').val();
         //     date_to     = $('#date-to').val();
-            
+
         //     if (date_from == '') {
         //         date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getDate() + '/' + temp_date.getFullYear();
         //     }
@@ -281,38 +287,38 @@ var chart = new function () {
         // }
 
         $.ajax({
-            url     : '/generate_reports_sales',
-            type    : 'POST',
-            data    : {
-                date_from   : date_from,
-                date_to     : date_to,
-                filter_type : filter_type
+            url: '/generate_reports_sales',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                date_to: date_to,
+                filter_type: filter_type
             }
         })
-        .done(function(response){
-            $('#chart-sample').html(response);
+            .done(function (response) {
+                $('#chart-sample').html(response);
 
-            // $('#sales_order_table').DataTable();
+                // $('#sales_order_table').DataTable();
 
-            var table = $('#sales_order_table').DataTable();
-            $('#sales_order_table').on('change',function(){
-            table
-            .search(this.value)
-            .draw();
-        });
-        })
-        .fail(function(){
+                var table = $('#sales_order_table').DataTable();
+                $('#sales_order_table').on('change', function () {
+                    table
+                        .search(this.value)
+                        .draw();
+                });
+            })
+            .fail(function () {
 
-        });
+            });
     }
 
     this.generate_report_trends = function () {
         var filter_type = $('#date-filter-option option:selected').val();
-        var date_from       = '';
-        var date_to         = '';
-        var temp_date_from  = '';
-        var temp_date_to    = '';
-        var temp_date       = new Date();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date();
 
 
         if (filter_type == 'yearly') {
@@ -321,228 +327,234 @@ var chart = new function () {
                 date_from = temp_date.getFullYear();
             }
 
-            date_to     = '12/31/' + date_from;
-            date_from   = '01/01/' + date_from;
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
         }
-        else if (filter_type == 'monthly'){
-            date_from   = $('#date-from').val();
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
 
             if (date_from == '') {
                 date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
             }
 
-            temp_date_from  = date_from.split('/');
-            date_from       = temp_date_from[0] + '/01/' + temp_date_from[1];
-            temp_date       = new Date(date_from);
-            date_to         = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-            date_to         = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
         }
 
         $.ajax({
-            url     : '/generate_report_trends',
-            type    : 'POST',
-            data    : {
-                date_from   : date_from,
-                date_to     : date_to,
-                filter_type : filter_type
+            url: '/generate_report_trends',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                date_to: date_to,
+                filter_type: filter_type
             }
         })
-        .done(function(response){
-            $('#chart-sample').html(response);
+            .done(function (response) {
+                $('#chart-sample').html(response);
 
-            $('#sales_trends_table').DataTable();
-        })
-        .fail(function(){
+                $('#sales_trends_table').DataTable();
+            })
+            .fail(function () {
 
-        });
+            });
     }
 
-//material purchase
+    //material purchase
     this.generate_reports_materials_purchased = function (date_to) {
-    var filter_type = $('#date-filter-option option:selected').val();
-    var date_from = '';
-    var date_to= '';
-    var temp_date_from = '';
-    var temp_date_to = '';
-    var temp_date = new Date;
+        var filter_type = $('#date-filter-option option:selected').val();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date;
 
-    if (filter_type == 'yearly'){
-        date_from = $('#date-from').val();
-        if (date_from == ''){
-            date_from == temp_date.getFullYear();
-        }
-
-        date_to = '12/31/' + date_from;
-        date_from = '01/01/' + date_from;
-    }
-    else if (filter_type == 'monthly'){
-        date_from = $('#date-from').val();
-        if (date_from == '') {
-            date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
-        }
-
-        temp_date_from  = date_from.split('/');
-        date_from       = temp_date_from[0] + '/01/' + temp_date_from[1];
-        temp_date       = new Date(date_from);
-        date_to         = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-        date_to         = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
-    }
-
-
-    $.ajax({
-        url         : '/generate_reports_materials_purchased',
-        type        : 'POST',
-        data        : { date_from : date_from, 
-                        filter_type : filter_type,
-                        date_to : date_to},
-    })
-    .done(function(response){
-        $('#chart-sample').html(response);
-
-        var table = $('#mp_charts_table').DataTable(
-            {
-                dom: 'Bfrtip',
-                buttons: [
-                    'copyHtml5',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'pdfHtml5'
-                ]
+        if (filter_type == 'yearly') {
+            date_from = $('#date-from').val();
+            if (date_from == '') {
+                date_from == temp_date.getFullYear();
             }
-        );
-        $('#mp_status').on('change',function(){
-            table
-            .search(this.value)
-            .draw();
-        });
-    })
-    .fail(function(){
 
-    });
-}
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
+        }
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
+            if (date_from == '') {
+                date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
+            }
 
-   //purchase and sales
-   this.generate_reports_purchase_and_sales = function (date_to) {
-    var filter_type = $('#date-filter-option option:selected').val();
-    var date_from = '';
-    var date_to= '';
-    var temp_date_from = '';
-    var temp_date_to = '';
-    var temp_date = new Date;
-
-    if (filter_type == 'yearly'){
-        date_from = $('#date-from').val();
-        if (date_from == ''){
-            date_from == temp_date.getFullYear();
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
         }
 
-        date_to = '12/31/' + date_from;
-        date_from = '01/01/' + date_from;
-    }
-    else if (filter_type == 'monthly'){
-        date_from = $('#date-from').val();
 
-        if (date_from == ''){
-            date_from = (temp_date.getMonth() + 1) + '/01/' + temp_date.getFullYear();
+        $.ajax({
+            url: '/generate_reports_materials_purchased',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                filter_type: filter_type,
+                date_to: date_to
+            },
+        })
+            .done(function (response) {
+                $('#chart-sample').html(response);
+
+                var table = $('#mp_charts_table').DataTable(
+                    {
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copyHtml5',
+                            'excelHtml5',
+                            'csvHtml5',
+                            'pdfHtml5'
+                        ]
+                    }
+                );
+                $('#mp_status').on('change', function () {
+                    table
+                        .search(this.value)
+                        .draw();
+                });
+            })
+            .fail(function () {
+
+            });
+    }
+
+    //purchase and sales
+    this.generate_reports_purchase_and_sales = function (date_to) {
+        var filter_type = $('#date-filter-option option:selected').val();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date;
+
+        if (filter_type == 'yearly') {
+            date_from = $('#date-from').val();
+            if (date_from == '') {
+                date_from == temp_date.getFullYear();
+            }
+
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
+        }
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
+
+            if (date_from == '') {
+                date_from = (temp_date.getMonth() + 1) + '/01/' + temp_date.getFullYear();
+            }
+
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            //date_to        = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/01/' + temp_date_from[1];
         }
 
-        temp_date_from = date_from.split('/');
-        date_from      = temp_date_from[0] + '/01/' + temp_date_from[1];
-        temp_date      = new Date(date_from);
-        //date_to        = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-        date_to        = temp_date_from[0] + '/01/' + temp_date_from[1];
+
+        $.ajax({
+            url: '/generate_reports_purchase_and_sales',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                filter_type: filter_type,
+                date_to: date_to
+            },
+        })
+            .done(function (response) {
+                $('#chart-sample').html(response);
+
+                $('#mp_charts_table').DataTable();
+            })
+            .fail(function () {
+
+            });
+
     }
-
-
-    $.ajax({
-        url         : '/generate_reports_purchase_and_sales',
-        type        : 'POST',
-        data        : { date_from : date_from, 
-                        filter_type : filter_type,
-                        date_to : date_to},
-    })
-    .done(function(response){
-        $('#chart-sample').html(response);
-
-        $('#mp_charts_table').DataTable();
-    })
-    .fail(function(){
-
-    });
-    
-}
     //stock monitoring
     //suupliers and stock
     this.generate_reports_stock_monitoring = function (item) {
         var filter_type = $('#date-filter-option option:selected').val();
         var date_from = '';
-        var date_to= '';
+        var date_to = '';
         var temp_date_from = '';
         var temp_date_to = '';
         var temp_date = new Date;
-    
-        if (filter_type == 'yearly'){
+
+        if (filter_type == 'yearly') {
             date_from = $('#date-from').val();
-            if (date_from == ''){
+            if (date_from == '') {
                 date_from == temp_date.getFullYear();
             }
-    
+
             date_to = '12/31/' + date_from;
             date_from = '01/01/' + date_from;
         }
-        else if (filter_type == 'monthly'){
+        else if (filter_type == 'monthly') {
             date_from = $('#date-from').val();
-    
-            if (date_from == ''){
+
+            if (date_from == '') {
                 date_from = (temp_date.getMonth() + 1) + '/01/' + temp_date.getFullYear();
             }
-    
+
             temp_date_from = date_from.split('/');
-            date_from      = temp_date_from[0] + '/01/' + temp_date_from[1];
-            temp_date      = new Date(date_from);
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
             //date_to        = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-            date_to        = temp_date_from[0] + '/01/' + temp_date_from[1];
+            date_to = temp_date_from[0] + '/01/' + temp_date_from[1];
         }
-    
-    
-      
-      
+
+
+
+
         var item_filter = $('#item-filter-option option:selected').val();
-      
-    
+
+
         $.ajax({
-            url         : '/generate_reports_stock_monitoring',  
-            type        : 'GET',
-            data        : {"item_filter"     :   item_filter,
-                            date_from        : date_from, 
-                            filter_type      : filter_type,
-                            date_to          : date_to},
-            success     : function(item_filter) {
-                    console.log("Value added " + item_filter );
-                  }
-    
+            url: '/generate_reports_stock_monitoring',
+            type: 'GET',
+            data: {
+                "item_filter": item_filter,
+                date_from: date_from,
+                filter_type: filter_type,
+                date_to: date_to
+            },
+            success: function (item_filter) {
+                console.log("Value added " + item_filter);
+            }
+
         })
-        
-        .done(function(response){
-            $('#chart-sample').html(response);
-            $('.selectpicker').selectpicker();
-            $('#mp_charts_table').DataTable();
-        })
-        .fail(function(){
-    
-        });
-    
-        
+
+            .done(function (response) {
+                $('#chart-sample').html(response);
+                $('.selectpicker').selectpicker();
+                $('#mp_charts_table').DataTable();
+            })
+            .fail(function () {
+
+            });
+
+
     }
-    
+
     this.generate_reports_delivery = function () {
 
         var filter_type = $('#date-filter-option option:selected').val();
-        var date_from       = '';
-        var date_to         = '';
-        var temp_date_from  = '';
-        var temp_date_to    = '';
-        var temp_date       = new Date();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date();
 
 
         if (filter_type == 'yearly') {
@@ -551,47 +563,47 @@ var chart = new function () {
                 date_from = temp_date.getFullYear();
             }
 
-            date_to     = '12/31/' + date_from;
-            date_from   = '01/01/' + date_from;
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
         }
-        else if (filter_type == 'monthly'){
-            date_from   = $('#date-from').val();
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
 
             if (date_from == '') {
                 date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
             }
 
-            temp_date_from  = date_from.split('/');
-            date_from       = temp_date_from[0] + '/01/' + temp_date_from[1];
-            temp_date       = new Date(date_from);
-            date_to         = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-            date_to         = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
         }
 
         $.ajax({
-            url     : '/generate_reports_delivery',
-            type    : 'POST',
-            data    : {
-                date_from   : date_from,
-                date_to     : date_to,
-                filter_type : filter_type
+            url: '/generate_reports_delivery',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                date_to: date_to,
+                filter_type: filter_type
             }
         })
-        .done(function(response){
-            $('#chart-sample').html(response);
+            .done(function (response) {
+                $('#chart-sample').html(response);
 
-           
 
-            var table = $('#delivery_table').DataTable();
-            $('#delivery_status').on('change',function(){
-                table
-                .search(this.value)
-                .draw();
-            });
+
+                var table = $('#delivery_table').DataTable();
+                $('#delivery_status').on('change', function () {
+                    table
+                        .search(this.value)
+                        .draw();
+                });
             })
-            .fail(function(){
-        });
-        
+            .fail(function () {
+            });
+
 
 
 
@@ -601,11 +613,11 @@ var chart = new function () {
     this.generate_reports_fast_move = function () {
 
         var filter_type = $('#date-filter-option option:selected').val();
-        var date_from       = '';
-        var date_to         = '';
-        var temp_date_from  = '';
-        var temp_date_to    = '';
-        var temp_date       = new Date();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date();
 
 
         if (filter_type == 'yearly') {
@@ -614,40 +626,108 @@ var chart = new function () {
                 date_from = temp_date.getFullYear();
             }
 
-            date_to     = '12/31/' + date_from;
-            date_from   = '01/01/' + date_from;
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
         }
-        else if (filter_type == 'monthly'){
-            date_from   = $('#date-from').val();
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
 
             if (date_from == '') {
                 date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
             }
 
-            temp_date_from  = date_from.split('/');
-            date_from       = temp_date_from[0] + '/01/' + temp_date_from[1];
-            temp_date       = new Date(date_from);
-            date_to         = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
-            date_to         = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
         }
 
         $.ajax({
-            url     : '/generate_reports_fast_move',
-            type    : 'POST',
-            data    : {
-                date_from   : date_from,
-                date_to     : date_to,
-                filter_type : filter_type
+            url: '/generate_reports_fast_move',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                date_to: date_to,
+                filter_type: filter_type
             }
         })
-        .done(function(response){
-            $('#chart-sample').html(response);
+            .done(function (response) {
+                $('#chart-sample').html(response);
 
-            $('#fastMove_table').DataTable();
+                $('#fastMove_table').DataTable();
+            })
+            .fail(function () {
+
+            });
+
+
+    }
+
+    this.generate_reports_purchase_invoice = function () {
+
+        var filter_type = $('#date-filter-option option:selected').val();
+        var date_from = '';
+        var date_to = '';
+        var temp_date_from = '';
+        var temp_date_to = '';
+        var temp_date = new Date;
+
+        if (filter_type == 'yearly') {
+            date_from = $('#date-from').val();
+            if (date_from == '') {
+                date_from == temp_date.getFullYear();
+            }
+
+            date_to = '12/31/' + date_from;
+            date_from = '01/01/' + date_from;
+        }
+        else if (filter_type == 'monthly') {
+            date_from = $('#date-from').val();
+            if (date_from == '') {
+                date_from = (temp_date.getMonth() + 1) + '/' + temp_date.getFullYear();
+            }
+
+            temp_date_from = date_from.split('/');
+            date_from = temp_date_from[0] + '/01/' + temp_date_from[1];
+            temp_date = new Date(date_from);
+            date_to = new Date(temp_date.getFullYear(), temp_date.getMonth() + 1, 0);
+            date_to = temp_date_from[0] + '/' + date_to.getDate() + '/' + temp_date_from[1];
+        }
+
+
+        $.ajax({
+            url: '/generate_reports_purchase_invoice',
+            type: 'POST',
+            data: {
+                date_from: date_from,
+                filter_type: filter_type,
+                date_to: date_to
+            },
         })
-        .fail(function(){
+            .done(function (response) {
+                $('#chart-sample').html(response);
 
-        });
+                var table = $('#pi_charts_table').DataTable(
+                    {
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copyHtml5',
+                            'excelHtml5',
+                            'csvHtml5',
+                            'pdfHtml5'
+                        ]
+                    }
+                );
+                $('#pi_status').on('change', function () {
+                    table
+                        .search(this.value)
+                        .draw();
+                });
+            })
+            .fail(function () {
+
+            });
 
 
     }

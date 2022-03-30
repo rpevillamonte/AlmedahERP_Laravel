@@ -70,6 +70,14 @@ Route::get('/chartofaccounts', function () {
     return view('modules.accounting.chartofaccounts');
 });
 
+Route::get('/accountspayable', function() {
+    return view('modules.accounting.accountpayable');
+});
+
+Route::get('/generalledger', function() {
+    return view('modules.accounting.generalledger');
+});
+
 Route::get('/login', function() {
     return view('modules.login.login');
 });
@@ -276,6 +284,10 @@ Route::get('/paymententry', function () {
     return view('modules.accounting.paymententry');
 });
 
+Route::get('/accountsreceivable', function () {
+    return view('modules.accounting.accountsReceivable');
+});
+
 /**PENDING ORDERS ROUTES */
 Route::get('/pendingorders', [PendingOrdersController::class, 'index']);
 Route::get('/view-progress/{id}', [PendingOrdersController::class, 'view_progress']);
@@ -449,6 +461,8 @@ Route::get('/salesinvoice', function () {
 Route::get('/sales-invoice-item', function () {
     return view('modules.selling.salesinvoiceitem');
 });
+
+
 
 /*SALES TAXES*/
 Route::get('/salestaxes', function() {
@@ -660,6 +674,7 @@ Route::post('/generate_reports_fast_move',                      [ChartController
 
 Route::post('/generate_reports_materials_purchased',            [ChartController::class, 'generate_reports_materials_purchased']);
 Route::post('/generate_reports_purchase_and_sales',             [ChartController::class, 'generate_reports_purchase_and_sales']);
+Route::post('/generate_reports_purchase_invoice',               [ChartController::class, 'generate_reports_purchase_invoice']);
 Route::get('/generate_reports_stock_monitoring',                [ChartController::class, 'generate_reports_stock_monitoring']);
 Auth::routes();
 

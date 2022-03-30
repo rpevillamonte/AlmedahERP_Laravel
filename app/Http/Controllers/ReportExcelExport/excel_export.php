@@ -3,6 +3,7 @@ namespace App\Http\Controllers\ReportExcelExport;
 
 use App\Models\ChartModel;
 use App\Models\MaterialPurchased;
+use App\Models\PurchaseInvoice;
 use DB;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -111,6 +112,18 @@ class excel_export implements FromView
         else if ($this->report_type == 8) {
             $table_data         = ChartModel::get_fast_moving_table($this->date_from,$this->date_filter_type);
             return view('modules.reports.ExcelExportBlade.fast_moving_xlxs',['table_data' => $table_data, 'has_width' => true]);
+        }
+        else if ($this->report_type == 9) {
+            if ($this->date_filter_type == 'yearly'){
+                $table_data1 = PurchaseInvoice::whereYear('date_created', '=', $this->date_from)->get();
+                return view('modules.reports.ExcelExportBlade.purchase_invoice_xlxs',['purchaseInvoiceDataTable' => $table_data1, 'has_width' => true]);
+            }
+            else{
+                $table_data1 = PurchaseInvoice::whereYear('date_created', '=',  $this->date_from)
+                ->whereMonth('date_created', '=', $this->month)
+                ->get();
+                return view('modules.reports.ExcelExportBlade.purchase_invoice_xlxs',['purchaseInvoiceDataTable' => $table_data1, 'has_width' => true]);
+            }
         }
         
 
