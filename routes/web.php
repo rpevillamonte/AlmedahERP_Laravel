@@ -74,6 +74,10 @@ Route::get('/login', function() {
     return view('modules.login.login');
 });
 
+Route::get('/stock', function() {
+    return view('modules.stock.stock');
+});
+
 Route::get('/logout',  [App\Http\Controllers\Auth\LoginController::class, 'logout']);
 
 Route::get('/profile', [EmployeeController::class, 'getAuthEmployeeDetails']);
