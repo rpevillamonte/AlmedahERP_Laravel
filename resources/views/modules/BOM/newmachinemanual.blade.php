@@ -1,6 +1,6 @@
 <!--
     Duplication of machineinfo.blade.php file. This file is made exclusively for creating a new
-    Machine Manual. 
+    Machine Manual.
 -->
 <script src="{{ asset('js/address.js') }}"></script>
 <script src="{{ asset('js/machinemanual.js') }}"></script>
@@ -42,10 +42,27 @@
         <div class="row">
             <div class="col-4">
                 <div class="form-group">
-                    <label for="Machine_Image">Machine Image</label>
-                    <input type="file" accept="image/*" name="Machine_Image" id="Machine_Image">
+                    <label for="">Machine Image</label>
+                    <img id="MM_img_tmp" src="../images/thumbnail.png" style="width:100%;">
+                    <br><br>
+                    <input type="file" accept="image/*" name="Machine_Image[]" id="Machine_Image"
+                        onchange="readURL1(this);" multiple>
                 </div>
             </div>
+            <script>
+                function readURL1(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            $('#MM_img_tmp')
+                                .attr('src', e.target.result)
+                        };
+
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            </script>
             <div class="col-6">
             </div>
             <div class="col-6">
@@ -88,7 +105,7 @@
                 <textarea id="Machine_Description" class="summernote" name="Machine_Description"></textarea>
             </div>
         </div>
-    </div>        
+    </div>
 </form>
 
 <script type="text/javascript">
@@ -103,4 +120,3 @@
         });
     });
 </script>
-
