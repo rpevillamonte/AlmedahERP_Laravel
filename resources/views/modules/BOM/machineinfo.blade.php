@@ -50,7 +50,8 @@
             <div class="col-4">
                 <div class="form-group">
                     <label for="Machine_Image">Machine Image</label>
-                    <img id="Machine_img_edit" src="../images/thumbnail.png" style="width:100%;">
+                    <img id="Machine_img_edit" src="{{ asset('storage/' . json_decode($manual->machine_image)[0]) }}"
+                        style="width:100%;">
                     <br><br>
                     <input type="file" accept="image/*" name="Machine_Image[]" id="Machine_Image"
                         onchange="readURL1(this);" multiple>
