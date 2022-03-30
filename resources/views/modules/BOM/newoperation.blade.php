@@ -44,9 +44,11 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="Default_workcenter">Default Work Center</label>
-                    <select class="form-control selectpicker" name="Default_WorkCenter" id="Default_WorkCenter" data-live-search="true">
+                    <select class="form-control selectpicker" name="Default_WorkCenter" id="Default_WorkCenter"
+                        data-live-search="true">
                         @foreach ($work_centers as $wc)
-                            <option data-subtext="{{ $wc->wc_code }}" value="{{ $wc->wc_code }}">{{ $wc->wc_label }}</option>
+                            <option data-subtext="{{ $wc->wc_code }}" value="{{ $wc->wc_code }}">
+                                {{ $wc->wc_label }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -55,7 +57,7 @@
             </div>
             <div class="form-group col-md-12">
                 <label for="operation_Description">Description</label>
-                <textarea id="Description" class="summernote" name="Description"></textarea>
+                <textarea id="Description" class="form-control" name="Description"></textarea>
             </div>
         </div>
     </div>

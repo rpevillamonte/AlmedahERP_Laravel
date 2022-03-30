@@ -85,30 +85,35 @@
                                 </tr>
                             </thead>
                             <tbody class="" id="newemployee-input-rows">
-                                <tr id="employee-1">
-                                    <td id="mr-code-input" class="mr-code-input"><input type="text" value=""
-                                            name="Employee_name" list="employees" id="Employee_name"
-                                            class="form-control">
-                                    </td>
-                                    <datalist id="employees">
-
-                                        <option value="">
-
-                                        </option>
-
-                                    </datalist>
-                                    <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
-                                            name="Employee_hours" id="Employee_hours" class="form-control"></td>
-                                    <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
-                                            name="Employee_minutes" id="Employee_minutes" class="form-control"></td>
-                                    <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
-                                            name="Employee_seconds" id="Employee_seconds" class="form-control"></td>
-                                    <td>
-                                        <a id="" class="btn delete-btn" href="#" role="button">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                @foreach (json_decode($wc->employee_id_set) ?? [] as $emp)
+                                    <tr>
+                                        <td id="mr-code-input" class="mr-code-input"><input type="text"
+                                                value="{{ $emp->employee_id }}" name="Employee_name" list="employees"
+                                                id="Employee_name" class="form-control">
+                                        </td>
+                                        <datalist id="employees">
+                                            @foreach ($employees as $employee)
+                                                <option value="{{ $employee->employee_id }}">
+                                                    {{ $employee->first_name }} {{ $employee->last_name }}
+                                                </option>
+                                            @endforeach
+                                        </datalist>
+                                        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
+                                                value="" name="Employee_hours" id="Employee_hours"
+                                                class="form-control"></td>
+                                        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
+                                                value="" name="Employee_minutes" id="Employee_minutes"
+                                                class="form-control"></td>
+                                        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
+                                                value="" name="Employee_seconds" id="Employee_seconds"
+                                                class="form-control"></td>
+                                        <td>
+                                            <a id="" class="btn delete-btn" href="#" role="button">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                         <td colspan="7" rowspan="5">
@@ -125,14 +130,13 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="Available_Machine">Available Machine</label>
-                                        <select class="form-control" id="Available_Machine">
-                                            <option value="n/a">
-                                                <li>No Option</li>
-                                            </option>
-
-                                            <option value="">
-
-                                            </option>
+                                        <select class="form-control" id="Available_Machine"
+                                            value="{{ $wc->machine_code }}">
+                                            @foreach ($machines_manuals as $machine)
+                                                <option value="{{ $machine->machine_code }}">
+                                                    {{ $machine->machine_name }}
+                                                </option>
+                                            @endforeach
 
                                         </select>
                                     </div>
@@ -153,12 +157,12 @@
                                                     name="machine_process" id="machine_process" class="form-control">
                                             </td>
                                             <td style="width: 10%;" class="mr-qty-input">
-                                                <input type="number" value="{{ $machine->setup_time }}" readonly name="setup_time" id="setup_time"
-                                                    class="form-control">
+                                                <input type="number" value="{{ $machine->setup_time }}" readonly
+                                                    name="setup_time" id="setup_time" class="form-control">
                                             </td>
                                             <td style="width: 10%;" class="mr-qty-input">
-                                                <input type="text" value="{{ $machine->running_time }}" readonly name="Running_time"
-                                                    id="Running_time" class="form-control">
+                                                <input type="text" value="{{ $machine->running_time }}" readonly
+                                                    name="Running_time" id="Running_time" class="form-control">
                                             </td>
 
                                         </tr>

@@ -41,7 +41,7 @@ class WorkCenterController extends Controller
         $destination = $source_path == 'native' ? 'createworkcenter' : 'newWorkCenter';
         $machines_manual = MachinesManual::all();
         $employees = Employee::all();
-        return view("modules.BOM.$destination", ['machines_manuals' => $machines_manual, 'employees' => $employees]); 
+        return view("modules.BOM.$destination", ['machines_manuals' => $machines_manual, 'employees' => $employees]);
     }
 
     /**
@@ -71,7 +71,7 @@ class WorkCenterController extends Controller
         $work_center->rent_cost = $form_data['rent_cost'];
         $work_center->wages = $form_data['wages'];
         $work_center->hour_rate = $form_data['hour_rate'];
-        
+
         if(isset($form_data['employee_id_set'])){ //checks if theres employee ID
             $work_center->employee_id_set = $form_data['employee_id_set'];
         }
@@ -93,8 +93,10 @@ class WorkCenterController extends Controller
         //
         $wc = WorkCenter::find($id);
         $machine = $wc->machine_manual;
-        return view('modules.BOM.editworkcenter', 
-                    ['wc' => $wc, 'machine' => $machine]);
+        $employees = Employee::all();
+        $machines_manual = MachinesManual::all();
+        return view('modules.BOM.editworkcenter',
+                    ['wc' => $wc, 'machine' => $machine, 'employees' => $employees, 'machines_manuals' => $machines_manual]);
     }
 
     /**

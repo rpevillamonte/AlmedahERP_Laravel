@@ -25,8 +25,7 @@
                         onclick="loadmachine();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-info btn" style="background-color: #0788ced7;" onclick=""
-                        id="saveMMBtn">Save</button>
+                    <button class="btn btn-info btn" style="display: none;" onclick="" id="saveMMBtn">Save</button>
                 </li>
                 <li class="nav-item li-bom">
                     <form action="{{ route('machinemanual.destroy', ['machinemanual' => $manual->id]) }}"
@@ -50,7 +49,8 @@
             <div class="col-4">
                 <div class="form-group">
                     <label for="Machine_Image">Machine Image</label>
-                    <img id="Machine_img_edit" src="../images/thumbnail.png" style="width:100%;">
+                    <img id="Machine_img_edit" src="{{ asset('storage/' . json_decode($manual->machine_image)[0]) }}"
+                        style="width:100%;">
                     <br><br>
                     <input type="file" accept="image/*" name="Machine_Image[]" id="Machine_Image"
                         onchange="readURL1(this);" multiple>
@@ -113,8 +113,8 @@
             </div>
             <div class="form-group col-md-12">
                 <label for="Machine_Description">Machine Description</label>
-                <textarea id="Machine_Description" class="summernote mm"
-                    name="Machine_Description">{{ $manual->machine_description }}</textarea>
+                <textarea id="Machine_Description" class="summernote mm" name="Machine_Description"
+                    required>{{ $manual->machine_description }}</textarea>
             </div>
         </div>
     </div>

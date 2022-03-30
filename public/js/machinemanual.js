@@ -2,9 +2,9 @@ $(document).ready(function () {
     $(".mm").keyup(onChangeFunction);
 });
 
-/**function onChangeFunction() {
-    $("#saveMMBtn").css('display', 'inline-block');
-}**/
+function onChangeFunction() {
+    $("#saveMMBtn").css("display", "inline-block");
+}
 
 $("#mmDelete").click(function () {
     $("#deleteMM").submit();
