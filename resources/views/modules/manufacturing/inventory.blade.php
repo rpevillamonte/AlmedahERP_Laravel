@@ -301,8 +301,8 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="">Material Code</label>
-                                <input class="form-control" id="material_code" type="text" name="material_code" placeholder="Ex. MT181204"
-                                    required>
+                                <input class="form-control" id="material_code" type="text" name="material_code" placeholder="Ex. MT181204" required
+                                    >
                                 <span id="update-code-error" class="input-error text-danger"></span>
                             </div>
                         </div>
@@ -401,6 +401,13 @@
                             <option value="To Purchase">To Purchase</option>
                             <option value="Available">Available</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group col-12">
+                            <label for="" class="mr-3">Consumable</label>
+                            <input type="checkbox" name="edit_consumable" id="edit_consumable" style="transform: scale(1.4);">
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -540,7 +547,7 @@
                             <label for="" class="mr-3">Consumable</label>
                             <input type="checkbox" name="consumable" id="consumable" style="transform: scale(1.4);">
                         </div>
-                      </div>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -684,6 +691,11 @@
                 $(form).find('#total_amount').focusout();
                 $(form).find('#edit_uom_id').val(data.uom_id);
                 $(form).find('#edit_uom_id').change();
+                $(form).find('#edit_consumable').prop("checked",data.consumable == 1 ? true : false);
+                $(form).find('#edit_consumable').change( function (){
+                    $(this).val( $(this).is(':checked') ? 1 : 0 );
+                });
+                
             });
 
         });
@@ -778,6 +790,7 @@
                 }
             });
             var formData = new FormData(this);
+            formData.append("consumable", $('#edit_consumable').val());
             $.ajax({
                 type: 'POST',
                 url: $('#update-material-form').attr('action'),
@@ -786,7 +799,7 @@
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    //console.log("success");
+                    console.log("success");
                     if (data.status == "success") {
                         // If a new image was set, use it as the value. Otherwise, use the old image
                         var image = (data.image) ? data.image : sessionStorage.getItem(
@@ -813,6 +826,9 @@
                                     formData.get('material_code'),
                                     formData.get('material_name'),
                                     data.category_title,
+                                    formData.get('consumable') == 1 ?
+                                    '<input type="checkbox" class="form-check-input" disabled checked>' :
+                                    '<input type="checkbox" class="form-check-input" disabled>',
                                     '<span class="text-black-50">' + formData
                                     .get('stock_quantity') + '</span>',
                                     '<span class="text-black-50">' + formData

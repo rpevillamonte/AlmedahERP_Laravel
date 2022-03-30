@@ -50,7 +50,7 @@ class MaterialsController extends Controller
             'material_name' => 'required|string',
             'material_category' => 'required|string',
             'uom_id'=> 'required|exists:materials_uom',
-            'rm_quantity' => 'required|integer|numeric|min:1',
+            'rm_quantity' => 'required|integer|numeric|min:0',
             'rm_status' => 'required',
             'material_image' => 'required',
             'material_image.*' => 'image' 
@@ -131,7 +131,7 @@ class MaterialsController extends Controller
             'material_name' => 'required|string',
             'material_category' => 'required|string',
             'uom_id'=> 'required|exists:materials_uom',
-            'rm_quantity' => 'required|integer|numeric|min:1',
+            'rm_quantity' => 'required|integer|numeric|min:0',
             'rm_status' => 'required',
         ]);
 
@@ -165,6 +165,7 @@ class MaterialsController extends Controller
             $data->rm_quantity = $form_data['rm_quantity'];
             $data->stock_quantity = $data->rm_quantity * $data->uom->conversion_factor;
             $data->category->quantity += $data->stock_quantity;
+            $data->consumable = $form_data['consumable'];
             $data->category->save();
             // MAKE THESE FIELDS NOT-STATIC
             $data->reorder_level = 30;
