@@ -43,7 +43,7 @@
             <div class="col-4">
                 <div class="form-group">
                     <label for="Machine_Image">Machine Image</label>
-                    <input type="file" name="Machine_Image" id="Machine_Image">
+                    <input type="file" accept="image/*" name="Machine_Image" id="Machine_Image">
                 </div>
             </div>
             <div class="col-6">
