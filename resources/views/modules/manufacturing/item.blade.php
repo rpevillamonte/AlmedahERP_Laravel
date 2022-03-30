@@ -527,7 +527,7 @@
                                     <div class="form-group my-2">
                                         <label for="">Product Image</label><br>
                                         <img style="width:250px;" id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
-                                        <input class="form-control" type="file" id="picture" name="picture[]" onchange="readURL1(this);" required multiple>
+                                        <input class="form-control" type="file" accept="image/*" id="picture" name="picture[]" onchange="readURL1(this);" required multiple>
                                     </div>
                                 </div>
                                 <div class="col-sm">

@@ -224,7 +224,7 @@
                     <div class="form-group p-2">
                         <label for="">Image</label>
                         <img id="img_tmp_edit" src="../images/thumbnail.png" style="width:100%;">
-                        <input class="form-control" type="file" name="material_image[]" onchange="readURL2(this);" multiple>
+                        <input class="form-control" type="file" accept="image/*" name="material_image[]" onchange="readURL2(this);" multiple>
                     </div>
 
                     <script>
@@ -339,14 +339,14 @@
                     {{-- <div class="form-group p-2">
                         <label for="">Image</label>
                         <img id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
-                        <input class="form-control" type="file" name="material_image" onchange="readURL3(this);"
+                        <input class="form-control" type="file" accept="image/*" name="material_image" onchange="readURL3(this);"
                             required>
                     </div> --}}
 
                     <div class="form-group pb-2 m-0">
                         <label for="">Image</label>
                         <img id="img_tmp_edit" src="../images/thumbnail.png" style="width:100%;">
-                        <input class="form-control" type="file" name="material_image[]" onchange="readURL2(this);" multiple>
+                        <input class="form-control" type="file" accept="image/*" name="material_image[]" onchange="readURL2(this);" multiple>
                     </div>
 
                     <script>
@@ -471,14 +471,14 @@
                     {{-- <div class="form-group p-2">
                         <label for="">Image</label>
                         <img id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
-                        <input class="form-control" type="file" name="material_image" onchange="readURL3(this);"
+                        <input class="form-control" type="file" accept="image/*" name="material_image" onchange="readURL3(this);"
                             required>
                     </div> --}}
 
                     <div class="form-group pb-2 m-0">
                         <label for="">Image</label>
                         <img id="img_tmp" src="../images/thumbnail.png" style="width:100%;">
-                        <input class="form-control" type="file" name="material_image[]" onchange="readURL3(this);" required multiple>
+                        <input class="form-control" type="file" accept="image/*" name="material_image[]" onchange="readURL3(this);" required multiple>
                     </div>
 
                     <script>
