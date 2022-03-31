@@ -728,12 +728,12 @@
                                     .draw();
                             });
                         } else {
-                            alert(data.message);
+                            //alert(data.message);
                         }
                     },
                     error: function(data) {
-                        console.log("error");
-                        console.log(data);
+                        //console.log("error");
+                        //console.log(data);
                         $(document).ready(function() {
                             sessionStorage.setItem("status", "error");
                             $('#divMain').load('/inventory');
@@ -827,8 +827,8 @@
                                     formData.get('material_name'),
                                     data.category_title,
                                     formData.get('consumable') == 1 ?
-                                    '<input type="checkbox" class="form-check-input" disabled checked>' :
-                                    '<input type="checkbox" class="form-check-input" disabled>',
+                                    '<input type="checkbox" class="d-flex flex-row" disabled checked>' :
+                                    '<input type="checkbox" class="d-flex flex-row" disabled>',
                                     '<span class="text-black-50">' + formData
                                     .get('stock_quantity') + '</span>',
                                     '<span class="text-black-50">' + formData
@@ -942,7 +942,9 @@
                                     formData.get('material_code'),
                                     formData.get('material_name'),
                                     data.category_title,
-                                    data.material.consumable === 1 ? "yes" : "no",
+                                    data.material.consumable === 1 ? 
+                                    '<input type="checkbox" class="d-flex flex-row" disabled checked>' :
+                                    '<input type="checkbox" class="d-flex flex-row" disabled>',
                                     '<span class="text-black-50">' + formData
                                     .get('stock_quantity') + '</span>',
                                     '<span class="text-black-50">' + formData
