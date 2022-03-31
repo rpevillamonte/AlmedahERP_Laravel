@@ -760,7 +760,7 @@
                                 <label for="">Product Image</label><br>
                                 <img style="width:250px;" id="img_tmp" src="../images/thumbnail.png"
                                     style="width:100%;">
-                                <input class="form-control" type="file" id="picture" name="picture[]"
+                                <input class="form-control" accept="image/*" type="file" id="picture" name="picture[]"
                                     onchange="readURL1(this);" required multiple>
                             </div>
                         </div>
@@ -941,12 +941,12 @@
                         <div class="row">
                             <div class="col">
                                 <label for="manufacturing_date">Manufacturing Date</label>
-                                <input type="date" name="manufacturing_date" id="manufacturing_date"
+                                <input type="date" min="<?php echo date("Y-m-d"); ?>" name="manufacturing_date" id="manufacturing_date"
                                     class="form-control">
                             </div>
                             <div class="col">
                                 <label for="product_pulled_off_market">Product Pulled off Market</label>
-                                <input type="date" name="product_pulled_off_market" id="product_pulled_off_market"
+                                <input type="date" min="<?php echo date("Y-m-d"); ?>" name="product_pulled_off_market" id="product_pulled_off_market"
                                     class="form-control">
                             </div>
                         </div>
