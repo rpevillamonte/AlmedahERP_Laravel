@@ -32,6 +32,11 @@
         </div>
     </div>
 </nav>
+<div id="operation_success_msg" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="operation_alert_msg" class="alert alert-danger" style="display: none;">
+</div>
 <form action="#" method="POST" id="operationModuleForm" class="create">
     @csrf
     @method('PATCH')

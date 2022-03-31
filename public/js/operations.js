@@ -6,6 +6,9 @@
     });
  */
 
+var OPERATION_SUCCESS = "#operation_success_msg";
+var OPERATION_FAIL = "#operation_alert_msg";
+
 $(document).ready(function () {
     $("#table_operations").DataTable();
     $(".om").keyup(onChangeFunction);
@@ -16,6 +19,19 @@ function onChangeFunction() {
 }
 
 $("#operationModuleSave").click(function () {
+    if (!$("#Operation_Name").val()) {
+        slideAlert("Please provide a name for this operation.", OPERATION_FAIL);
+        return;
+    } else if (!$("#Default_WorkCenter").val()) {
+        slideAlert("A default work center is required.", OPERATION_FAIL);
+        return;
+    }
+
+    if (!$("#Description").val()) {
+        slideAlert("Please fill up the Description.", OPERATION_FAIL);
+        return;
+    }
+
     $("#operationModuleForm").submit();
 });
 

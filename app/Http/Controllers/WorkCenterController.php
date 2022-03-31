@@ -52,15 +52,23 @@ class WorkCenterController extends Controller
      */
     public function store(Request $request)
     {
-        $wc_code = "MOUNT-"; //initialize prefix "mount-"
         $form_data = $request->input();
+        $last_wc = WorkCenter::latest()->first();
+        $next_id = $last_wc ? $last_wc->id + 1 : 1; //duplicate checker || Current ID + 1
+        $wc_code = "MOUNT-"; //initialize prefix "mount-"
+
+        $work_center = new WorkCenter(); //inserting all the necessary data/value needed
+
         $wc_label = $form_data['wc_label'];
         $words = explode(' ', $wc_label);
-        $wc_code .= strtoupper($words[0]); //get wc_label first word
+        //$wc_code .= strtoupper($words[0]); //get wc_label first word
+
+        $wc_code .= strtoupper($words[0]). "-" . str_pad($next_id, 3, "0", STR_PAD_LEFT);
+
         $wc_type = $form_data['wc_type'];
         $duration = $form_data["duration"];
 
-        $work_center = new WorkCenter(); //inserting all the necessary data/value needed
+
         $work_center->wc_code = $wc_code;
         $work_center->wc_label = $wc_label;
         $work_center->wc_type = $wc_type;
