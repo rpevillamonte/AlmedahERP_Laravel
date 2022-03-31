@@ -53,6 +53,12 @@
     </div>
 </nav>
 
+<div id="routing_success_msg" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="routing_alert_msg" class="alert alert-danger" style="display: none;">
+</div>
+
 <form action="{{ route('routing.update', ['routing' => $route->id]) }}" method="POST" id="routingsForm" class="create">
     @csrf
     @method('PATCH')

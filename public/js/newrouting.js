@@ -83,7 +83,7 @@ $("#routingsForm").submit(function () {
             "X-CSRF-TOKEN": CSRF_TOKEN,
         },
     });
-    // create a routing first....
+
     var routingData = new FormData(this);
 
     var operationsData = {};
@@ -102,18 +102,16 @@ $("#routingsForm").submit(function () {
 
     $.ajax({
         type: "POST",
-        url: $("#routingsForm").attr("action"),
-        async: false, //needed for retrieving routing_id from url
+        url: $(this).attr("action"),
         data: routingData,
-        cache: false,
         contentType: false,
         processData: false,
         success: function (response) {
+            slideAlert('Record saved.', ROUTING_SUCCESS);
             RoutingTable();
         },
     });
-    //routingId = tempId;
-    // ..then input the routing operations
+
 
     return false;
 });

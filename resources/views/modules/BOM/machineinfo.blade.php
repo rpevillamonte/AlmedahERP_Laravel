@@ -25,7 +25,7 @@
                         onclick="loadmachine();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-info btn" style="display: none;" onclick="" id="saveMMBtn">Save</button>
+                    <button class="btn btn-info btn" onclick="" id="saveMMBtn">Save</button>
                 </li>
                 <li class="nav-item li-bom">
                     <form action="{{ route('machinemanual.destroy', ['machinemanual' => $manual->id]) }}"
@@ -40,6 +40,12 @@
         </div>
     </div>
 </nav>
+
+<div id="mm_success_message" class="alert alert-success" style="display: none;">
+</div>
+
+<div id="mm_alert_message" class="alert alert-danger" style="display: none;">
+</div>
 
 <form action="{{ route('machinemanual.update', ['machinemanual' => $manual->id]) }}" id="mmForm" method="POST">
     @csrf
