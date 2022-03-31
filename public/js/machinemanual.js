@@ -1,13 +1,13 @@
 var MM_SUCCESS = "#mm_success_message";
 var MM_FAIL = "#mm_alert_message";
 
-// $(document).ready(function () {
-//     $(".mm").keyup(onChangeFunction);
-// });
+$(document).ready(function () {
+    $(".mm").keyup(onChangeFunction);
+});
 
-// function onChangeFunction() {
-//     $("#saveMMBtn").css("display", "inline-block");
-// }
+function onChangeFunction() {
+    $("#saveMMBtn").css("display", "inline-block");
+}
 
 $("#mmDelete").click(function () {
     $("#deleteMM").submit();
@@ -34,9 +34,9 @@ $("#deleteMM").submit(function () {
 
 $("#saveMMBtn").click(function () {
     var fields = document.getElementsByClassName("mm");
-    for(var i=0; i<fields.length; i++) {
-        if(fields.item(i).value == '') {
-            slideAlert('Empty field/s have been detected.', MM_FAIL);
+    for (var i = 0; i < fields.length; i++) {
+        if (fields.item(i).value == "") {
+            slideAlert("Empty field/s have been detected.", MM_FAIL);
             return false;
         }
     }
@@ -55,7 +55,7 @@ $("#mmForm").submit(function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            slideAlert('Record saved!', MM_SUCCESS);
+            slideAlert("Record saved!", MM_SUCCESS);
             loadmachine();
         },
     });

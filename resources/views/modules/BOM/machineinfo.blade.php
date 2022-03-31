@@ -25,7 +25,7 @@
                         onclick="loadmachine();">Cancel</button>
                 </li>
                 <li class="nav-item li-bom">
-                    <button class="btn btn-info btn" onclick="" id="saveMMBtn">Save</button>
+                    <button class="btn btn-info btn" style="display: none;" onclick="" id="saveMMBtn">Save</button>
                 </li>
                 <li class="nav-item li-bom">
                     <form action="{{ route('machinemanual.destroy', ['machinemanual' => $manual->id]) }}"
@@ -119,7 +119,7 @@
             </div>
             <div class="form-group col-md-12">
                 <label for="Machine_Description">Machine Description</label>
-                <textarea id="Machine_Description" class="summernote mm" name="Machine_Description"
+                <textarea id="Machine_Description" class="form-control mm" name="Machine_Description"
                     required>{{ $manual->machine_description }}</textarea>
             </div>
         </div>
