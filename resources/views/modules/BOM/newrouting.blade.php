@@ -258,15 +258,14 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="Default_WorkCenter">Default WorkCenter</label>
-                                <select name="Default_WorkCenter" id="Default_WorkCenter"
-                                    class="form-control selectpicker" data-live-search="true">
+                                <label for="Default_WorkCenter">Default Work Center</label>
+                                <input type="text" name="Default_WorkCenter" id="Default_WorkCenter"
+                                    class="form-control" list="work_center_list">
+                                <datalist id="work_center_list">
                                     @foreach ($work_centers as $wc)
-                                        <option data-subtext="{{ $wc->wc_code }}" value="{{ $wc->wc_code }}">
-                                            {{ $wc->wc_label }}</option>
+                                        <option value="{{ $wc->wc_code }}">{{ $wc->wc_label }}</option>
                                     @endforeach
-                                </select>
-
+                                </datalist>
                             </div>
                         </div>
                         <div class="form-group col-md-12">
