@@ -1162,7 +1162,6 @@
                 "Machine Manual",
                 "Work Center",
                 "Work Order",
-                "Machine Manual",
                 "Employee",
                 "Roles",
                 "Department",
