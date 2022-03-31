@@ -64,7 +64,7 @@ $("#saveRouting").click(function () {
     if (!$("#Routing_Name").val()) {
         slideAlert("Please provide a name for this routing.", ROUTING_FAIL);
         return;
-    } else if (!$("#operation1").val()) {
+    } else if (!$("#description1").val()) {
         slideAlert("Please select an Operation.", ROUTING_FAIL);
         return;
     }
@@ -107,11 +107,10 @@ $("#routingsForm").submit(function () {
         contentType: false,
         processData: false,
         success: function (response) {
-            slideAlert('Record saved.', ROUTING_SUCCESS);
+            slideAlert("Record saved.", ROUTING_SUCCESS);
             RoutingTable();
         },
     });
-
 
     return false;
 });

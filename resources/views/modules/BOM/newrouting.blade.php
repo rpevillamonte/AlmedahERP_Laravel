@@ -89,7 +89,7 @@
                     <td class="mr-qty-input">
                         <select name="operation" id="operation1" data-live-search="true"
                             class="form-control operation_select selectpicker" onchange="operationSearch(1);">
-                            <option value="non">No Operation Selected.</option>
+                            <option value="0">No Operation Selected.</option>
                             @foreach ($operations as $operation)
                                 <option data-subtext="{{ $operation->operation_id }}"
                                     value="{{ $operation->operation_id }}">
