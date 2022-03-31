@@ -109,6 +109,28 @@ class WorkCenterController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $form_data = $request->input();
+        $wc_type = $form_data['wc_type'];
+        $duration = $form_data["duration"];
+
+        $work_center = WorkCenter::find($id); //inserting all the necessary data/value needed
+        $work_center->wc_type = $wc_type;
+        $work_center->duration = $duration;
+        $work_center->production_capacity = $form_data['prod_cost'];
+        $work_center->electricity_cost = $form_data['elec_cost'];
+        $work_center->consumable_cost = $form_data['con_cost'];
+        $work_center->rent_cost = $form_data['rent_cost'];
+        $work_center->wages = $form_data['wages'];
+        $work_center->hour_rate = $form_data['hour_rate'];
+
+        if(isset($form_data['employee_id_set'])){ //checks if theres employee ID
+            $work_center->employee_id_set = $form_data['employee_id_set'];
+        }
+        if(isset($form_data['machine_code'])){ //checks if theres machine_code
+            $work_center->machine_code = $form_data['machine_code'];
+        }
+
+        $work_center->save();
     }
 
     /**

@@ -37,7 +37,9 @@
 
 <div id="wc_alert_msg" class="alert alert-danger" style="display: none;">
 </div>
-<form action="" method="post" id="newworkcenter" class="create">
+<form action="{{ route('workcenter.update', ['workcenter' => $wc->id]) }}" method="post" id="newworkcenter" class="create">
+    @csrf
+    @method('PATCH')
     <br>
     <div class="container">
         <form id="editworkcenter" name="editworkcenter" role="form">
@@ -45,16 +47,16 @@
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Work_Center_Code">Work Center Code</label>
+                        <label for="Work_Center_Code">Work Center Code</label>
 
-                        <input type="text" name="edit_Work_Center_Code" id="edit_Work_Center_Code"
+                        <input type="text" name="Work_Center_Code" id="Work_Center_Code"
                             value="{{ $wc->wc_code }}" class="form-control" disabled>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Work_Center_label">Work Center Label</label>
-                        <input type="text" name="edit_Work_Center_label" id="edit_Work_Center_label"
+                        <label for="Work_Center_label">Work Center Label</label>
+                        <input type="text" name="Work_Center_label" id="Work_Center_label"
                             value="{{ $wc->wc_label }}" class="form-control" readonly>
                     </div>
                 </div>
@@ -179,43 +181,43 @@
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Production_Capacity">Production Capacity</label>
-                        <input type="number" min="1" name="edit_Production_Capacity" id="edit_Production_Capacity"
+                        <label for="Production_Capacity">Production Capacity</label>
+                        <input type="number" min="1" name="Production_Capacity" id="Production_Capacity"
                             value="{{ $wc->production_capacity }}" class="form-control">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Electricity_Cost">Electricity Cost</label>
-                        <input type="number" min="1" name="edit_Electricity_Cost" id="edit_Electricity_Cost"
+                        <label for="Electricity_Cost">Electricity Cost</label>
+                        <input type="number" min="1" name="Electricity_Cost" id="Electricity_Cost"
                             value="{{ $wc->electricity_cost }}" class="form-control hour_rate_compu">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Consumable_Cost">Consumable Cost</label>
-                        <input type="number" min="1" name="edit_Consumable_Cost" id="edit_Consumable_Cost"
+                        <label for="Consumable_Cost">Consumable Cost</label>
+                        <input type="number" min="1" name="Consumable_Cost" id="Consumable_Cost"
                             value="{{ $wc->consumable_cost }}" class="form-control hour_rate_compu">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Rent_Cost">Rent Cost</label>
-                        <input type="number" min="1" name="edit_Rent_Cost" id="edit_Rent_Cost"
+                        <label for="Rent_Cost">Rent Cost</label>
+                        <input type="number" min="1" name="Rent_Cost" id="Rent_Cost"
                             value="{{ $wc->rent_cost }}" class="form-control hour_rate_compu">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Wages">Wages</label>
-                        <input type="number" min="1" name="edit_Wages" id="edit_Wages" value="{{ $wc->wages }}"
+                        <label for="Wages">Wages</label>
+                        <input type="number" min="1" name="Wages" id="Wages" value="{{ $wc->wages }}"
                             class="form-control hour_rate_compu">
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-group">
-                        <label for="edit_Hour_rate">Hour Rate</label>
-                        <input type="number" value="0" min="0" name="edit_Hour_rate" id="edit_Hour_rate"
+                        <label for="Hour_rate">Hour Rate</label>
+                        <input type="number" value="0" min="0" name="Hour_rate" id="Hour_rate"
                             value="{{ $wc->hour_rate }}" class="form-control" readonly>
                     </div>
                 </div>
