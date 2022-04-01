@@ -108,7 +108,7 @@
             </div>
             <div class="form-group col-md-12">
                 <label for="Machine_Description">Machine Description</label>
-                <textarea id="Machine_Description" class="mm summernote" name="Machine_Description"></textarea>
+                <textarea id="Machine_Description" class="mm form-control" name="Machine_Description"></textarea>
             </div>
         </div>
     </div>
