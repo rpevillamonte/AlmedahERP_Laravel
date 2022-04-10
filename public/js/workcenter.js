@@ -4,37 +4,65 @@ var WC_FAIL = "#wc_alert_msg";
 function checkWC() {
     msg = 'Work Center created!';
     alert = WC_SUCCESS;
-    if(!$("#Work_Center_label").val()) {
-        msg = "No label indicated for work center.";
+
+    flag = $("#Work_Center_label").val() === '' || $("#wc_select").val() === 'N/A';
+
+    if (flag) {
         alert = WC_FAIL;
-    } 
-    if($("#wc_select").val() === 'N/A') {
-        msg = "No type indicated for work center."; 
+        if ($("#Work_Center_label").val() === '') msg = "No label indicated for work center.";
+        if ($("#wc_select").val() === 'N/A') msg = "No type indicated for work center.";
+    }
+
+    if ($("#wc_select").val().includes("Human") && !checkEmployees()) {
+        msg = "Incomplete data provided for employees.";
         alert = WC_FAIL;
-    } 
-    if(!$("#Production_Capacity").val()) {
-        msg = "No indicated production capacity."; 
+    }
+
+    if ($("#wc_select").val().includes("Machine") && !$("#Available_Machine").val()) {
+        msg = "Must indicate a Machine for this Work Center.";
         alert = WC_FAIL;
-    } 
+    }
+
     $(".hour_rate_compu").each(function () {
         // element == this
-        if($(this).val() === '0') {
+        if ($(this).val() === '0') {
             msg = "Computation of hour rate is incomplete."
             alert = WC_FAIL;
-            return false;
         }
     });
+
     slideAlert(msg, alert);
     return (alert === WC_SUCCESS) ? true : false;
 
 }
 
-$("form[name='deleteWC']").submit(function () { 
+function checkEmployees() {
+    var check = true;
+    $(".wc_employee").each(function () {
+        // element == this
+        if (!$(this).val()) {
+            check = false;
+        }
+    });
+    console.log(check);
+    return check;
+}
+
+$("#wc_select").change(function (e) { 
+
+    var choice = $(this).val();
+    if (choice === 'N/A') resetTypeTable();
+    else if (choice === "Human") resetTypeTable("EMPLOYEE");
+    else if (choice === "Machine") resetTypeTable("MACHINE");
+    
+});
+
+$("form[name='deleteWC']").submit(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN,
         }
-    }); 
+    });
     $.ajax({
         type: "DELETE",
         url: $(this).attr('action'),
@@ -50,13 +78,13 @@ $("form[name='deleteWC']").submit(function () {
 
 $("#save_wc").click(function () {
     $.ajaxSetup({
-       headers: {
-           'X-CSRF-TOKEN': CSRF_TOKEN, //protection :>
-       }
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN, //protection :>
+        }
     });
 
     var flag = checkWC();
-    if(!flag) {return;}
+    if (!flag) { return; }
 
     var formData = new FormData();
     formData.append('wc_label', $("#Work_Center_label").val());
@@ -76,22 +104,19 @@ $("#save_wc").click(function () {
 
     formData.append('duration', time);
 
-    if($("#wc_select").val() == "Human"){ //to check if wc_type is human
+    if ($("#wc_select").val().includes("Human")) {
         var employee_id_set = {};
-        for(let i=1; i <= $("#newemployee-input-rows tr").length; i++) {
+        for (let i = 1; i <= $("#newemployee-input-rows tr").length; i++) {
             let employee_data = $(`#employee-${i}`);
             let emp_id = employee_data.find("#Employee_name").val();
             employee_id_set[i] = {
-                'employee_id' : emp_id
+                'employee_id': emp_id
             }
         }
         formData.append('employee_id_set', JSON.stringify(employee_id_set));
     }
-    else if($("#wc_select").val() == "Machine"){ //to check if wc_type is machine
-        formData.append('machine_code', $("#Available_Machine").val());
-    }
-    else if($("#wc_select").val() == "Human and Machine"){ //to check if wc_type is human and machine
-        formData.append('employee_id', $("#Employee_name").val());
+
+    if ($("#wc_select").val().includes("Machine")) { //to check if wc_type is machine
         formData.append('machine_code', $("#Available_Machine").val());
     }
 
@@ -111,7 +136,7 @@ $("#save_wc").click(function () {
 $("#Available_Machine").change(function () {
     var machine_code = $(this).val(); //jqvalget
 
-    if(machine_code == "n/a"){ //to remove values if there's no option
+    if (machine_code == "n/a") { //to remove values if there's no option
         $("#machine_process").val(null);
         $("#setup_time").val(null);
         $("#Running_time").val(null);
@@ -130,31 +155,72 @@ $("#Available_Machine").change(function () {
     });
 });
 
-$(".hour_rate_compu").change(function (e) { 
-    var sum = parseFloat($("#Electricity_Cost").val())+parseFloat($("#Consumable_Cost").val())+parseFloat($("#Rent_Cost").val())+parseFloat($("#Wages").val());
+$(".hour_rate_compu").change(function (e) {
+    var sum = parseFloat($("#Electricity_Cost").val()) + parseFloat($("#Consumable_Cost").val()) + parseFloat($("#Rent_Cost").val()) + parseFloat($("#Wages").val());
     $("#Hour_rate").val(sum);
     e.preventDefault();
-    
+
 });
 
-function addRownewEmployee(){
-    if($('#no-data')[0]){
+function resetTypeTable(choice = 'DEFAULT') {
+    if (choice == "DEFAULT") {
+        resetWCEmployees();
+        resetWCMachine();
+    }
+    else if (choice == "MACHINE") {
+        resetWCEmployees();
+    }
+    else if (choice = "EMPLOYEE") {
+        resetWCMachine();
+    }
+}
+
+function resetWCEmployees() {
+    $(".newemployee-row").remove();
+    $('#newemployee-input-rows').append(
+        `
+        <tr id="employee-1" class="newemployee-row">
+            <td id="mr-code-input" class="mr-code-input"><input type="text" value=""
+                    name="Employee_name" list="employees" id="Employee_name" class="form-control wc_employee">
+            </td>
+            <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
+                    name="Employee_hours" id="Employee_hours" class="form-control wc_employee"></td>
+            <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
+                    name="Employee_minutes" id="Employee_minutes" class="form-control wc_employee"></td>
+            <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
+                    name="Employee_seconds" id="Employee_seconds" class="form-control wc_employee"></td>
+            <td>
+                <a id="" class="btn delete-btn" href="#" role="button">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+        `);
+}
+
+function resetWCMachine() {
+    $('.wc_machine').val(null);
+    $("#Available_Machine").val('n/a');
+}
+
+function addRownewEmployee() {
+    if ($('#no-data')[0]) {
         deleteItemRow($('#no-data').parents('tr'));
     }
     //let lastRow = $('#newemployee-input-rows tr:last');
     let nextID = $("#newemployee-input-rows tr").length + 1;
     $('#newemployee-input-rows').append(
-    `
-    <tr id="employee-${nextID}">
+        `
+    <tr id="employee-${nextID}" class="newemployee-row">
         <td id="mr-code-input" class="mr-code-input"><input type="text" value=""
-                name="Employee_name" list="employees" id="Employee_name" class="form-control">
+                name="Employee_name" list="employees" id="Employee_name" class="form-control wc_employee">
         </td>
         <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
-                name="Employee_hours" id="Employee_hours" class="form-control"></td>
+                name="Employee_hours" id="Employee_hours" class="form-control wc_employee"></td>
         <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
-                name="Employee_minutes" id="Employee_minutes" class="form-control"></td>
+                name="Employee_minutes" id="Employee_minutes" class="form-control wc_employee"></td>
         <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
-                name="Employee_seconds" id="Employee_seconds" class="form-control"></td>
+                name="Employee_seconds" id="Employee_seconds" class="form-control wc_employee"></td>
         <td>
             <a id="" class="btn delete-btn" href="#" role="button">
                 <i class="fa fa-trash" aria-hidden="true"></i>
