@@ -515,6 +515,9 @@ Route::get('/stock', function () {
 // Route::get('/stock', [StockMovesController::class, 'index']);
 
 /**STOCK ENTRY ROUTES */
+Route::get('/stockentry', function () {
+    return view('modules.manufacturing.stockentry');
+});
 Route::get('/openNewStockEntry', function () {
     return view('modules.manufacturing.NewStockEntry');
 });
