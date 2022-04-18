@@ -605,8 +605,8 @@ Route::put('/update-employee/{id}', [EmployeeController::class, 'update']);
 
 
 /**WORK CENTER ROUTES **/
-Route::resource('/workcenter', WorkCenterController::class);
 Route::get('/newworkcenter', [WorkCenterController::class, 'routingCreateForm']);
+Route::resource('/workcenter', WorkCenterController::class);
 
 /**WORK ORDER ROUTES*/
 Route::get('/workorder', [WorkOrderController::class, 'index']);
