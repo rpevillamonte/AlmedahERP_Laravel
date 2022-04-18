@@ -77,6 +77,7 @@
                     <table class="table border-bottom table-hover table-bordered" id="operations">
                         <thead class="border-top border-bottom bg-light">
                             <tr class="text-muted">
+                                <td class="text-center">Employee ID</td>
                                 <td class="text-center">Employee Name</td>
                                 <td class="text-center">Hours</td>
                                 <td class="text-center">Minutes</td>
@@ -93,8 +94,11 @@
                                 @endforeach
                             </datalist>
                             <tr id="employee-1" class="newemployee-row">
-                                <td id="mr-code-input" class="mr-code-input"><input type="text"
-                                        name="Employee_name" list="employees" id="Employee_name" class="form-control wc_employee">
+                                <td id="mr-code-input" class="mr-code-input e_id"><input type="text" name="Employee_id"
+                                    list="employees" id="Employee_id" class="form-control wc_employee id_field">
+                                </td>
+                                <td class="mr-qty-input e_name" class="mr-code-input"><input type="text" value=""
+                                        name="Employee_name" id="Employee_name" class="form-control wc_employee name_field">
                                 </td>
                                 <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0" value=""
                                         name="Employee_hours" id="Employee_hours" class="form-control wc_employee"></td>
@@ -146,7 +150,8 @@
                             <tbody class="" id="newmachine-input-rows">
                                 <tr data-id="${nextID}">
                                     <td id="mr-code-input" class="mr-code-input"><input type="text" value="" readonly
-                                            name="machine_process" id="machine_process" class="form-control wc_machine"></td>
+                                            name="machine_process" id="machine_process" class="form-control wc_machine">
+                                    </td>
                                     <td style="width: 10%;" class="mr-qty-input"><input type="text" value="" readonly
                                             name="setup_time" id="setup_time" class="form-control wc_machine">
                                     <td style="width: 10%;" class="mr-qty-input"><input type="text" value="" readonly
