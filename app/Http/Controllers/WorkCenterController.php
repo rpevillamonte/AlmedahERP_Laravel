@@ -99,7 +99,7 @@ class WorkCenterController extends Controller
     {
         //
         $wc = WorkCenter::find($id);
-        $machine = $wc->machine_manual;
+        $machine = str_contains($wc->wc_type, 'Machine') ? $wc->machine_manual : null;
         $employees = Employee::all();
         $machines_manual = MachinesManual::all();
         return view('modules.BOM.editworkcenter',
@@ -116,6 +116,10 @@ class WorkCenterController extends Controller
     public function update(Request $request, $id)
     {
         //
+        
+    }
+
+    public function updateWC(Request $request, $id) {
         $form_data = $request->input();
         $wc_type = $form_data['wc_type'];
         $duration = $form_data["duration"];

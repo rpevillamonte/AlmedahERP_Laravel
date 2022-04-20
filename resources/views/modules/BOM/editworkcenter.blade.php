@@ -40,10 +40,9 @@ $i = 1;
 
 <div id="wc_alert_msg" class="alert alert-danger" style="display: none;">
 </div>
-<form action="{{ route('workcenter.update', ['workcenter' => $wc->id]) }}" method="post" id="newworkcenter"
+<form action="/update-wc/{{ $wc->id }}" method="post" id="newworkcenter"
     class="create">
     @csrf
-    @method('PATCH')
     <br>
     <div class="container">
         <div class="row">
@@ -99,7 +98,7 @@ $i = 1;
                             </datalist>
                             @if (!is_null($wc->employee_id_set))
                                 @foreach (json_decode($wc->employee_id_set) as $emp)
-                                    <tr id="employee-<?php $i; ?>" class="newemployee-row">
+                                    <tr id="employee-<?php $i; ?>" class="wc_emp_data">
                                         <td id="mr-code-input" class="mr-code-input"><input type="text"
                                                 value="{{ $emp->employee_id }}" name="Employee_id" list="employees"
                                                 id="Employee_id" class="wc_employee form-control">
@@ -127,7 +126,7 @@ $i = 1;
                                     @endphp
                                 @endforeach
                             @else
-                                <tr id="employee-1" class="newemployee-row">
+                                <tr id="employee-1" class="wc_emp_data">
                                     <td id="mr-code-input" class="mr-code-input"><input type="text" name="Employee_id"
                                             list="employees" id="Employee_id" class="form-control wc_employee">
                                     </td>
@@ -166,8 +165,14 @@ $i = 1;
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="Available_Machine">Available Machine</label>
-                                <select class="form-control" id="Available_Machine"
-                                    value="{{ $wc->machine_code }}">
+                                <select class="form-control" id="Available_Machine">
+                                    <option value="{{ $wc->machine_code ?? 'n/a' }}">
+                                        @if (is_null($wc->machine_code))
+                                            No Option
+                                        @else
+                                            {{ $wc->machine_manual->machine_name }}
+                                        @endif
+                                    </option>
                                     @foreach ($machines_manuals as $machine)
                                         <option value="{{ $machine->machine_code }}">
                                             {{ $machine->machine_name }}
@@ -189,16 +194,22 @@ $i = 1;
                             <tbody class="" id="newmachine-input-rows">
                                 <tr data-id="${nextID}">
                                     <td id="mr-code-input" class="mr-code-input">
-                                        <input type="text" value="{{ $machine->machine_process ?? ''}}" readonly
+                                        <input type="text" value="@if (!is_null($machine))
+                                            {{ $machine->machine_process }}
+                                        @endif" readonly
                                             name="machine_process" id="machine_process"
                                             class="form-control wc_machine">
                                     </td>
                                     <td style="width: 10%;" class="mr-qty-input">
-                                        <input type="number" value="{{ $machine->setup_time ?? ''}}" readonly
+                                        <input type="number" value="@if (!is_null($machine))
+                                            {{ $machine->setup_time }}
+                                        @endif" readonly
                                             name="setup_time" id="setup_time" class="form-control wc_machine">
                                     </td>
                                     <td style="width: 10%;" class="mr-qty-input">
-                                        <input type="text" value="{{ $machine->running_time ?? ''}}" readonly
+                                        <input type="number" value="@if (!is_null($machine))
+                                            {{ $machine->running_time }}
+                                        @endif" readonly
                                             name="Running_time" id="Running_time" class="form-control wc_machine">
                                     </td>
 

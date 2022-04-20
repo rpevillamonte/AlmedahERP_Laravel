@@ -3,13 +3,17 @@ var WC_FAIL = "#wc_alert_msg";
 
 $(document).ready(function () {
     empSearchFunction();
+    $(".wc_machine").each(function() {
+        $this = $(this);
+        $this.val($this.val().trim());
+    });
 });
 
 function empSearchFunction() {
-    $(".id_field").each(function() {
-        $(this).change(function() {
+    $(".id_field").each(function () {
+        $(this).change(function () {
             // if($(this).val() !== $(".id_field").val()) {
-                
+
             // }
             $.ajaxSetup({
                 headers: {
@@ -78,13 +82,13 @@ function checkEmployees() {
     return check;
 }
 
-$("#wc_select").change(function (e) { 
+$("#wc_select").change(function (e) {
 
     var choice = $(this).val();
     if (choice === 'N/A') resetTypeTable();
     else if (choice === "Human") resetTypeTable("EMPLOYEE");
     else if (choice === "Machine") resetTypeTable("MACHINE");
-    
+
 });
 
 $("form[name='deleteWC']").submit(function () {
@@ -106,67 +110,71 @@ $("form[name='deleteWC']").submit(function () {
     return false;
 });
 
-$("#save_wc").click(function () {
-    if (checkWC()) {
-        $("#newworkcenter").submit();
-    }
-});
+function getEmployeeSet() {
+    var employee_id_set = {};
+    let i = 1;
+    $(".wc_emp_data").each(function () {
+        let employee_data = $(this);
+        let emp_id = employee_data.find("#Employee_id").val();
+        employee_id_set[i] = {
+            'employee_id': emp_id,
+            'e_hours': employee_data.find("#Employee_hours").val(),
+            'e_min': employee_data.find("#Employee_minutes").val(),
+            'e_sec': employee_data.find("#Employee_seconds").val(),
+        }
+        i++;
+    });
+    return employee_id_set;
+}
 
-$("#newworkcenter").submit(function() {
+$("#save_wc").click(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': CSRF_TOKEN, //protection :>
         }
     });
 
-    var formData = new FormData();
-    formData.append('wc_label', $("#Work_Center_label").val());
-    formData.append('wc_type', $("#wc_select").val());
-    formData.append('prod_cost', $("#Production_Capacity").val());
-    formData.append('elec_cost', $("#Electricity_Cost").val());
-    formData.append('con_cost', $("#Consumable_Cost").val());
-    formData.append('rent_cost', $("#Rent_Cost").val());
-    formData.append('wages', $("#Wages").val());
-    formData.append('hour_rate', $("#Hour_rate").val());
-
-    var hrs = document.getElementById("Employee_hours").value;
-    var mins = document.getElementById("Employee_minutes").value;
-    var sec = document.getElementById("Employee_seconds").value;
-
-    var time = hrs + ":" + mins + ":" + sec;
-
-    formData.append('duration', time);
-
-    if ($("#wc_select").val().includes("Human")) {
-        var employee_id_set = {};
-        for (let i = 1; i <= $("#newemployee-input-rows tr").length; i++) {
-            let employee_data = $(`#employee-${i}`);
-            let emp_id = employee_data.find("#Employee_id").val();
-            employee_id_set[i] = {
-                'employee_id': emp_id,
-                'e_hours': employee_data.find("#Employee_hours").val(),
-                'e_min' : employee_data.find("#Employee_minutes").val(),
-                'e_sec' : employee_data.find("#Employee_seconds").val(),
+    if (checkWC()) {
+        var formData = new FormData();
+        formData.append('wc_label', $("#Work_Center_label").val());
+        formData.append('wc_type', $("#wc_select").val());
+        formData.append('prod_cost', $("#Production_Capacity").val());
+        formData.append('elec_cost', $("#Electricity_Cost").val());
+        formData.append('con_cost', $("#Consumable_Cost").val());
+        formData.append('rent_cost', $("#Rent_Cost").val());
+        formData.append('wages', $("#Wages").val());
+        formData.append('hour_rate', $("#Hour_rate").val());
+    
+        var hrs = document.getElementById("Employee_hours").value;
+        var mins = document.getElementById("Employee_minutes").value;
+        var sec = document.getElementById("Employee_seconds").value;
+    
+        var time = hrs + ":" + mins + ":" + sec;
+    
+        formData.append('duration', time);
+    
+        if ($("#wc_select").val().includes("Human")) {
+            formData.append('employee_id_set', JSON.stringify(getEmployeeSet()));
+        }
+    
+        if ($("#wc_select").val().includes("Machine")) {
+            formData.append('machine_code', $("#Available_Machine").val());
+        }
+    
+        $.ajax({ //jqajax & jqattrget
+            type: $("#newworkcenter").attr("method"),
+            url: $("#newworkcenter").attr("action"),
+            data: formData,
+            contentType: false, //to successfully store data in laravel
+            processData: false,
+            success: function (response) {
+                console.log("success");
+                loadworkcenterlist();
             }
-        }
-        formData.append('employee_id_set', JSON.stringify(employee_id_set));
+        });
     }
 
-    if ($("#wc_select").val().includes("Machine")) { 
-        formData.append('machine_code', $("#Available_Machine").val());
-    }
-
-    $.ajax({ //jqajax & jqattrget
-        type: $("#newworkcenter").attr("method"),
-        url: $("#newworkcenter").attr("action"),
-        data: formData,
-        contentType: false, //to successfully store data in laravel
-        processData: false,
-        success: function (response) {
-            console.log("success");
-            loadworkcenterlist();
-        }
-    });
+ 
 })
 
 $("#Available_Machine").change(function () {
@@ -212,10 +220,10 @@ function resetTypeTable(choice = 'DEFAULT') {
 }
 
 function resetWCEmployees() {
-    $(".newemployee-row").remove();
+    $(".wc_emp_data").remove();
     $('#newemployee-input-rows').append(
         `
-        <tr id="employee-1" class="newemployee-row">
+        <tr id="employee-1" class="wc_emp_data">
             <td id="mr-code-input" class="mr-code-input e_id"><input type="text" name="Employee_id"
                 list="employees" id="Employee_id" class="form-control wc_employee id_field">
             </td>
@@ -250,7 +258,7 @@ function addRownewEmployee() {
     let nextID = $("#newemployee-input-rows tr").length + 1;
     $('#newemployee-input-rows').append(
         `
-    <tr id="employee-${nextID}" class="newemployee-row">
+    <tr id="employee-${nextID}" class="wc_emp_data">
         <td id="mr-code-input" class="mr-code-input e_id"><input type="text" name="Employee_id"
             list="employees" id="Employee_id" class="form-control wc_employee id_field">
         </td>

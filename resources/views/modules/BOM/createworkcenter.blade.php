@@ -93,7 +93,7 @@
                                     </option>
                                 @endforeach
                             </datalist>
-                            <tr id="employee-1" class="newemployee-row">
+                            <tr id="employee-1" class="wc_emp_data">
                                 <td id="mr-code-input" class="mr-code-input e_id"><input type="text" name="Employee_id"
                                     list="employees" id="Employee_id" class="form-control wc_employee id_field">
                                 </td>
@@ -128,7 +128,7 @@
                                 <label for="Available_Machine">Available Machine</label>
                                 <select class="form-control" id="Available_Machine">
                                     <option value="n/a">
-                                        <li>No Option</li>
+                                        No Option
                                     </option>
                                     @foreach ($machines_manuals as $machine)
                                         <option value="{{ $machine->machine_code }}">
