@@ -489,7 +489,7 @@
                                                 $('#item-group-modal').modal('toggle');
                                             }
                                         });
-<<<<<<< HEAD
+                                    });
                                     </script>
                                 </div>
                             </div>
@@ -662,7 +662,7 @@
                                             &#43; Create a new UOM
                                         </option>
                                     </select>
-                                    <script type="text/javascript">
+                                    <script>
                                         $(document).ready(function() {
                                             $('.selectpicker1').selectpicker();
                                             $('#unit').on('change', function() {
@@ -673,13 +673,8 @@
                                             $('#add-unit-modal').on('shown.bs.modal', function() {
                                                 $(document).off('focusin.modal');
                                             });
-=======
-                                        $('#item-group-modal').on('shown.bs.modal', function() {
-                                            $(document).off('focusin.modal');
->>>>>>> c556c065ff545e77d1a99246ab6f71f24c658869
                                         });
-                                    });
-                                </script>
+                                    </script>
                             </div>
                         </div>
                         <div class="col-sm">
