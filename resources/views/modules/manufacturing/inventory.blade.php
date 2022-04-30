@@ -3,6 +3,7 @@
     function clickView(images){
         if(typeof images == 'string')
             images = JSON.parse(images);
+            console.log(images)
         $('#exampleImage').modal('show');
         $('.imageContainer').html('');
         for(i of images){

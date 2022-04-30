@@ -191,7 +191,7 @@
         populateMaterials(product.materials);
         $('#bar_code').val(product['bar_code']);
         $('#create-product-form').modal('show');
-        $('#img_tmp').attr('src', 'storage/' + product['picture']);
+        $('#img_tmp').attr('src', 'storage/' + JSON.parse(product['picture']));
         $('#item_code').show();
         // Picture field isn't required; an empty picture will
         // retain the old picture of a product
@@ -489,7 +489,7 @@
                                                 $('#item-group-modal').modal('toggle');
                                             }
                                         });
-<<<<<<< HEAD
+                                    });
                                     </script>
                                 </div>
                             </div>
@@ -580,20 +580,21 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-sm">
-                                            <div class="form-group">
-                                                <label for="reorderLevel">Minimum Order Quantity</label>
-                                                <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
+                                    <div id = "madeToStockFields">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <div class="form-group">
+                                                    <label for="reorderLevel">Minimum Order Quantity</label>
+                                                    <input type="number" name="reorderLevel" id="reorderLevel" class="form-control" placeholder="Ex. 100">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm">
-                                            <div class="form-group">
-                                                <label for="reorderQty">Maximum Order Quantity</label>
-                                                <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <div class="form-group">
+                                                    <label for="reorderQty">Maximum Order Quantity</label>
+                                                    <input type="number" name="reorderQty" id="reorderQty" class="form-control" placeholder="Ex. 100">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -609,7 +610,6 @@
                                             document.getElementById("reorderQty").setAttribute("required", "");
                                         } else {
                                             document.getElementById("madeToStockFields").setAttribute("hidden", "");
-                                            
                                             document.getElementById("stock_unit").value = 0;
                                             document.getElementById("reorderLevel").removeAttribute("required");
                                             document.getElementById("reorderQty").removeAttribute("required");
@@ -628,205 +628,6 @@
                                 }
                             }
                         </script>
-
-
-
-
-                        <div class="row">
-                            <div class="col-sm">
-                                <div class="form-group">
-                                    <label for="">Sales Price W.T.</label>
-                                    <input class="form-control" type="number" id="sales_price_wt" name="sales_price_wt" required placeholder="Ex. 1000">
-                                </div>
-                            </div>
-                            <div class="col-sm">
-                                <div class="form-group">
-                                    <label for="">Stock Quantity</label>
-                                    <input class="form-control" type="number" id="stock_unit" name="stock_unit" required placeholder="Ex. 1000">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm">
-                                <div class="form-group">
-                                    <label>Unit of Measurement</label>
-                                    <select id="unit" class="selectpicker1 form-control" name="unit" data-container="body" data-live-search="true" title="Select an Option" data-hide-disabled="true" required>
-                                        <option value="none" selected disabled hidden>
-                                            Select an Option
-                                        </option>
-                                        @foreach ($product_units as $unit)
-                                            <option value="{{ $unit->unit }}">{{ $unit->unit }}</option>
-                                        @endforeach
-                                        <option value="New">
-                                            &#43; Create a new UOM
-                                        </option>
-                                    </select>
-                                    <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            $('.selectpicker1').selectpicker();
-                                            $('#unit').on('change', function() {
-                                                if (this.value == "New") {
-                                                    $('#add-unit-modal').modal('toggle');
-                                                }
-                                            });
-                                            $('#add-unit-modal').on('shown.bs.modal', function() {
-                                                $(document).off('focusin.modal');
-                                            });
-=======
-                                        $('#item-group-modal').on('shown.bs.modal', function() {
-                                            $(document).off('focusin.modal');
->>>>>>> c556c065ff545e77d1a99246ab6f71f24c658869
-                                        });
-                                    });
-                                </script>
-                            </div>
-                        </div>
-                        <div class="col-sm">
-                            <div class="form-group">
-                                <label class=" text-nowrap align-middle">
-                                    Sales Supply Method
-                                </label>
-                                <select class="form-control sellable" id="saleSupplyMethod" required
-                                    name="saleSupplyMethod" onchange="changeSaleSupplyMethod()">
-                                    <option selected disabled>Please Select</option>
-                                    <option value="Made to Stock">Made to Stock</option>
-                                    <option value="To Produce">To Produce</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" id="product_selected" style="display: none;">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Product Subtype</label>
-                                <select class="form-control" name="product_category" required>
-                                    <option value="none" selected disabled hidden>
-                                        Select an Option
-                                    </option>
-                                    <option>Finished Product</option>
-                                    <option>Semi-finished </option>
-                                    <option>Component</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Procurement Method</label>
-                                <select id="procurement_method" class="form-control" name="procurement_method"
-                                    required>
-                                    <option value="none" selected disabled hidden>
-                                        Select an Option
-                                    </option>
-                                    <option value="buy">Buy</option>
-                                    <option value="produce">Produce</option>
-                                    <option value="buy and produce">Buy & Produce</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" id="made-to-selected" style="display: none;">
-                        <label for="">Made to ?</label>
-                        <select class="form-control" name="procurement_method" required>
-                            <option value="none" selected disabled hidden>
-                                Select an Option
-                            </option>
-                            <option value="Made-to-Stock">Made-to-Stock</option>
-                            <option value="Made-to-Order">Made-to-Order</option>
-                        </select>
-                    </div>
-
-                    <script>
-                        $("#product_type").change(function() {
-                            if ($(this).val() == "Product") {
-                                $("#product_selected").show();
-                            } else {
-                                $("#product_selected").hide();
-                            }
-                        });
-                        $("#procurement_method").change(function() {
-                            if ($(this).val() == "produce" || $(this).val() == "buy and produce") {
-                                $("#made-to-selected").show();
-                            } else {
-                                $("#made-to-selected").hide();
-                            }
-                        });
-                    </script>
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="form-group my-2">
-                                <label for="">Product Image</label><br>
-                                <img style="width:250px;" id="img_tmp" src="../images/thumbnail.png"
-                                    style="width:100%;">
-                                <input class="form-control" accept="image/*" type="file" id="picture" name="picture[]"
-                                    onchange="readURL1(this);" required multiple>
-                            </div>
-                        </div>
-                        <div class="col-sm">
-                            <div class="row">
-                                <div class="col-sm">
-                                    <div class="form-group">
-                                        <label for="">Barcode</label>
-                                        <input class="form-control" type="text" id="bar_code" name="bar_code" required
-                                            placeholder="Ex. 036000291452">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm">
-                                    <div class="form-group">
-                                        <label for="reorderLevel">Minimum Order Quantity</label>
-                                        <input type="number" name="reorderLevel" id="reorderLevel"
-                                            class="form-control" placeholder="Ex. 100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm">
-                                    <div class="form-group">
-                                        <label for="reorderQty">Maximum Order Quantity</label>
-                                        <input type="number" name="reorderQty" id="reorderQty" class="form-control"
-                                            placeholder="Ex. 100">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        function changeSaleSupplyMethod() {
-                            var salesSupplyMethod = document.getElementById("saleSupplyMethod").value;
-                            if (salesSupplyMethod == "Made to Stock") {
-                                document.getElementById("madeToStockFields").removeAttribute("hidden");
-                                document.getElementById("reorderLevel").setAttribute("required", "");
-                                document.getElementById("reorderQty").setAttribute("required", "");
-                            } else {
-                                document.getElementById("madeToStockFields").setAttribute("hidden", "");
-
-                                document.getElementById("stock_unit").value = 0;
-                                document.getElementById("reorderLevel").removeAttribute("required");
-                                document.getElementById("reorderQty").removeAttribute("required");
-                            }
-                        }
-                    </script>
-                    <script>
-                        function readURL1(input) {
-                            if (input.files && input.files[0]) {
-                                var reader = new FileReader();
-                                reader.onload = function(e) {
-                                    $('#img_tmp')
-                                        .attr('src', e.target.result)
-                                };
-                                reader.readAsDataURL(input.files[0]);
-                            }
-                        }
-                    </script>
-
-
-
 
                     <div class="row">
                         <div class="col-sm">
