@@ -262,7 +262,7 @@ $i = 1;
             <div class="col-6">
                 <div class="form-group">
                     <label for="Hour_rate">Hour Rate</label>
-                    <input type="number" value="0" min="0" name="Hour_rate" id="Hour_rate"
+                    <input type="number"  min="0" name="Hour_rate" id="Hour_rate"
                         value="{{ $wc->hour_rate }}" class="form-control" readonly>
                 </div>
             </div>
