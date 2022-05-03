@@ -897,7 +897,7 @@
                 console.log(data);
                 $('#notif').text('');
                 $('#notif').html(
-                    '<li>' + Object.keys(data.responseJSON["errors"]) + '</li>'
+                    '<li>' + Object.values(data.responseJSON["errors"])[0] + '</li>'
                 );
             }
         });
