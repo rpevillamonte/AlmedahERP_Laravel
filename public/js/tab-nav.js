@@ -636,19 +636,19 @@ function loadAddress() {
 
 function loadBOMForm() {
     $(document).ready(function () {
-        $("#contentBom").load("/bom/create");
+        $("#contentBOM").load("/bom/create");
     });
 }
 
 function loadBOM(id) {
     $(document).ready(function () {
-        $("#contentBom").load(`/bom/${id}`);
+        $("#contentBOM").load(`/bom/${id}`);
     });
 }
 
 function loadBOMtable() {
     $(document).ready(function () {
-        $("#contentBom").load("/bom");
+        $("#contentBOM").load("/bom");
     });
 }
 
