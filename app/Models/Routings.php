@@ -16,6 +16,11 @@ class Routings extends Model
         'routing_name',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'routing_id';
+    }
+
     public function routingOperations()
     {
         return $this->hasMany(RoutingOperation::class, 'routing_id', 'routing_id')->orderBy('sequence_id', 'asc');

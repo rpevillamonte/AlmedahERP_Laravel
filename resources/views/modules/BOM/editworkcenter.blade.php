@@ -97,23 +97,23 @@ $i = 1;
                                 @endforeach
                             </datalist>
                             @if (!is_null($wc->employee_id_set))
-                                @foreach (json_decode($wc->employee_id_set) as $emp)
+                                @foreach ($e_set as $emp)
                                     <tr id="employee-<?php $i; ?>" class="wc_emp_data">
                                         <td id="mr-code-input" class="mr-code-input"><input type="text"
-                                                value="{{ $emp->employee_id }}" name="Employee_id" list="employees"
+                                                value="{{ $emp['employee_id'] }}" name="Employee_id" list="employees"
                                                 id="Employee_id" class="wc_employee form-control">
                                         </td>
-                                        <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
-                                                value="" name="Employee_name" id="Employee_name"
+                                        <td style="width: 15%;" class="mr-qty-input"><input type="text" min="0"
+                                                value="{{ $emp['emp_name'] }}" name="Employee_name" id="Employee_name"
                                                 class="form-control wc_employee"></td>
                                         <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
-                                                value="{{ $emp->e_hours }}" name="Employee_hours" id="Employee_hours"
+                                                value="{{ $emp['hours'] }}" name="Employee_hours" id="Employee_hours"
                                                 class="wc_employee form-control"></td>
                                         <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
-                                                value="{{ $emp->e_min }}" name="Employee_minutes"
+                                                value="{{ $emp['mins'] }}" name="Employee_minutes"
                                                 id="Employee_minutes" class="wc_employee form-control"></td>
                                         <td style="width: 15%;" class="mr-qty-input"><input type="number" min="0"
-                                                value="{{ $emp->e_sec }}" name="Employee_seconds"
+                                                value="{{ $emp['seconds'] }}" name="Employee_seconds"
                                                 id="Employee_seconds" class="wc_employee form-control"></td>
                                         <td>
                                             <a id="" class="btn delete-btn" href="#" role="button">
@@ -194,20 +194,20 @@ $i = 1;
                             <tbody class="" id="newmachine-input-rows">
                                 <tr data-id="${nextID}">
                                     <td id="mr-code-input" class="mr-code-input">
-                                        <input type="text" value="@if (!is_null($machine))
+                                        <input type="text" value="@if (!is_null($wc->machine_code))
                                             {{ $machine->machine_process }}
                                         @endif" readonly
                                             name="machine_process" id="machine_process"
                                             class="form-control wc_machine">
                                     </td>
                                     <td style="width: 10%;" class="mr-qty-input">
-                                        <input type="number" value="@if (!is_null($machine))
+                                        <input type="number" value="@if (!is_null($wc->machine_code))
                                             {{ $machine->setup_time }}
                                         @endif" readonly
                                             name="setup_time" id="setup_time" class="form-control wc_machine">
                                     </td>
                                     <td style="width: 10%;" class="mr-qty-input">
-                                        <input type="number" value="@if (!is_null($machine))
+                                        <input type="number" value="@if (!is_null($wc->machine_code))
                                             {{ $machine->running_time }}
                                         @endif" readonly
                                             name="Running_time" id="Running_time" class="form-control wc_machine">
@@ -269,3 +269,13 @@ $i = 1;
         </div>
     </div>
 </form>
+
+
+<script>
+    $(document).ready(function () {
+        $('.wc_machine').each(
+            $this = $(this);
+            $this.val($this.val().trim());
+        );
+    });
+</script>

@@ -100,10 +100,12 @@ class WorkCenterController extends Controller
         //
         $wc = WorkCenter::find($id);
         $machine = str_contains($wc->wc_type, 'Machine') ? $wc->machine_manual : null;
+        $employee_set = $wc->employee_set();
         $employees = Employee::all();
         $machines_manual = MachinesManual::all();
         return view('modules.BOM.editworkcenter',
-                    ['wc' => $wc, 'machine' => $machine, 'employees' => $employees, 'machines_manuals' => $machines_manual]);
+                    ['wc' => $wc, 'machine' => $machine, 'e_set' => $employee_set,
+                    'employees' => $employees, 'machines_manuals' => $machines_manual]);
     }
 
     /**
