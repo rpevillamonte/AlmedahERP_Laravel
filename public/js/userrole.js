@@ -1,7 +1,7 @@
 var permissions = {};
 var role_strings = [
-    "Customer",
-    "Employee",
+    "Customers",
+    "Employees",
     "Suppliers",
     "Supplier_Group",
     "Inventory",
@@ -63,6 +63,33 @@ $(
     var key = tr_id.replace(needle2, "");
     var value = $(this).prop("checked") == true ? 1 : 0;
     permissions[key][elem_func] = value;
+});
+
+// select all privileges by module
+$('.module_all, .edit_module_all').change(function() {
+    var value = $(this).prop("checked") == true ? 1 : 0;
+    var tr = $(this).parent("td").parent("tr");
+    var tr_id = tr.attr("id");
+    $(`#${tr_id}`).find("input[name='role-check'], input[name='edit-role-check']").prop('checked', value);
+    if(tr_id.indexOf('Edit') === 1) {
+        tr_id.replace('Edit', "");
+    }
+    var key = tr_id.replace("role", "");
+    permissions[key]['view'] = value;
+    permissions[key]['create'] = value;
+    permissions[key]['edit'] = value;
+    permissions[key]['delete'] = value;
+});
+
+// select all modules by privilege
+$('.priv_all, .edit_priv_all').change(function() {
+    var value = $(this).prop("checked") == true ? 1 : 0;
+    var priv = $(this).attr('name');
+    var class_name = $(this).hasClass('priv_all') ? `.user-${priv}` : `.edit-user-${priv}`;
+    $(class_name).prop('checked', value);
+    for (var i=0; i<role_strings.length; i++) {
+        permissions[role_strings[i]][priv] = value;
+    }
 });
 
 $(".role-entity").click(function () {
