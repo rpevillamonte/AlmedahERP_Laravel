@@ -63,7 +63,6 @@ class EmployeeController extends Controller
             'email' => 'required|unique:env_employees,email',
             'gender' => 'required',
             'date_of_birth' => 'required',
-            'department_id' => 'required',
             'hired_date' => 'required',
             'salary' => 'required',
             'salary_term' => 'required',
@@ -95,7 +94,7 @@ class EmployeeController extends Controller
             $data->is_admin = $form_data['is_admin'] ?? 0;
             $data->address = $form_data['address'];
             $data->status = $form_data['status'];
-            $data->department_id = $form_data['department_id'];
+            $data->department_id = $form_data['department_id'] ?? 'N/A';
             $data->role_id = $form_data['role_id'];
 
             $data->employment_id = $form_data['employment_type'];
@@ -130,6 +129,7 @@ class EmployeeController extends Controller
             $employee->position = $request->input('position');
             $employee->gender = $request->input('memberGender');
 
+            $employee->department_id = $request->input('deptID');
             $employee->contact_number = $request->input('contactno');
             $employee->salary_term = $request->input('salaryTerm');
             $employee->salary = $request->input('Salary');
