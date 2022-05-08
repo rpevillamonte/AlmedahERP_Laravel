@@ -308,7 +308,7 @@ class ProductsController extends Controller
         } catch (Throwable $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Product does not exist!',
+                'message' => 'Ordered Products is dependent on this product. Delete the ordered products first.',
             ]);
         }
     }
