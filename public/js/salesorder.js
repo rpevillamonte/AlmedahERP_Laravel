@@ -226,7 +226,7 @@ function addToTable() {
         currentCart.push([currentProduct, 0]);
         stockMinusQuantity.push([currentCart, 0]);
         $("#ProductsTable").append(
-            `<tr><td><div class="form-check"><input type="checkbox" class="form-check-input">  </div></td><td class="text-center">  ` +
+            `<tr><td class="text-center">  ` +
                 currentProduct +
                 `</td><td class="text-center d-flex justify-content-center">  <input type="number" class="form-control text-center" data-stock="` +
                 currentProductStock +
@@ -436,11 +436,6 @@ function finalizer(arr_components) {
         // append each component to the components table
         $(".components").append(
             `<tr>
-        <td>
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input">
-        </div>
-        </td>
         <td class="text-center">
         ` +
                 component[0] +

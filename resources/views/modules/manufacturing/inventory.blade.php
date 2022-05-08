@@ -112,11 +112,6 @@
                                                 data-original-title="Delete"><i class="fa fa-trash"></i> Delete</button>
                                             </li>
                                         @endif
-                                        <li>
-                                            <button id='add-stock-btn-{{ $row->id }}' data-id="{{ $row->id }}" type="button" class="add-stock-btn btn btn-success btn-sm rounded-0">
-                                                <i class="fa fa-plus" aria-hidden="true"></i> Add Stock
-                                            </button>
-                                        </li>
                                     </ul>
                                 </div>
                             </td>
@@ -610,38 +605,6 @@
     </div>
 </div>
 
-<!-- Add Stock Modal -->
-<div class="modal fade" id="add-stock-modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <form action="" id="add-stock-form" method="post">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add Stock</h5>
-                        <button type="button" class="close" onclick="$('#add-stock-modal').modal('hide');" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                      <label for="add-stock-qty"></label>
-                        <div class="col-6">
-                            <input type="number" min="0" name="add_stock_qty" id="add_stock_qty" class="form-control" placeholder="">
-                        </div>
-                        <div class="col-6">
-                            <input type="select" readonly value="" id="stock_uom_display" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="$('#add-stock-modal').modal('hide');">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- End of add stock modal -->
 
 <script>
     $('#create-material-form').modal({
@@ -745,40 +708,6 @@
             return false;
         });
 
-        // When clicking an add stock button
-        $('body').on('click', '.add-stock-btn', function(e){
-            e.preventDefault();
-            let id = this.dataset.id;
-            $('#add-stock-modal').modal('show');
-            $('#add-stock-form').attr('action', `/inventory/${id}/add-stock`);
-            $.get('/inventory/' + sessionStorage.getItem('material-edit-id'), function(data, status) {
-                $('#stock_uom_display').val(data.material.uom.item_uom + ` (${data.material.uom.conversion_factor} pc. each)`);
-            });
-        });
-
-        // Add stock form function
-        $('#add-stock-form').submit(function(){
-            console.log(`Trying to submit to ${this.action}`);
-            let url = this.action;
-            let fd = new FormData(this);
-            $.ajax({
-                type: 'POST',
-                data: fd,
-                url: url,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function(data){
-                    $('#add-stock-modal').modal('hide');
-                    $(`#item-qty-${data.id}`).html(data.new_amount);
-                },
-                error: function(data){
-                    alert(`Error: ${data.message}`);
-                },
-            })
-            this.action = '';
-            return false;
-        });
 
         // Update form function
         // When the form is submitted (save button is pressed and all the required fields are filled in)
@@ -855,12 +784,7 @@
                                             data-toggle="tooltip" data-placement="top" title=""
                                             data-original-title="Delete"><i class="fa fa-trash"></i> Delete</button>
                                         </li>
-                                        
-                                        <li>
-                                            <button id='add-stock-btn-${data.id}' data-id="${data.id}" type="button" class="add-stock-btn btn btn-success btn-sm rounded-0">
-                                                <i class="fa fa-plus" aria-hidden="true"></i> Add Stock
-                                            </button>
-                                        </li>
+                                    
                                     </ul>
                                 </div>`
                                 ])
@@ -971,12 +895,7 @@
                                             data-toggle="tooltip" data-placement="top" title=""
                                             data-original-title="Delete"><i class="fa fa-trash"></i> Delete</button>
                                         </li>
-                                        
-                                        <li>
-                                            <button id='add-stock-btn-${data.id}' data-id="${data.id}" type="button" class="add-stock-btn btn btn-success btn-sm rounded-0">
-                                                <i class="fa fa-plus" aria-hidden="true"></i> Add Stock
-                                            </button>
-                                        </li>
+                                    
                                     </ul>
                                 </div>`
                                 ])
@@ -1106,26 +1025,6 @@
         //     });
         // }));
         /*Delete Product*/
-    });
-
-    $(document).ready(function() {
-        var status = sessionStorage.getItem("status");
-        if (status == "success") {
-            $('#alert-message').html(`
-            <div class="alert alert-success" role="alert">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                Success!
-            </div>            
-            `);
-        } else if (status == "error") {
-            $('#alert-message').html(`
-            <div class="alert alert-danger" role="alert">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                Error!
-            </div>            
-            `);
-        }
-        sessionStorage.removeItem("status");
     });
 
 </script>

@@ -12,6 +12,7 @@ use DB;
 use Auth;
 use Exception;
 use Illuminate\Support\Facades\Validator;
+use App\Models\NotificationLog;
 
 class MaterialsController extends Controller
 {
@@ -112,6 +113,13 @@ class MaterialsController extends Controller
             
             $data->item_image = json_encode($imagePath);
             $data->save();
+
+            $notif = new NotificationLog();
+            $notif->description = "New Inventory Material for " . $data->item_code;
+            $notif->model_id = $data->id;
+            $notif->model_name = $data->item_name;
+            $notif->save();
+
             return response()->json([
                 'status' => 'success',
                 'image' => $imagePath,
