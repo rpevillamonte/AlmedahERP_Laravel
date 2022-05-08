@@ -460,8 +460,8 @@
                             <div class="form-group">
                                 <label>Item Group</label>
                                 <select id="product_type" class="selectpicker form-control" name="product_type"
-                                    data-container="body" data-live-search="true" title="Select an Option"
-                                    data-hide-disabled="true">
+                                     data-live-search="true" title="Select an Option"
+                                    >
                                     <option value="none" selected disabled hidden>
                                         Select an Option
                                     </option>
@@ -642,8 +642,8 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Unit of Measurement</label>
-                                <select id="unit" class="selectpicker1 form-control" name="unit" data-container="body"
-                                    data-live-search="true" title="Select an Option" data-hide-disabled="true" required>
+                                <select id="unit" class="selectpicker1 form-control" name="unit" 
+                                    data-live-search="true" title="Select an Option"  required>
                                     <option value="none" selected disabled hidden>
                                         Select an Option
                                     </option>
@@ -674,8 +674,8 @@
                             <div class="form-group" id="attribute_group">
                                 <label>Attributes</label>
                                 <select id="attribute" class="selectpicker2 form-control" name="attribute"
-                                    data-container="body" data-live-search="true" title="Select attribute"
-                                    data-hide-disabled="true">
+                                     data-live-search="true" title="Select attribute"
+                                    >
                                     <option value="none" selected disabled hidden>
                                         Select an Option
                                     </option>
@@ -720,8 +720,8 @@
                     <div class="form-group" id="attribute_group">
                         <label>Value</label>
                         <select id="value_item_variants" class="selectpicker2 form-control" name="value_item_variants"
-                            data-container="body" data-live-search="true" title="Select attribute"
-                            data-hide-disabled="true">
+                             data-live-search="true" title="Select attribute"
+                            >
                             <option value="none" selected disabled hidden>
                                 Select an Option
                             </option>
@@ -754,9 +754,9 @@
                     </div>
                     <div class="form-group" id="materials-picker">
                         <label>Materials</label>
-                        <select id="materials" class="selectpicker3 form-control" name="materials"
-                            data-container="body" data-live-search="true" title="Select Materials"
-                            data-hide-disabled="true">
+                        <select id="materials" class="selectpicker form-control" name="materials"
+                             data-live-search="true" title="Select Materials"
+                            >
                             <option value="none" selected disabled hidden>
                                 Select a Material
                             </option>
@@ -776,7 +776,7 @@
                         <script type="text/javascript">
                             materialList = (typeof materialList != 'undefined' && materialList instanceof Array) ? materialList : []
                             $(document).ready(function() {
-                                $('.selectpicker3').selectpicker();
+                                $('.selectpicker').selectpicker();
                                 $('#materials').on('change', function() {
                                     addMaterial(this.value);
                                 });
@@ -789,8 +789,8 @@
                     <div class="form-group" id="components-picker">
                         <label>Components</label>
                         <select id="components" class="selectpicker4 form-control" name="components"
-                            data-container="body" data-live-search="true" title="Select components"
-                            data-hide-disabled="true">
+                             data-live-search="true" title="Select components"
+                            >
                             <option value="none" selected disabled hidden>
                                 Select a Component
                             </option>
