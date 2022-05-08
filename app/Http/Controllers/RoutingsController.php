@@ -7,6 +7,7 @@ use App\Models\RoutingOperation;
 use App\Models\Routings;
 use App\Models\WorkCenter;
 use \App\Models\UserRole;
+use Illuminate\Support\Facades\DB;
 use Auth;
 use Exception;
 use Illuminate\Http\Request;
@@ -129,11 +130,13 @@ class RoutingsController extends Controller
         //
         try {
             $form_data = $request->input();
-            $routing = Routings::find($routings->id);
-            $routing->routing_name = $form_data['Routing_Name'];
-            $routing->save();
+            $routings->routing_name = $form_data["Routing_Name"];
+            $routings->save();
 
-            $routing_ops = json_decode($form_data['routing_operations']);
+            $routing_ops = json_decode($form_data["routing_operations"]);
+
+            DB::table('routings_operations')->where('routing_id', $routings->routing_id)->delete();
+
             foreach ($routing_ops as $r_ops) {
                 $hour_rate = $r_ops->hour_rate;
                 $op_time = $r_ops->operation_time;

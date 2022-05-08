@@ -62,8 +62,7 @@ $i = 1;
 <div id="routing_alert_msg" class="alert alert-danger" style="display: none;">
 </div>
 
-<form action="{{ route('routing.update', ['routing' => $route->id]) }}" method="POST" id="routingsForm"
-    class="create">
+<form action="{{ route('routing.update', ['routing' => $route->id]) }}" id="routingsForm" class="update">
     @csrf
     @method('PATCH')
     <br>

@@ -12,9 +12,14 @@ class Routings extends Model
     protected $table = 'routings';
     public $timestamps = true;
     protected $fillable = [
-        'routings_id',
+        'routing_id',
         'routing_name',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'routing_id';
+    }
 
     public function routingOperations()
     {

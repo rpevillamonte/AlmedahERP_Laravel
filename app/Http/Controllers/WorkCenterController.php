@@ -68,7 +68,6 @@ class WorkCenterController extends Controller
         $wc_type = $form_data['wc_type'];
         $duration = $form_data["duration"];
 
-
         $work_center->wc_code = $wc_code;
         $work_center->wc_label = $wc_label;
         $work_center->wc_type = $wc_type;
@@ -100,11 +99,13 @@ class WorkCenterController extends Controller
     {
         //
         $wc = WorkCenter::find($id);
-        $machine = $wc->machine_manual;
+        $machine = str_contains($wc->wc_type, 'Machine') ? $wc->machine_manual : null;
+        $employee_set = $wc->employee_set();
         $employees = Employee::all();
         $machines_manual = MachinesManual::all();
         return view('modules.BOM.editworkcenter',
-                    ['wc' => $wc, 'machine' => $machine, 'employees' => $employees, 'machines_manuals' => $machines_manual]);
+                    ['wc' => $wc, 'machine' => $machine, 'e_set' => $employee_set,
+                    'employees' => $employees, 'machines_manuals' => $machines_manual]);
     }
 
     /**
@@ -117,6 +118,10 @@ class WorkCenterController extends Controller
     public function update(Request $request, $id)
     {
         //
+        
+    }
+
+    public function updateWC(Request $request, $id) {
         $form_data = $request->input();
         $wc_type = $form_data['wc_type'];
         $duration = $form_data["duration"];
@@ -131,10 +136,11 @@ class WorkCenterController extends Controller
         $work_center->wages = $form_data['wages'];
         $work_center->hour_rate = $form_data['hour_rate'];
 
-        if(isset($form_data['employee_id_set'])){ //checks if theres employee ID
+        if(isset($form_data['employee_id_set'])) { //checks if theres employee ID
             $work_center->employee_id_set = $form_data['employee_id_set'];
         }
-        if(isset($form_data['machine_code'])){ //checks if theres machine_code
+
+        if(isset($form_data['machine_code'])) { //checks if theres machine_code
             $work_center->machine_code = $form_data['machine_code'];
         }
 
