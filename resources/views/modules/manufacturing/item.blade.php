@@ -61,24 +61,14 @@
         if (materialList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
-            if ($('#raw_' + id).val() > 0 && $('#raw_' + id).val() > Number(qty)) {
-                $('#materials_div').append(
-                    '<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-' +
-                    id +
-                    '"><label class="text-light text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-' +
-                    id + '">' + $('#mat-option-' + id).text() + '</span> (<span id="material-badge-qty-' + id +
-                    '">' + $('#raw_' + id).val() +
-                    '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value=' +
-                    qty + '>  </div>  </td>  </tr>');
-            } else {
-                $('#materials_div').append(
-                    '<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-' +
-                    id +
-                    '"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-light text-truncate badge badge-danger m-1 p-2">' +
-                    $('#mat-option-' + id).html() + ' (' + $('#raw_' + id).val() +
-                    ' Stocks Left)</label></div></td></tr>');
-
-            }
+            $('#materials_div').append(
+                '<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-' +
+                id +
+                '"><label class="text-light text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-' +
+                id + '">' + $('#mat-option-' + id).text() + '</span> (<span id="material-badge-qty-' + id +
+                '">' + $('#raw_' + id).val() +
+                '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value=' +
+                qty + '>  </div>  </td>  </tr>');
             materialList.push(id);
         }
 
@@ -178,7 +168,7 @@
         for (let component in componentsJSON) {
             var componentId = componentsJSON[component].component_id;
             var componentQty = componentsJSON[component].component_qty;
-            addComponent(componentId);
+            addComponent(componentId, componentQty);
         }
     }
     // Function that takes a product as a JSON as a parameter
@@ -189,6 +179,8 @@
         $('#materials_div').html('');
         attributeList = [];
         populateMaterials(product.materials);
+        $('#components_div').html('');
+        populateComponents(product.components);
         $('#bar_code').val(product['bar_code']);
         $('#create-product-form').modal('show');
         $('#img_tmp').attr('src', 'storage/' + JSON.parse(product['picture']));
@@ -449,7 +441,7 @@
                             <div class="form-group">
                                 <label for="product_code">Item Code</label>
                                 <input type="text" name="product_code" id="product_code" class="form-control"
-                                    placeholder="Automatically Generated..." disabled>
+                                    placeholder="Automatically Generated..." readonly>
                             </div>
                         </div>
                         <div class="col-sm">
@@ -468,8 +460,8 @@
                             <div class="form-group">
                                 <label>Item Group</label>
                                 <select id="product_type" class="selectpicker form-control" name="product_type"
-                                    data-container="body" data-live-search="true" title="Select an Option"
-                                    data-hide-disabled="true">
+                                     data-live-search="true" title="Select an Option"
+                                    >
                                     <option value="none" selected disabled hidden>
                                         Select an Option
                                     </option>
@@ -650,8 +642,8 @@
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>Unit of Measurement</label>
-                                <select id="unit" class="selectpicker1 form-control" name="unit" data-container="body"
-                                    data-live-search="true" title="Select an Option" data-hide-disabled="true" required>
+                                <select id="unit" class="selectpicker1 form-control" name="unit" 
+                                    data-live-search="true" title="Select an Option"  required>
                                     <option value="none" selected disabled hidden>
                                         Select an Option
                                     </option>
@@ -682,8 +674,8 @@
                             <div class="form-group" id="attribute_group">
                                 <label>Attributes</label>
                                 <select id="attribute" class="selectpicker2 form-control" name="attribute"
-                                    data-container="body" data-live-search="true" title="Select attribute"
-                                    data-hide-disabled="true">
+                                     data-live-search="true" title="Select attribute"
+                                    >
                                     <option value="none" selected disabled hidden>
                                         Select an Option
                                     </option>
@@ -728,8 +720,8 @@
                     <div class="form-group" id="attribute_group">
                         <label>Value</label>
                         <select id="value_item_variants" class="selectpicker2 form-control" name="value_item_variants"
-                            data-container="body" data-live-search="true" title="Select attribute"
-                            data-hide-disabled="true">
+                             data-live-search="true" title="Select attribute"
+                            >
                             <option value="none" selected disabled hidden>
                                 Select an Option
                             </option>
@@ -762,9 +754,9 @@
                     </div>
                     <div class="form-group" id="materials-picker">
                         <label>Materials</label>
-                        <select id="materials" class="selectpicker3 form-control" name="materials"
-                            data-container="body" data-live-search="true" title="Select Materials"
-                            data-hide-disabled="true">
+                        <select id="materials" class="selectpicker form-control" name="materials"
+                             data-live-search="true" title="Select Materials"
+                            >
                             <option value="none" selected disabled hidden>
                                 Select a Material
                             </option>
@@ -784,7 +776,7 @@
                         <script type="text/javascript">
                             materialList = (typeof materialList != 'undefined' && materialList instanceof Array) ? materialList : []
                             $(document).ready(function() {
-                                $('.selectpicker3').selectpicker();
+                                $('.selectpicker').selectpicker();
                                 $('#materials').on('change', function() {
                                     addMaterial(this.value);
                                 });
@@ -797,8 +789,8 @@
                     <div class="form-group" id="components-picker">
                         <label>Components</label>
                         <select id="components" class="selectpicker4 form-control" name="components"
-                            data-container="body" data-live-search="true" title="Select components"
-                            data-hide-disabled="true">
+                             data-live-search="true" title="Select components"
+                            >
                             <option value="none" selected disabled hidden>
                                 Select a Component
                             </option>
