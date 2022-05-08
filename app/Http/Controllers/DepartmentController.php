@@ -20,10 +20,7 @@ class DepartmentController extends Controller
     {
         //
         $employees = Employee::get(['employee_id', 'first_name', 'last_name']);
-        $departments = DB::table('departments')
-                        ->select('departments.*', 'env_employees.last_name', 'env_employees.first_name')
-                        ->join('env_employees', 'departments.reports_to', '=', 'env_employees.employee_id')
-                        ->get();
+        $departments = Department::with(['dept_head'])->get();
         return view('modules.userManagement.Departments.Departments',
                     ['employees' => $employees,
                      'departments' => $departments]
@@ -41,10 +38,9 @@ class DepartmentController extends Controller
         //
         $form_data = $request->input();
         $dept_name = $form_data['deptName'];
-        $dept_head = $form_data['deptHead'];
         $exists = Department::where('department_name', $dept_name)->first();
 
-        if($form_data['deptHead'] == 'non' || $exists){
+        if($exists){
             return Response::json(['error' => 'Error msg'], 404);
         }else{
             
@@ -55,7 +51,10 @@ class DepartmentController extends Controller
             $dept_id = 'DEPT-' . str_pad($id, 3, '0', STR_PAD_LEFT);
             $dept->department_id = $dept_id;
             $dept->department_name = $dept_name;
-            $dept->reports_to = $dept_head;
+
+            if(isset($form_data['deptHead'])) {
+                $dept->reports_to = $form_data['deptHead'];
+            }
 
             $dept->save();
         }
@@ -87,9 +86,10 @@ class DepartmentController extends Controller
         $dept = Department::find($id);
         $dept_name = $form_data['deptEditName'];
         $dept->department_name = $dept_name;
-        $dept->reports_to = $form_data['deptEditHead'];
+        if(isset($form_data['deptEditHead'])) {
+            $dept->reports_to = $form_data['deptEditHead'];
+        }
         $dept->save();
-        return response($dept_name);
     }
 
     /**
