@@ -98,7 +98,7 @@ $("#addemployee").on("submit", function (e) {
         error: function () {
             console.log("ERROR");
             dangerNotification(
-                "An existing account with the same Email exists!",
+                "There was a problem upon creating an employee!",
                 "addemployee-danger"
             );
         },

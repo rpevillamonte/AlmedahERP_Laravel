@@ -94,7 +94,7 @@
             <div class="col-3">
             <div class="form-group">
               <label>Department ID</label>
-              <input type="text" name="deptID" id="deptID" class="form-control" disabled>
+              <input type="text" name="deptID" id="deptID" class="form-control">
             </div>
             </div>      
         </div>  
