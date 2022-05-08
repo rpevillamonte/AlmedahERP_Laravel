@@ -228,7 +228,6 @@
                                         <table class="table border-bottom table-hover table-bordered table-sm">
                                           <thead class="border-top border-bottom bg-light">
                                             <tr class="text-muted">
-                                              <td></td>
                                               <td class="font-weight-bold text-center">Product Code</td>
                                               <td class="font-weight-bold text-center">Quantity to Purchase</td>
                                               <td class="font-weight-bold text-center">Stock </td>
@@ -279,7 +278,6 @@
                                             <table class="table border-bottom table-hover table-bordered">
                                                 <thead class="border-top border-bottom bg-light">
                                                     <tr class="text-muted">
-                                                        <td></td>
                                                         <td>Component Name</td>
                                                         <td>Category</td>
                                                         <td>Qty. Available</td>

@@ -820,39 +820,38 @@
         });
 
         /*Jerone's Code*/
-        // function auto_load(){
+        //function auto_load(){
         //    $( document ).ready(function() {
-        //         $.ajax({
-        //             url: "{{ route('get_notifications') }}",
-        //             method:"GET",
-        //             cache: false,
-        //             success: function(data){
-        //                 $('#notif_count').html(data.results.length);
-        //                 console.log(data.results.length);
-        //                 var content = '';
-        //                 data.results.forEach(function(item) {
-        //                     content+=`
-    //                                     <a class="dropdown-item d-flex align-items-center" href="#">
-    //                                         <div class="mr-3">
-    //                                             <div class="icon-circle bg-primary">
-    //                                                 <i class="fas fa-file-alt text-white"></i>
-    //                                             </div>
-    //                                         </div>
-    //                                         <div>
-    //                                             <div class="small text-gray-500">${new Date(item.created_at).toDateString()}</div>
-    //                                             <span class="font-weight-bold">${item.description}</span>
-    //                                         </div>
-    //                                     </a>                    
-    //                     `;
-        //                 });
-        //                 $('#alert_list_div').html(content);
-        //             }
-        //         });
+        //        $.ajax({
+        //            url: "{{ route('get_notifications') }}",
+        //            method:"GET",
+        //            cache: false,
+        //            success: function(data){
+        //                $('#notif_count').html(data.results.length);
+        //                console.log(data.results.length);
+        //                var content = '';
+        //                data.results.reverse().forEach(function(item) {
+        //                    content+=`
+        //                                    <a class="dropdown-item d-flex align-items-center" href="#">
+        //                                        <div class="mr-3">
+        //                                            <div class="icon-circle bg-primary">
+        //                                                <i class="fas fa-file-alt text-white"></i>
+        //                                            </div>
+        //                                        </div>
+        //                                        <div>
+        //                                            <div class="small text-gray-500">${new Date(item.created_at).toDateString()}</div>
+        //                                            <span class="font-weight-bold">${item.description}</span>
+        //                                        </div>
+        //                                    </a>                    
+        //                    `;
+        //                });
+        //                $('#alert_list_div').html(content);
+        //            }
+        //        });
         //    });
-        // }
-        // auto_load();
-        // setInterval(auto_load,5000);
-
-        // 
+        //}
+        //auto_load();
+        //setInterval(auto_load,5000);
+        //// 
     </script>
 @endsection
