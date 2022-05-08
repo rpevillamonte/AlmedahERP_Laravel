@@ -160,16 +160,17 @@ function resetRoleForm() {
 }
 
 $("#saveRole").click(function () {
-    var message = "",
-        role_alert = "";
-    if ($("input[name='role-check']:checked").length > 0) {
+    var message = "", role_alert = "";
+    if ($("input[name='role-check']:checked").length > 0 && $("#roleName").val()) {
         $("#roleForm").submit();
         message = "Role successfully developed.";
         role_alert = ROLE_SUCCESS;
-    } else {
+    } 
+    else {
         if (!$("#roleName").val()) {
             message = "No name provided for this role.";
-        } else {
+        }
+        else {
             message = "This role has no privileges.";
         }
         role_alert = ROLE_FORM_NOTIF;
