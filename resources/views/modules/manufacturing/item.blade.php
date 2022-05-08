@@ -61,24 +61,14 @@
         if (materialList.indexOf(id) !== -1) {
             alert("Value exists!");
         } else {
-            if ($('#raw_' + id).val() > 0 && $('#raw_' + id).val() > Number(qty)) {
-                $('#materials_div').append(
-                    '<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-' +
-                    id +
-                    '"><label class="text-light text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-' +
-                    id + '">' + $('#mat-option-' + id).text() + '</span> (<span id="material-badge-qty-' + id +
-                    '">' + $('#raw_' + id).val() +
-                    '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value=' +
-                    qty + '>  </div>  </td>  </tr>');
-            } else {
-                $('#materials_div').append(
-                    '<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-' +
-                    id +
-                    '"><label style="cursor: pointer;" onclick="$(`#create-product-form`).hide(); $(`body`).removeClass(`modal-open`); $(`.modal-backdrop`).remove(); $(`#divMain`).load(`/inventory`);" class="text-light text-truncate badge badge-danger m-1 p-2">' +
-                    $('#mat-option-' + id).html() + ' (' + $('#raw_' + id).val() +
-                    ' Stocks Left)</label></div></td></tr>');
-
-            }
+            $('#materials_div').append(
+                '<tr><td> <span class="delete_mat" style="font-size:30px;cursor:pointer"><i class="float-right text-danger fa fa-trash-o"></i></span> <div class="col-sm-6 material-badge text-light" id="material-badge-' +
+                id +
+                '"><label class="text-light text-truncate badge badge-success m-1 p-2"><span id="material-badge-name-' +
+                id + '">' + $('#mat-option-' + id).text() + '</span> (<span id="material-badge-qty-' + id +
+                '">' + $('#raw_' + id).val() +
+                '</span> Stocks Available)</label><input type="number" min="0" name="materials_qty[]" class="form-control" placeholder="Qty." value=' +
+                qty + '>  </div>  </td>  </tr>');
             materialList.push(id);
         }
 
@@ -178,7 +168,7 @@
         for (let component in componentsJSON) {
             var componentId = componentsJSON[component].component_id;
             var componentQty = componentsJSON[component].component_qty;
-            addComponent(componentId);
+            addComponent(componentId, componentQty);
         }
     }
     // Function that takes a product as a JSON as a parameter
@@ -189,6 +179,8 @@
         $('#materials_div').html('');
         attributeList = [];
         populateMaterials(product.materials);
+        $('#components_div').html('');
+        populateComponents(product.components);
         $('#bar_code').val(product['bar_code']);
         $('#create-product-form').modal('show');
         $('#img_tmp').attr('src', 'storage/' + JSON.parse(product['picture']));
@@ -449,7 +441,7 @@
                             <div class="form-group">
                                 <label for="product_code">Item Code</label>
                                 <input type="text" name="product_code" id="product_code" class="form-control"
-                                    placeholder="Automatically Generated..." disabled>
+                                    placeholder="Automatically Generated..." readonly>
                             </div>
                         </div>
                         <div class="col-sm">
