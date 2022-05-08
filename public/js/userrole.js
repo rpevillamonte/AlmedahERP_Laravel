@@ -71,8 +71,8 @@ $('.module_all, .edit_module_all').change(function() {
     var tr = $(this).parent("td").parent("tr");
     var tr_id = tr.attr("id");
     $(`#${tr_id}`).find("input[name='role-check'], input[name='edit-role-check']").prop('checked', value);
-    if(tr_id.indexOf('Edit') === 1) {
-        tr_id.replace('Edit', "");
+    if(tr_id.indexOf('Edit') !== -1) {
+        tr_id = tr_id.replace('Edit', "");
     }
     var key = tr_id.replace("role", "");
     permissions[key]['view'] = value;
@@ -108,6 +108,7 @@ $(".role-entity").click(function () {
             $("#roleEditName").val(role.role_name);
             $("#hiddenRoleID").val(role.id);
             permissions = role.permissions;
+            console.log(permissions);
             for (let key in permissions) {
                 var tr = $(`#roleEdit${key}`);
                 var role_prop = permissions[key];
@@ -141,12 +142,12 @@ $("#closeRolePrompt, #closeRoleEditPrompt").click(function () {
 });
 
 function resetRoleForm() {
-    $(".user-view, .user-create, .user-edit, .user-delete").prop(
+    $(".user-view, .user-create, .user-edit, .user-delete, .module_all, .priv_all").prop(
         "checked",
         false
     );
     $(
-        ".edit-user-view, .edit-user-create, .edit-user-edit, .edit-user-delete"
+        ".edit-user-view, .edit-user-create, .edit-user-edit, .edit-user-delete, .edit_module_all, .edit_priv_all"
     ).prop("checked", false);
     $("#roleName").val(null);
     $("#roleEditName").val(null);
@@ -181,12 +182,18 @@ $("#saveRole").click(function () {
 $("#updateRole").click(function () {
     var message = "",
         role_alert = "";
-    if ($("input[name='edit-role-check']:checked").length > 0) {
+    if ($("input[name='edit-role-check']:checked").length > 0 && $("#roleEditName").val()) {
         $("#roleEditForm").submit();
         message = "Successfully edited role.";
         role_alert = ROLE_SUCCESS;
     } else {
-        message = "Failed to edit role. No privileges have been granted.";
+        message = "Failed to edit role. ";
+        if($("input[name='edit-role-check']:checked").length == 0) {
+            message = message.concat("No privileges have been granted.");
+        } 
+        if(!$("#roleEditName").val()) {
+            message = message.concat("No name has been provided.");
+        }
         role_alert = ROLE_FAIL;
     }
     slideAlert(message, role_alert);
@@ -247,7 +254,6 @@ $("#deleteRoleForm").submit(function (e) {
         contentType: false,
         processData: false,
         success: function (response) {
-            console.log("deleted");
             roleRefresh();
         },
     });
@@ -273,6 +279,7 @@ $("#roleEditForm").submit(function (e) {
         processData: false,
         success: function (response) {
             resetRoleForm();
+            roleRefresh();
         },
     });
 
