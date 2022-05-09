@@ -103,6 +103,7 @@
                     @method('PATCH')
                     <div class="row">
                         <div class="col-6">
+                        <input type="text" name="" id="hiddenSuppField" style="display:none;" value="{{ $supplier->id }}" readonly>
                             <label for="supplier_name">Company Name</label>
                             <input type="text" id="supplier_name" name="supplier_name" class="form-control"
                                 value="{{ $supplier['company_name'] }}">

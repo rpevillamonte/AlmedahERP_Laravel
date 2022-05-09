@@ -1,7 +1,7 @@
 <script src="{{ asset('js/supplier.js') }}"></script>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="justify-content: space-between;">
     <div class="container-fluid">
-        <h2 class="navbar-brand" style="font-size: 35px;">New Supplier 1</h2><span>• Not Saved</span>
+        <h2 class="navbar-brand" style="font-size: 35px;">New Supplier</h2><span>• Not Saved</span>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
