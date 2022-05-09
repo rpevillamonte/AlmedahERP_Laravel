@@ -154,6 +154,7 @@ class PurchaseInvoiceController extends Controller
         if ($invoice->payment_mode === 'Installment') {
             $all_data = PaymentInvoiceLog::where('p_invoice_id', $invoice->p_invoice_id)
                         ->where('payment_description', '!=', 'Downpayment');
+            if($all_data->count() === 0) return "Downpayment";
             $current_count = $all_data->count() + 1;
             $ordinal_string = $this->ordinal($current_count);
             return strval($ordinal_string) . " Installment";
@@ -189,7 +190,7 @@ class PurchaseInvoiceController extends Controller
 
         $lastLog = PaymentInvoiceLog::orderby('id', 'desc')->first();
         $nextID = ($lastLog) ? $lastLog->id + 1 : 1;
-        $description = ($nextID == 1) ? "Downpayment" : $this->generateDescription($invoice, $lastLog);
+        $description = $this->generateDescription($invoice, $lastLog);
         
 
         $pi_log_id = "PI-LOG-" . str_pad($nextID, 3, '0', STR_PAD_LEFT);
