@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Auth;
+use DateTime;
 use Illuminate\Support\Facades\Mail;
 
 class MaterialsPurchasedController extends Controller
@@ -114,6 +115,7 @@ class MaterialsPurchasedController extends Controller
         $items_purchased = $purchase_order->itemsPurchased();
         $req_date = ($r_quotation != null) ? 
                     $r_quotation->material_request->required_date : $items_purchased[0]['req_date'];
+        $req_date = new DateTime($req_date);
         return view(
             'modules.buying.purchaseorderinfo',
             [
