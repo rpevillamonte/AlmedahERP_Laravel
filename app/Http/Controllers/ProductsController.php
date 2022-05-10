@@ -244,7 +244,11 @@ class ProductsController extends Controller
             $data->unit = $form_data['unit'];
             $data->internal_description = $form_data['internal_description'];
             $data->bar_code = $form_data['bar_code'];
-
+            $data->stock_unit = $form_data['stock_unit'] ? $form_data['stock_unit'] : $data->stock_unit;
+            if($form_data['saleSupplyMethod'] == "Made to Stock"){
+                $data->reorder_level = $form_data['reorderLevel'];
+                $data->reorder_qty = $form_data['reorderQty'];
+            }
             $data->sale_supply_method = $form_data['saleSupplyMethod'];
             $data->manufacturing_date = $form_data['manufacturing_date'];
             $data->product_pulled_off_market = $form_data['product_pulled_off_market'];

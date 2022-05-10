@@ -886,8 +886,7 @@
                 if (data.type == "Variant") {
                     data.status.forEach(function(arrayItem) {
                         console.log(arrayItem);
-                        addAttribute(item.attribute, item.value);
-                        alert('variant');
+                        addAttribute(arrayItem.attribute, arrayItem.value);
                     });
                 } else {
                     data.status.forEach(function(item) {
