@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Operation;
 use App\Models\RoutingOperation;
 use App\Models\Routings;
@@ -34,16 +33,6 @@ class RoutingsController extends Controller
         return view('modules.BOM.routing', ['routings' => $routings, 'permissions'=> $permissions]);
     }
 
-    public function view($id)
-    {
-        $routing = Routings::find($id);
-        $operations = Operation::get(['id', 'operation_id', 'operation_name']);
-        $routing_operation = $routing->operations();
-        $work_centers = WorkCenter::all();
-        return view('modules.BOM.editrouting', ['route' => $routing,'routing_operations' => $routing_operation,
-                                                'work_centers' => $work_centers, 'operations' => $operations]);
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -51,10 +40,15 @@ class RoutingsController extends Controller
      */
     public function create()
     {
-        //
         $operations = Operation::get(['id', 'operation_id', 'operation_name']);
         $work_centers = WorkCenter::all();
         return view('modules.BOM.newrouting', ['operations' => $operations, 'work_centers' => $work_centers]);
+    }
+
+    public function getOperations($routing_id) {
+        $routing = Routings::where('routing_id', $routing_id)->first();
+        $operations = $routing->operations();
+        return ['operations' => $operations];
     }
 
     /**
@@ -65,7 +59,6 @@ class RoutingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
         try {
             $routing = new Routings();
             $last_routing = Routings::latest()->first();
@@ -99,21 +92,26 @@ class RoutingsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Routings  $routings
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Routings $routings)
+    public function show($id)
     {
-        //
+        $routing = Routings::find($id);
+        $operations = Operation::get(['id', 'operation_id', 'operation_name']);
+        $routing_operation = $routing->operations();
+        $work_centers = WorkCenter::all();
+        return view('modules.BOM.editrouting', ['route' => $routing,'routing_operations' => $routing_operation,
+                                                'work_centers' => $work_centers, 'operations' => $operations]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Routings  $routings
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Routings $routings)
+    public function edit($id)
     {
         //
     }
@@ -122,14 +120,14 @@ class RoutingsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Routings  $routings
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Routings $routings)
+    public function update(Request $request, $id)
     {
-        //
         try {
             $form_data = $request->input();
+            $routings = Routings::find($id);
             $routings->routing_name = $form_data["Routing_Name"];
             $routings->save();
 
@@ -157,19 +155,13 @@ class RoutingsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Routings  $routings
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $routing = Routings::find($id);
         $routing->delete();
-    }
-
-    public function getOperations($routing_id) {
-        $routing = Routings::where('routing_id', $routing_id)->first();
-        $operations = $routing->operations();
-        return ['operations' => $operations];
     }
 
 }

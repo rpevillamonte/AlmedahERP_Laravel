@@ -703,7 +703,7 @@ function loadnewRouting() {
 
 function EditRouting(id) {
     $(document).ready(function () {
-        $("#contentRouting").load(`/editrouting/${id}`);
+        $("#contentRouting").load(`/routing/${id}`);
     });
 }
 
