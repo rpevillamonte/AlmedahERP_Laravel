@@ -32,20 +32,13 @@ $("#departmentForm").submit(function (e) {
 $("#saveNewDept").click(function () {
     var msg = '', dept_alert = '';
     var flag = true;
-    if($("#deptName").val() && $("#deptHead").val() !== 'non') {
+    if($("#deptName").val()) {
         msg = 'Successfully created a department.';
         dept_alert = DEPT_SUCCESS;
         flag = false;
         $("#departmentForm").submit();
     } else {
-        msg = 'Failed to create a department. ';
-        if (!$("#deptName").val() && $("#deptHead").val() == 'non') {
-            msg = msg.concat('No information provided.');
-        } 
-        else {
-            if (!$("#deptName").val()) msg = msg.concat('No department name provided.');
-            else if($("#deptHead").val() == 'non') msg = msg.concat('No indicated department head.');
-        } 
+        msg = 'Failed to create a department. No department name provided.';
         dept_alert = DEPT_FAIL;
     }
     slideAlert(msg, dept_alert);
@@ -113,7 +106,7 @@ $("#deleteDeptForm").submit(function (e) {
 
 $("#saveEditDept").click(function () {
     var msg = '', dept_alert = '';
-    if($("#deptEditName").val() && $("#deptEditHead").val() !== 'non') {
+    if($("#deptEditName").val()) {
         $("#editDepartment").submit();
         msg = 'Successfully edited department data.';
         dept_alert = DEPT_SUCCESS;

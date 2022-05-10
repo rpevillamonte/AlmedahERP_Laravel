@@ -77,8 +77,7 @@ class UserRoleController extends Controller
 
             $role = UserRole::find($id);
             $role->role_name = $form_data['roleEditName'];
-            $role->description = '-';
-            $role->permissions = $form_data['permissions'];
+            $role->permissions = $form_data["permissions"];
     
             $role->save();
         } catch (Exception $e) {

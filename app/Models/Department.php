@@ -14,4 +14,8 @@ class Department extends Model
         'reports_to'
     ];
     public $timestamps = false;
+
+    public function dept_head() {
+        return $this->hasOne(Employee::class, 'employee_id', 'reports_to');
+    }
 }

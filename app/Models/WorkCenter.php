@@ -28,7 +28,7 @@ class WorkCenter extends Model
     public function employee_set() {
         $employee_data = json_decode($this->employee_id_set);
         $mod_emp_data = array();
-        foreach($employee_data as $emp) {
+        foreach((array)$employee_data as $emp) {
             $employee = Employee::where('employee_id', $emp->employee_id)->first();
             array_push($mod_emp_data,
                 array(

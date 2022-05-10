@@ -30,7 +30,7 @@
         Department Head
       </label>
       <select name="deptEditHead" id="deptEditHead" class="form-control dept-select" id="edit-department-head" data-live-search="true">
-        <option val="non" data-subtext="None" selected></option>
+        <option value="" data-subtext="None" selected></option>
         @foreach ($employees as $employee)
             <option value="{{ $employee->employee_id }}" data-subtext="{{ $employee->employee_id }}">{{ $employee->last_name }}, {{ $employee->first_name }}</option>
         @endforeach

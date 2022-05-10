@@ -16,6 +16,11 @@ function saveReceipt() {
         },
     });
 
+    if (!$("#orderId").val()) {
+        slideAlert("No purchase order to create a receipt from.", PR_FAIL);
+        return;
+    }
+
     let formData = new FormData();
     let received_mats = {};
 

@@ -48,23 +48,19 @@
 </nav>
 <br>
 <div class="float-right">
-<div class="btn-group btn-group-sm" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Supplier Quotation
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="#">Create</a>
-                        <a class="dropdown-item" href="#">View</a>
-                    </div>
-                </div>
-</div>
-<br>
-<div class="container-fluid" style="margin: 0; padding: 0;">
+    <div class="btn-group btn-group-sm" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Supplier Quotation
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="#">Create</a>
+            <a class="dropdown-item" href="#">View</a>
+        </div>
+    </div>
     <div class="float-right" id="headingOne">
         <div class="float-right">
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                
                 <!-- Shows the send email button only if the quotation has already been
                    submitted -->
                 @if (isset($rfquotation) && $rfquotation->req_status == "Submitted")
@@ -76,6 +72,10 @@
             </div>
         </div>
     </div>
+</div>
+<br>
+<div class="container-fluid" style="margin: 0; padding: 0;">
+    
     <form id="req-forquotation-form" class="update" action="{{ $action }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if (isset($rfquotation))

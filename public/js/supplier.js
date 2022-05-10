@@ -62,46 +62,46 @@ $(".supplier-search").change(function (e) {
 
 });
 
-$("#supplierForm, #updateSupplierForm").submit(function () {
+// $("#supplierForm, #updateSupplierForm").submit(function () {
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': CSRF_TOKEN
-        }
-    });
+//     $.ajaxSetup({
+//         headers: {
+//             'X-CSRF-TOKEN': CSRF_TOKEN
+//         }
+//     });
 
-    var formData = new FormData(this);
-    if (!$("#supplier_contact").val()) {
-        formData.delete('supplier_contact');
-    }
+//     var formData = new FormData(this);
+//     if (!$("#supplier_contact").val()) {
+//         formData.delete('supplier_contact');
+//     }
 
-    if (
-        !$("#supplier_name").val() || !$("#supplier_phone").val() ||
-        $("#supplier_group").val() === 'n/o' || !$("#supplier_email").val() || !$("#supplier_address").val()
-    ) {
-        slideAlert("Please make sure that all the appropriate information has been provided.", SUPP_FAIL);
-        return;
-    }
+//     if (
+//         !$("#supplier_name").val() || !$("#supplier_phone").val() ||
+//         $("#supplier_group").val() === 'n/o' || !$("#supplier_email").val() || !$("#supplier_address").val()
+//     ) {
+//         slideAlert("Please make sure that all the appropriate information has been provided.", SUPP_FAIL);
+//         return;
+//     }
 
-    if ($("#supplier_phone").val().length != 11) {
-        slideAlert("Contact number is not of appropriate length.", SUPP_FAIL);
-        return;
-    }
+//     if ($("#supplier_phone").val().length != 11) {
+//         slideAlert("Contact number is not of appropriate length.", SUPP_FAIL);
+//         return;
+//     }
 
-    $.ajax({
-        url: $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            loadSupplier();
-        }
-    });
+//     $.ajax({
+//         url: $(this).attr('action'),
+//         type: $(this).attr('method'),
+//         data: formData,
+//         contentType: false,
+//         processData: false,
+//         success: function (data) {
+//             loadSupplier();
+//         }
+//     });
 
-    return false;
+//     return false;
 
-});
+// });
 
 $("#deleteSuppForm").submit(function () {
     $.ajaxSetup({
@@ -127,5 +127,48 @@ $("#deleteSupplier").click(function () {
 });
 
 $("#saveBtn, #updateSupplierBtn").click(function () {
-    $("#supplierForm, #updateSupplierForm").submit();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': CSRF_TOKEN
+        }
+    });
+    
+
+
+    if (
+        !$("#supplier_name").val() || !$("#supplier_phone").val() ||
+        !$("#supplier_email").val() || !$("#supplier_address").val()
+        ) {
+            slideAlert("Please make sure that all the appropriate information has been provided.", SUPP_FAIL);
+            return;
+        }
+        
+        if ($("#supplier_phone").val().length != 11) {
+            slideAlert("Contact number is not of appropriate length.", SUPP_FAIL);
+            return;
+        }
+    
+    var formData = new FormData();
+    formData.append('supplier_name', $("#supplier_name").val());
+    formData.append('supplier_phone', $("#supplier_phone").val());
+    formData.append('supplier_email', $("#supplier_email").val());
+    if ($("#supplier_contact").val()) {
+        formData.append('supplier_contact', $("#supplier_contact").val());
+    }
+    formData.append('supplier_address', $("#supplier_address").val());
+
+    var route = $("#hiddenSuppField").val() ? `/supplier/${$("#hiddenSuppField").val()}` : '/supplier';
+
+    $.ajax({
+        url: route,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            loadSupplier();
+        }
+    });
+
+    return false;
 });

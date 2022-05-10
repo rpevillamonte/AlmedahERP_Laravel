@@ -57,15 +57,15 @@
                     </a>
                 </td>
                 <td>{{ $department->department_name }}</td>
-                <td>{{ $department->first_name }} {{ $department->last_name }}</td>
+                <td>
+                    @if (!is_null($department->dept_head))
+                        {{ $department->dept_head->first_name }} {{ $department->dept_head->last_name }}
+                    @else
+                        --
+                    @endif
+                </td>
             </tr>
         @endforeach
-        {{-- <tr>
-            <td class="text-bold"><a href="#editDeptPrompt" data-toggle="modal"
-                    data-target="#editDeptPrompt">DEPT-002</a></td>
-            <td>Department 2</td>
-            <td>John Doe</td>
-        </tr> --}}
     </tbody>
 </table>
 

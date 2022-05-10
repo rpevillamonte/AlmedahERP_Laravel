@@ -254,7 +254,6 @@ Route::get('/openManufacturingItemPriceForm', function () {
 
 /**MANUFACTURING ROUTING ROUTES */
 Route::get('/get-routing-ops/{routing_id}', [RoutingsController::class, 'getOperations']);
-Route::get('/editrouting/{id}', [RoutingsController::class, 'view']);
 Route::resource('/routing', RoutingsController::class);
 
 /**MATERIAL REQUEST ROUTES */

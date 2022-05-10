@@ -149,15 +149,17 @@ class PurchaseInvoiceController extends Controller
         return (($number % 100) >= 11) && (($number % 100) <= 13) ? $number . 'th' : $number . $ends[$number % 10];
     }
 
-    private function generateDescription(PurchaseInvoice $invoice, PaymentInvoiceLog $pi_log)
+    private function generateDescription(PurchaseInvoice $invoice)
     {
         if ($invoice->payment_mode === 'Installment') {
-            if (is_null($pi_log)) return "Downpayment";
             $all_data = PaymentInvoiceLog::where('p_invoice_id', $invoice->p_invoice_id)
-                        ->where('payment_description', '!=', 'Downpayment');
-            $current_count = $all_data->count() + 1;
-            $ordinal_string = $this->ordinal($current_count);
-            return strval($ordinal_string) . " Installment";
+                                         ->where('payment_description', 'Downpayment');
+            if ($all_data->count() == 0 ) return "Downpayment";
+            else {
+                $current_count = $all_data->count() - 1 + 1;
+                $ordinal_string = $this->ordinal($current_count);
+                return strval($ordinal_string) . " Installment";
+            }
         } else {
             return "Fully Paid";
         }
@@ -190,7 +192,7 @@ class PurchaseInvoiceController extends Controller
 
         $lastLog = PaymentInvoiceLog::orderby('id', 'desc')->first();
         $nextID = ($lastLog) ? $lastLog->id + 1 : 1;
-        $description = $this->generateDescription($invoice, $lastLog);
+        $description = $this->generateDescription($invoice);
         
 
         $pi_log_id = "PI-LOG-" . str_pad($nextID, 3, '0', STR_PAD_LEFT);
