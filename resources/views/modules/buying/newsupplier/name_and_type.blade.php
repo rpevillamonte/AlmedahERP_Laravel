@@ -8,7 +8,7 @@
             <input type="text" name="supplier_contact" id="supplier_contact" class="form-control" value="{{ $supplier['contact_name'] ?? '' }}">
 			<br>
 			<label for="supplier_phone">Contact No.</label>
-			<input min="1" type="number" id="supplier_phone" name="supplier_phone" value="{{ $supplier['phone_number'] ?? ''}}" class="form-control" placeholder="+63">
+			<input type="text" id="supplier_phone" name="supplier_phone" value="{{ $supplier['phone_number'] ?? ''}}" class="form-control" placeholder="+63">
 		</div>
 		<div class="col-6">
 			<label for="supplier_email">E-mail Address</label>
