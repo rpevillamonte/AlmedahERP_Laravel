@@ -102,7 +102,7 @@ $("#saveBtn, #updateSupplierBtn").click(function () {
 
         let number = $("#supplier_phone").val(); 
 
-        if(number.match(/^[0-9]+$/) != null || number.substring(0,1).match('09') != null) {
+        if(number.match(/^[0-9]+$/) == null || number.substring(0,2).match('09') == null) {
             slideAlert("Invalid format detected for contact number.", SUPP_FAIL);
             return;
         }
@@ -121,7 +121,7 @@ $("#saveBtn, #updateSupplierBtn").click(function () {
     }
     formData.append('supplier_address', $("#supplier_address").val());
 
-    var route = $("#hiddenSuppField").val() ? `/supplier/${$("#hiddenSuppField").val()}` : '/supplier';
+    var route = $("#hiddenSuppField").val() ? `/update-supplier/${$("#hiddenSuppField").val()}` : '/supplier';
 
     $.ajax({
         url: route,

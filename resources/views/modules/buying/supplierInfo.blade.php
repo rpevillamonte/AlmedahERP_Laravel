@@ -97,10 +97,8 @@
         </div>
         <div id="description" class="collapse" aria-labelledby="heading2">
             <div class="card-body">
-                <form action="{{ route('supplier.update', ['supplier' => $supplier->id]) }}" method="POST"
-                    id="updateSupplierForm">
+                <form id="updateSupplierForm" method="POST">
                     @csrf
-                    @method('PATCH')
                     <div class="row">
                         <div class="col-6">
                         <input type="text" name="" id="hiddenSuppField" style="display:none;" value="{{ $supplier->id }}" readonly>
@@ -113,7 +111,7 @@
                                 value="{{ $supplier['contact_name'] }}">
                             <br>
                             <label for="supplier_phone">Contact No.</label>
-                            <input min="1" type="number" id="supplier_phone" name="supplier_phone"
+                            <input type="text" id="supplier_phone" name="supplier_phone"
                                 value="{{ $supplier['phone_number'] }}" class="form-control" placeholder="+63">
                         </div>
                         <div class="col-6">

@@ -544,6 +544,7 @@ Route::get('/get-supplier/{id}', [SupplierController::class, 'getSupplier']);
 Route::get('/supp-filter/{name}', [SupplierController::class, 'filterByID']);
 Route::get('/supp-filter-sg/{item_code}', [SupplierController::class, 'filterBySupplierGroup']);
 Route::get('/supplier-all', [SupplierController::class, 'getSupplierData']);
+Route::post('/update-supplier/{id}', [SupplierController::class, 'updateSupplierData']);
 Route::resource('/supplier', SupplierController::class);
 
 
