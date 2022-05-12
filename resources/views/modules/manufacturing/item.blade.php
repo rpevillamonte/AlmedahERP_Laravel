@@ -216,7 +216,7 @@
             $('#product-form').attr('action', 'create-product');
             $('#product_status').val("Variant");
             $('#product-form .modal-body').append(
-                "<input type='hidden' value='" + product['picture'] + "' name='template_img' id='template_img'>"
+                "<input type='hidden' value='[" + JSON.parse(product['picture']) + "]' name='template_img' id='template_img'>"
             );
             $('#productFormLabel').html('Adding Variant');
         }
