@@ -458,8 +458,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <select class="form-select" name="request_id" id="request-id-link-select"
-                        data-live-search="true" hidden>
+                    <select name="request_id" id="request-id-link-select" style="display:none;">
                         <option value="none" class="text-muted">None</option>
                         @foreach ($material_requests as $material_request)
                             <option value="{{ $material_request->request_id }}"
@@ -468,10 +467,10 @@
                             </option>
                         @endforeach
                     </select>
-                    <ul class="list-group">
+                    <ul class="list-group" data-live-search="true">
                         @foreach ($material_requests as $material_request)
                             <button type="button" class="list-group-item list-group-item-action" onclick="clickMatReqID('{{ $material_request->request_id }}');"
-                                 tabindex="-2" data-html="true" data-toggle="popover" data-placement="right" title="<x-reqforquote_matreq_hover :list='$material_request->raw_mats'>
+                                 tabindex="-2" data-html="true" data-toggle="popover" data-placement="auto" title="<x-reqforquote_matreq_hover :list='$material_request->raw_mats'>
                                 <x-slot name='matreq_id'>
                                     {{ $material_request->request_id }}
                                 </x-slot>
@@ -500,6 +499,7 @@
     $(document).ready(function() {
         $('[data-toggle="popover"]').popover({
             html: true,
+            container: '#material-requests-modal',
             trigger: "focus"
         });
     });
