@@ -15,7 +15,19 @@
                         <small><b>Requested Materials: </b></small>
                     </div>
                     <div class='col-6'>
-                        <small class='w-100'>{{ $reqMaterials }}</small>
+                        <small class='w-100'>
+                            <ul class='m-2'>
+                                @foreach ($list as $rm)
+                                    <li>
+                                        <p>
+                                            <b>CODE:</b> {{ $rm->item_code }}
+                                            <br>
+                                            <b>REQUESTED:</b> {{ $rm->quantity_requested }}
+                                        </p>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </small>
                     </div>
                 </div>
                 <div class='row'>
