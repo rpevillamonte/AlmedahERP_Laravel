@@ -448,7 +448,7 @@
 <div class="modal fade" id="material-requests-modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content" style="overflow: initial;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Link a Material Request</h5>
                 <button type="button" class="close" onclick="$(this).parents('.modal').modal('hide')"
@@ -456,23 +456,22 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body position-static">
+            <div class="modal-body">
                 <div class="form-group">
                     <select class="form-select" name="request_id" id="request-id-link-select"
-                        data-live-search="true">
+                        data-live-search="true" hidden>
                         <option value="none" class="text-muted">None</option>
                         @foreach ($material_requests as $material_request)
                             <option value="{{ $material_request->request_id }}"
                                 data-items="{{ json_encode($material_request->raw_mats) }}"
-                                data-subtext="{{ $material_request->purpose }}"
-                                data-content="<a href='' style='text-decoration: none; color: black;' class='tooltip-test' title='{{ $material_request->request_id }}'>{{ $material_request->request_id }}</a>">
+                                data-subtext="{{ $material_request->purpose }}">{{ $material_request->request_id }}
                             </option>
                         @endforeach
                     </select>
                     <ul class="list-group">
                         @foreach ($material_requests as $material_request)
-                            <li class="list-group-item">
-                                <a tabindex="-1" data-html="true" data-toggle="popover" data-placement="right" title="<x-reqforquote_matreq_hover :list='$material_request->raw_mats'>"
+                            <button type="button" class="list-group-item list-group-item-action" onclick="clickMatReqID('{{ $material_request->request_id }}');"
+                                 tabindex="-2" data-html="true" data-toggle="popover" data-placement="right" title="<x-reqforquote_matreq_hover :list='$material_request->raw_mats'>
                                 <x-slot name='matreq_id'>
                                     {{ $material_request->request_id }}
                                 </x-slot>
@@ -484,8 +483,8 @@
                                 </x-slot>
                                 </x-reqforquote_matreq_hover>"
                                     style="cursor: pointer;">{{ $material_request->request_id }}
-                                </a>
-                            </li>
+                                
+                            </button>
                         @endforeach
                     </ul>
                 </div>
@@ -504,4 +503,8 @@
             trigger: "hover"
         });
     });
+
+    function clickMatReqID(matreqID){
+        $('#request-id-link-select').val(matreqID).trigger('change');
+    }
 </script>
