@@ -181,13 +181,15 @@ class SupplierController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function updateSupplierData(Request $request, $id) {
         try {
             $data = Supplier::find($id);
 
             $form_data = $request->input();
 
             $data->company_name = $form_data['supplier_name'];
-            $data->supplier_group = $form_data['supplier_group'];
             if (isset($form_data['supplier_contact'])) {
                 $data->contact_name = $form_data['supplier_contact'];
             }

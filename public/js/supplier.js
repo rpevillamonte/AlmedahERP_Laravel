@@ -62,47 +62,6 @@ $(".supplier-search").change(function (e) {
 
 });
 
-// $("#supplierForm, #updateSupplierForm").submit(function () {
-
-//     $.ajaxSetup({
-//         headers: {
-//             'X-CSRF-TOKEN': CSRF_TOKEN
-//         }
-//     });
-
-//     var formData = new FormData(this);
-//     if (!$("#supplier_contact").val()) {
-//         formData.delete('supplier_contact');
-//     }
-
-//     if (
-//         !$("#supplier_name").val() || !$("#supplier_phone").val() ||
-//         $("#supplier_group").val() === 'n/o' || !$("#supplier_email").val() || !$("#supplier_address").val()
-//     ) {
-//         slideAlert("Please make sure that all the appropriate information has been provided.", SUPP_FAIL);
-//         return;
-//     }
-
-//     if ($("#supplier_phone").val().length != 11) {
-//         slideAlert("Contact number is not of appropriate length.", SUPP_FAIL);
-//         return;
-//     }
-
-//     $.ajax({
-//         url: $(this).attr('action'),
-//         type: $(this).attr('method'),
-//         data: formData,
-//         contentType: false,
-//         processData: false,
-//         success: function (data) {
-//             loadSupplier();
-//         }
-//     });
-
-//     return false;
-
-// });
-
 $("#deleteSuppForm").submit(function () {
     $.ajaxSetup({
         headers: {
@@ -133,8 +92,6 @@ $("#saveBtn, #updateSupplierBtn").click(function () {
         }
     });
     
-
-
     if (
         !$("#supplier_name").val() || !$("#supplier_phone").val() ||
         !$("#supplier_email").val() || !$("#supplier_address").val()
@@ -142,8 +99,15 @@ $("#saveBtn, #updateSupplierBtn").click(function () {
             slideAlert("Please make sure that all the appropriate information has been provided.", SUPP_FAIL);
             return;
         }
+
+        let number = $("#supplier_phone").val(); 
+
+        if(number.match(/^[0-9]+$/) == null || number.substring(0,2).match('09') == null) {
+            slideAlert("Invalid format detected for contact number.", SUPP_FAIL);
+            return;
+        }
         
-        if ($("#supplier_phone").val().length != 11) {
+        if (number.length != 11) {
             slideAlert("Contact number is not of appropriate length.", SUPP_FAIL);
             return;
         }
@@ -157,7 +121,7 @@ $("#saveBtn, #updateSupplierBtn").click(function () {
     }
     formData.append('supplier_address', $("#supplier_address").val());
 
-    var route = $("#hiddenSuppField").val() ? `/supplier/${$("#hiddenSuppField").val()}` : '/supplier';
+    var route = $("#hiddenSuppField").val() ? `/update-supplier/${$("#hiddenSuppField").val()}` : '/supplier';
 
     $.ajax({
         url: route,

@@ -378,6 +378,16 @@
                         </div>
 
                         <div class="form-group col-6">
+                          <label for="">Reorder Level</label>
+                          <input type="text" value="0" id="reorder_level" class="form-control" placeholder="" aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group col-6">
+                          <label for="">Reorder Quantity</label>
+                          <input type="text" value="0" id="reorder_quantity" class="form-control" placeholder="" aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group col-6">
                           <label for="">Conversion Factor</label>
                           <input type="text" value="0" readonly id="edit_conversion_factor" class="form-control" placeholder="" aria-describedby="helpId">
                         </div>
@@ -514,6 +524,16 @@
                                 <option value="{{ $unit->uom_id }}" data-subtext="({{ $unit->conversion_factor }} nos.)" data-cf="{{ $unit->conversion_factor }}">{{ $unit->item_uom }}</option>   
                             @endforeach
                         </select>
+                        </div>
+
+                        <div class="form-group col-6">
+                          <label for="">Reorder Level</label>
+                          <input type="text" value="0" id="reorder_level" class="form-control" placeholder="" aria-describedby="helpId">
+                        </div>
+
+                        <div class="form-group col-6">
+                          <label for="">Reorder Quantity</label>
+                          <input type="text" value="0" id="reorder_quantity" class="form-control" placeholder="" aria-describedby="helpId">
                         </div>
 
                         <div class="form-group col-6">
