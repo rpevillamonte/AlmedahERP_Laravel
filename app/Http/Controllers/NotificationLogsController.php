@@ -17,7 +17,7 @@ class NotificationLogsController extends Controller
      */
     public function get_notifications()
     {
-        $notif = NotificationLog::whereNull('read_at')->get();
+        $notif = NotificationLog::whereNull('read_at')->orderBy('created_at', 'DESC')->take(10)->get();
         return response()->json(['results' => $notif]);
     }
 

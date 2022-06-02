@@ -379,12 +379,12 @@
 
                         <div class="form-group col-6">
                           <label for="">Reorder Level</label>
-                          <input type="text" value="0" id="reorder_level" class="form-control" placeholder="" aria-describedby="helpId">
+                          <input type="text" value="0" id="edit_reorder_level" class="form-control" placeholder="" aria-describedby="helpId">
                         </div>
 
                         <div class="form-group col-6">
                           <label for="">Reorder Quantity</label>
-                          <input type="text" value="0" id="reorder_quantity" class="form-control" placeholder="" aria-describedby="helpId">
+                          <input type="text" value="0" id="edit_reorder_quantity" class="form-control" placeholder="" aria-describedby="helpId">
                         </div>
 
                         <div class="form-group col-6">
@@ -676,6 +676,8 @@
                 $(form).find('#edit_uom_id').val(data.uom_id);
                 $(form).find('#edit_uom_id').change();
                 $(form).find('#edit_consumable').prop("checked",data.consumable == 1 ? true : false);
+                $(form).find('#edit_reorder_level').val(data.reorder_level);
+                $(form).find('#edit_reorder_quantity').val(data.reorder_qty);
                 $(form).find('#edit_consumable').change( function (){
                     $(this).val( $(this).is(':checked') ? 1 : 0 );
                 });
