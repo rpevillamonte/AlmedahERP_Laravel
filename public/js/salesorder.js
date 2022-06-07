@@ -25,7 +25,7 @@ $("#idBtn").on("click", function () {
 //  $('#product_name').val(null);
 //  $('#internal_description').val(null);
 //  // Making the image field required again in case it was set as not required
-//  // for whatever reason (such as making the create form an update form)
+//  // for whatever reason (such as making the form an update form)
 //  $('#picture').attr('required', 'required');
 //  $('#product_type').val(null);
 //  $('#product_type').selectpicker('refresh');
@@ -469,6 +469,7 @@ function finalizer(arr_components) {
        It gets the quantity available data of the raw material inside the component and it 
        checks if its raw material quantity is insufficient. 
     */
+    console.log({ materialsInComponents });
     materialsInComponents.forEach((matComponent) => {
         let rawMatFound = rawMaterialsOnly.find(
             (rawMat) =>
@@ -498,7 +499,7 @@ function finalizer(arr_components) {
                         component_name: rawMatFound["component_name"],
                         category: rawMatFound["category"],
                         quantity_needed_for_request: rawMaterialsNeeded,
-                        quantity_avail: RawMatFound["quantity_avail"],
+                        quantity_avail: rawMatFound["quantity_avail"],
                         item_code: rawMatFound["item_code"],
                         product_code: rawMatFound["product_code"],
                     });
@@ -536,9 +537,6 @@ function finalizer(arr_components) {
             }
         }
     });
-    console.log(createMatRequestItems);
-    console.log(rawMaterialsOnly);
-    console.log(materialsInComponents);
 
     $.ajax({
         url: "/returnProductComponentMaterials/",
@@ -672,10 +670,9 @@ function viewOrderedProducts(id) {
             console.log(response);
             dtOrders.clear().draw();
             response.forEach((row) => {
-                dtOrders.row.add( [
-                    row['product_code'],
-                    row['serial_no']
-                ]).draw( false );
+                dtOrders.row
+                    .add([row["product_code"], row["serial_no"]])
+                    .draw(false);
             });
         },
     });
@@ -834,7 +831,12 @@ function enableAddtoProduct() {
     document.getElementById("btnAddProduct").disabled = false;
 }
 
-function minusStocks(arr, materialsInComponents) {
+function minusStocks(
+    arr,
+    materialsInComponents,
+    formattedDate,
+    mat_insufficient
+) {
     var products = [];
     var qty = [];
     arr.forEach((element) => {
@@ -849,6 +851,8 @@ function minusStocks(arr, materialsInComponents) {
     data = {};
     data["products"] = products;
     data["qty"] = qty;
+    data["formattedDate"] = formattedDate;
+    data["mat_insufficient"] = mat_insufficient;
 
     $.ajaxSetup({
         headers: {
