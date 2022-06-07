@@ -883,7 +883,7 @@
                 }
                 //Minus stocks in env_raw materials. Zeroes stock if qty is insufficient since it will be saved in material request
                 try {
-                  minusStocks(componentsOrder, materialsInComponents);
+                  minusStocks(componentsOrder, materialsInComponents, formattedDate, mat_insufficient);
                 }
                 catch(err) {
                   console.log("Tried minusstock")

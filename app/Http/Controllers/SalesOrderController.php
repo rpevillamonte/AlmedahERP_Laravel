@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Component;
 use App\Models\WorkOrder;
 use App\Models\ManufacturingProducts;
+use App\Models\RequestedRawMat;
 use App\Models\ManufacturingMaterials;
 use App\Models\MaterialCategory;
 use App\Models\MaterialPurchased;
@@ -704,6 +705,8 @@ class SalesOrderController extends Controller
     function minusStocks(Request $request){
         $products = $request->input('products');
         $qty = $request->input('qty');
+        $formattedDate = $request->input('formattedDate');
+        $mat_insufficient = $request->input('mat_insufficient');
 
         for ($i=0; $i < count($products); $i++) { 
             try {
@@ -715,8 +718,31 @@ class SalesOrderController extends Controller
                         $raw_material->rm_quantity = 0;
                     }else{
                         $raw_material->rm_quantity = $raw_material->rm_quantity - $qty[$i];
+                        $raw_material->save();
+                        if($raw_material->rm_quantity - $qty[$i] <= $raw_material->reorder_level or $mat_insufficient == false){
+                            $matRequest = new MaterialRequest();
+                            $matRequest->request_date = Carbon::now();
+                            $matRequest->required_date = $formattedDate;
+                            $matRequest->purpose = 'Test';
+                            $matRequest->mr_status = "Draft";
+                            $matRequest->work_order_no = "";
+                            $matRequest->request_id = "REQ";
+                            $matRequest->save();
+                            $matRequest->request_id = $id_copy = "MAT-MR-".Carbon::now()->year."-".str_pad($matRequest->id, 5, '0', STR_PAD_LEFT);
+                            $matRequest->save();
+
+                            $requestItem = new RequestedRawMat();
+                            $requestItem->request_id = $matRequest->request_id;
+                            $requestItem->item_code = $raw_material->item_code;
+                            $requestItem->quantity_requested = $raw_material->reorder_qty;
+                            $requestItem->procurement_method = "buy";
+                            $requestItem->uom_id = $raw_material->uom_id;
+                            $requestItem->station_id = null;
+                            $requestItem->save();
+                        }
+                       
                     }
-                    $raw_material->save();
+                    
                 }
             } catch (\Throwable $th) {
                 //Should just end when subtracting from components;
