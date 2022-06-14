@@ -755,7 +755,7 @@
 
     <script src="{{ asset('js/side-nav.js') }}"></script>
     <script src="{{ asset('js/tab-nav.js') }}"></script>
-    <script>
+    {{-- <script>
         $(function() {
             var menu_list = [
                 "Dashboard",
@@ -853,5 +853,5 @@
         auto_load();
         setInterval(auto_load,5000);
         //// 
-    </script>
+    </script> --}}
 @endsection

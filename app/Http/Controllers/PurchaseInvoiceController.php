@@ -209,11 +209,6 @@ class PurchaseInvoiceController extends Controller
         $invoice->total_amount_paid = $new_price;
         $invoice->payment_balance = $new_balance;
         
-
-        if ($description === 'Downpayment') {
-            $invoice->grand_total = $new_balance;
-            //$invoice->total_amount_paid = 0;
-        }
         if ($new_price == $invoice->grand_total) {
             $new_status = "Paid";
             $receipt = $invoice->receipt;
